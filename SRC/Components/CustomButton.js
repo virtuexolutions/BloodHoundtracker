@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -7,14 +7,14 @@ import {
   Dimensions,
   I18nManager,
   ActivityIndicator,
-} from "react-native";
-import { Icon, Spinner } from "native-base";
-import LinearGradient from "react-native-linear-gradient";
-import { moderateScale, scale } from "react-native-size-matters";
-import CustomText from "./CustomText";
-import Color from "../Assets/Utilities/Color";
+} from 'react-native';
+import {Icon, Spinner} from 'native-base';
+import LinearGradient from 'react-native-linear-gradient';
+import {moderateScale, scale} from 'react-native-size-matters';
+import CustomText from './CustomText';
+import Color from '../Assets/Utilities/Color';
 
-const CustomButton = (props) => {
+const CustomButton = props => {
   const {
     activeOpacity,
     onPress,
@@ -40,7 +40,7 @@ const CustomButton = (props) => {
     isBold,
     disabled = false,
     alignSelf,
-    elevation
+    elevation,
 
     // value
   } = props;
@@ -58,16 +58,17 @@ const CustomButton = (props) => {
           marginTop: marginTop || 0,
           marginBottom: marginBottom || 0,
         },
-        elevation &&{
+        elevation && {
           shadowColor: Color.themeColor,
-shadowOffset: {
-	width: 0,
-	height: 4,
-},
-shadowOpacity: 0.32,
-shadowRadius: 5.46,
+          shadowOffset: {
+            width: 0,
+            height: 4,
+          },
+          shadowOpacity: 0.32,
+          shadowRadius: 5.46,
 
-elevation: 9,},
+          elevation: 9,
+        },
         alignSelf && {
           alignSelf: alignSelf,
         },
@@ -86,22 +87,20 @@ elevation: 9,},
           color: Color.white,
         },
       ]}
-      disabled={disabled}
-    >
+      disabled={disabled}>
       {disabled == false && isGradient ? (
         <LinearGradient
           style={{
-            flexDirection: "row",
+            flexDirection: 'row',
             width: width,
             height: height,
-            alignItems: "center",
-            justifyContent: "center",
+            alignItems: 'center',
+            justifyContent: 'center',
             borderRadius: moderateScale(30, 0.3),
           }}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          colors={bgColor ? bgColor :[Color.white, Color.white]}
-        >
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+          colors={bgColor ? bgColor : [Color.white, Color.white]}>
           {loader && (
             <ActivityIndicator
               style={styles.indicatorStyle}
@@ -128,8 +127,7 @@ elevation: 9,},
               },
             ]}
             isRegular={isBold ? false : true}
-            isBold={isBold ? true : false}
-          >
+            isBold={isBold ? true : false}>
             {text}
           </CustomText>
         </LinearGradient>
@@ -165,8 +163,7 @@ elevation: 9,},
               },
             ]}
             isRegular={isBold ? false : true}
-            isBold={isBold ? true : false}
-          >
+            isBold={isBold ? true : false}>
             {text}
           </CustomText>
         </>
@@ -178,28 +175,28 @@ elevation: 9,},
 const styles = StyleSheet.create({
   mainBtn: {
     // marginBottom: 10,
-    flexDirection: "row",
+    flexDirection: 'row',
     borderRadius: 5,
-    justifyContent: "center",
-    alignItems: "center",
-    alignSelf: "center",
-    paddingHorizontal : moderateScale(10,0.3),
-    paddingVertical : moderateScale(2,0.3),
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    paddingHorizontal: moderateScale(10, 0.3),
+    paddingVertical: moderateScale(2, 0.3),
   },
   text: {
-    color: "white",
+    color: 'white',
     // fontWeight: 'bold',
-    textTransform: "capitalize",
-    textAlign: "center",
-    letterSpacing:0.8
+    textTransform: 'capitalize',
+    textAlign: 'center',
+    letterSpacing: 0.8,
   },
   indicatorStyle: {
     paddingRight: 5,
     paddingLeft: I18nManager.isRTL ? 5 : 0,
   },
   iconCustom: {
-    color: "#C0C0C0",
-    fontSize: moderateScale(20,0.6),
+    color: '#C0C0C0',
+    fontSize: moderateScale(20, 0.6),
     paddingRight: 20,
     paddingLeft: I18nManager.isRTL ? 20 : 0,
   },

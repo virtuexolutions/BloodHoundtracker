@@ -1,35 +1,19 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {
-  ActivityIndicator,
-  Platform,
-  ToastAndroid,
-  TouchableOpacity,
-  View,
-  PanResponder,
-  ImageBackground,
-} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {ScrollView} from 'native-base';
+import React, {useState} from 'react';
+import {ActivityIndicator, TouchableOpacity, View} from 'react-native';
+import {moderateScale, ScaledSheet} from 'react-native-size-matters';
+import {useDispatch, useSelector} from 'react-redux';
 import Color from '../Assets/Utilities/Color';
+import CustomButton from '../Components/CustomButton';
+import CustomImage from '../Components/CustomImage';
 import CustomStatusBar from '../Components/CustomStatusBar';
 import CustomText from '../Components/CustomText';
-import CustomImage from '../Components/CustomImage';
-import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
-import {moderateScale, ScaledSheet} from 'react-native-size-matters';
 import TextInputWithTitle from '../Components/TextInputWithTitle';
-import CustomButton from '../Components/CustomButton';
-import {ScrollView} from 'native-base';
-import {Post} from '../Axios/AxiosInterceptorFunction';
-import {validateEmail} from '../Config';
-import {setSelectedRole, setUserData} from '../Store/slices/common';
-import {
-  setMilageRing,
-  setUserToken,
-  setWalkThrough,
-} from '../Store/slices/auth';
-import {useDispatch, useSelector} from 'react-redux';
-import DropDownSingleSelect from '../Components/DropDownSingleSelect';
 import navigationService from '../navigationService';
-import LinearGradient from 'react-native-linear-gradient';
-import {useNavigation} from '@react-navigation/native';
+import {windowHeight, windowWidth} from '../Utillity/utils';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
 const LoginScreen = () => {
   const dispatch = useDispatch();
@@ -43,167 +27,173 @@ const LoginScreen = () => {
     userRole ? userRole : 'Customer',
   );
 
-
   return (
     <>
       <CustomStatusBar
-        backgroundColor={
-           Color.black
-        }
-        barStyle={'light-content'}
+        backgroundColor={Color.white}
+        barStyle={'dark-content'}
       />
 
-      <ImageBackground
-        style={{
-          flex: 1,
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        removeClippedSubviews={true}
+        contentContainerStyle={{
+          alignSelf: 'center',
           alignItems: 'center',
         }}
-        resizeMode={'stretch'}
-        source={
-          selectedRole == 'Customer'
-            ? require('../Assets/Images/bg3.png')
-            : userRole == 'Vendor'
-            ? require('../Assets/Images/bg2.png')
-            : require('../Assets/Images/bg1.png')
-        }>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          removeClippedSubviews={true}
-          contentContainerStyle={{
-            alignSelf: 'center',
-            alignItems: 'center',
-          }}
-          style={{
-            width: '100%',
-            paddingTop: windowHeight * 0.1,
-            // flexGrow: 0,
-          }}>
-          <View style={[styles?.textContainer]}>
-            <CustomImage
-              source={require('../Assets/Images/logo.png')}
-              resizeMode={'contain'}
-              style={[styles.bottomImage]}
-            />
-          </View>
+        style={{
+          width: '100%',
+          // paddingTop: windowHeight * 0.1,
+        }}>
+        <View style={styles.imageContainer}>
+          <CustomImage
+            style={{height: '100%', width: '100%'}}
+            source={require('../Assets/Images/login.png')}
+            resizeMode={'contain'}
+          />
+        </View>
+        <CustomText isBold style={styles.heading}>
+          welcome back!
+        </CustomText>
+        <CustomText style={styles.text}>
+          Let’s login for explore continues
+        </CustomText>
 
-
+        <View style={styles.titleContainer}>
+          <CustomText style={styles.title}>Email or Phone Number</CustomText>
           <TextInputWithTitle
+            iconName={'envelope'}
+            iconType={EvilIcons}
             titleText={'Enter your Email'}
             secureText={false}
-            placeholder={'Enter your Email'}
+            placeholder={'Hello@Zachry.com'}
             setText={setEmail}
             value={email}
-            viewHeight={0.07}
-            viewWidth={0.9}
-            inputWidth={0.86}
+            viewHeight={0.06}
+            viewWidth={0.85}
+            inputWidth={0.8}
             borderColor={'#ffffff'}
             backgroundColor={'#FFFFFF'}
-            marginTop={moderateScale(15, 0.6)}
-            color={Color.themeColor}
+            marginTop={moderateScale(5, 0.6)}
+            color={Color.darkGray}
             placeholderColor={Color.themeLightGray}
-            borderRadius={moderateScale(25, 0.3)}
+            // borderRadius={moderateScale(25, 0.3)}
           />
+        </View>
+        <View style={{paddingTop: windowHeight * 0.015}}>
+          <CustomText style={styles.title}>password</CustomText>
+
           <TextInputWithTitle
+            iconName={'lock'}
+            iconType={AntDesign}
             titleText={'Enter your password'}
             secureText={true}
             placeholder={'Enter your password'}
             setText={setPassword}
             value={password}
-            viewHeight={0.07}
-            viewWidth={0.9}
-            inputWidth={0.86}
+            viewHeight={0.06}
+            viewWidth={0.85}
+            inputWidth={0.8}
             backgroundColor={'#FFFFFF'}
-            marginTop={moderateScale(15, 0.6)}
-            color={Color.themeColor}
+            marginTop={moderateScale(5, 0.6)}
+            color={Color.darkGray}
             placeholderColor={Color.themeLightGray}
-            borderRadius={moderateScale(25, 0.3)}
             marginBottom={moderateScale(10, 0.3)}
           />
-          <CustomText
-            onPress={() => {
-              navigationService.navigate('EnterPhone', {fromForgot: true});
-            }}
-            style={styles.txt3}>
-            {'Forgot Password?'}
+        </View>
+        {/* <CustomText
+          onPress={() => {
+            navigationService.navigate('EnterPhone', {fromForgot: true});
+          }}
+          style={styles.txt3}>
+          {'Forgot Password?'}
+        </CustomText> */}
+
+        <CustomButton
+          text={
+            isLoading ? (
+              <ActivityIndicator color={'#FFFFFF'} size={'small'} />
+            ) : (
+              'Login'
+            )
+          }
+          textColor={Color.white}
+          width={windowWidth * 0.85}
+          height={windowHeight * 0.07}
+          marginTop={moderateScale(20, 0.3)}
+          onPress={() => {}}
+          bgColor={Color.themeColor}
+          borderRadius={moderateScale(30, 0.3)}
+          elevation
+        />
+        <View style={styles.row}>
+          <View style={styles.line}></View>
+          <CustomText style={styles.connect}>You can Connect </CustomText>
+          <View style={styles.line}></View>
+        </View>
+        <View style={styles.second_row}>
+          <View style={styles.icon}>
+            <CustomImage
+              style={{
+                height: '100%',
+                width: '100%',
+              }}
+              source={require('../Assets/Images/google.png')}
+            />
+          </View>
+          <View style={styles.icon}>
+            <CustomImage
+              style={{
+                height: '100%',
+                width: '100%',
+              }}
+              source={require('../Assets/Images/mac.png')}
+            />
+          </View>
+        </View>
+
+        <View style={styles.container2}>
+          <CustomText style={styles.txt5}>
+            {"Don't have an account? "}
           </CustomText>
 
-          <CustomButton
-            text={
-              isLoading ? (
-                <ActivityIndicator color={'#FFFFFF'} size={'small'} />
-              ) : (
-                'Login'
-              )
-            }
-            textColor={Color.white}
-            width={windowWidth * 0.9}
-            height={windowHeight * 0.07}
-            marginTop={moderateScale(10, 0.3)}
-            onPress={() => {
-              // navigation.navigate('Tabnavigation');
-              navigation.navigate('MyDrawer');
-              // Login();
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={{
+              marginLeft: windowWidth * 0.01,
+              borderBottomWidth: 1,
+              borderColor: Color.themeColor,
             }}
-            bgColor={Color.black}
-            borderRadius={moderateScale(30, 0.3)}
-          />
-
-          <View style={styles.container2}>
-            <CustomText style={styles.txt5}>
-              {"Don't have an account? "}
+            onPress={() => navigationService.navigate('Signup')}>
+            <CustomText
+              style={[
+                styles.txt4,
+                {
+                  color: Color.themeColor,
+                },
+              ]}>
+              {'Sign Up here'}
             </CustomText>
-
-            <TouchableOpacity
-              activeOpacity={0.8}
-              style={{marginLeft: windowWidth * 0.01}}
-              onPress={() => navigationService.navigate('Signup')}>
-              <CustomText
-                style={[
-                  styles.txt4,
-                  {
-                    color: Color.black,
-                  },
-                ]}>
-                {'Sign Up'}
-              </CustomText>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-      </ImageBackground>
-      {/* 
-     <LinearGradient
-        start={{x: 0.0, y: 0.25}}
-        end={{x: 0.5, y: 1.0}}
-        colors={selectedRole == 'Customer' ?[ '#16222A','#3A6073',]:selectedRole == 'Vendor' ? ['#1f4037'   ,'#99f2c8' ] : ['#000046' , '#1CB5E0' , ]}
-        style={styles.container}>
-
-
-
-
-        </LinearGradient> */}
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </>
   );
 };
 
 const styles = ScaledSheet.create({
-  container: {
+  imageContainer: {
+    marginTop:windowHeight * 0.08 ,
+    height: windowHeight * 0.25,
+    width: windowWidth * 0.8,
+  },
+  titleContainer: {
     paddingTop: windowHeight * 0.02,
-    height: windowHeight * 0.9,
-    width: windowWidth,
   },
-  bottomImage: {
-    width: windowWidth * 0.4,
-  },
-
-  textContainer: {
-    marginTop: moderateScale(20, 0.3),
-  },
-
-  Heading: {
-    fontSize: moderateScale(20, 0.3),
-    color: '#ffffff',
-
-    alignSelf: 'flex-start',
+  title: {
+    color: Color.dar,
+    fontSize: moderateScale(12, 0.6),
+    paddingHorizontal: moderateScale(10, 0.6),
   },
 
   txt3: {
@@ -211,35 +201,60 @@ const styles = ScaledSheet.create({
     alignSelf: 'center',
     fontWeight: '600',
   },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  image1: {
-    width: 200,
-    height: 200,
-  },
+
   container2: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     width: windowWidth * 0.9,
+    marginTop: moderateScale(8, 0.3),
   },
   txt4: {
     color: Color.purple,
-    fontSize: moderateScale(15, 0.6),
+    fontSize: moderateScale(12, 0.6),
     marginTop: moderateScale(8, 0.3),
     fontWeight: 'bold',
   },
   txt5: {
-    color: Color.white,
+    color: Color.mediumGray,
     marginTop: moderateScale(10, 0.3),
-    fontSize: moderateScale(15, 0.6),
+    fontSize: moderateScale(12, 0.6),
   },
-  dropDown: {
-    backgroundColor: Color.red,
+  connect: {
+    color: Color.darkGray,
+    fontSize: moderateScale(11, 0.6),
+    paddingHorizontal: moderateScale(15, 0.6),
+  },
+
+  heading: {
+    color: Color.black,
+    fontSize: moderateScale(18, 0.6),
+    marginTop:windowHeight*0.025,
+  },
+  text: {
+    color: Color.darkGray,
+    width: windowWidth * 0.78,
+    fontSize: moderateScale(12, 0.6),
+    textAlign: 'center',
+  },
+  line: {
+    height: windowHeight * 0.002,
+    width: windowHeight * 0.13,
+    backgroundColor: Color.mediumGray,
+  },
+  row: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: moderateScale(15, 0.3),
+    flexDirection: 'row',
+    width: windowWidth * 0.9,
+  },
+  second_row: {flexDirection: 'row', paddingTop: moderateScale(10, 0.6)},
+  icon: {
+    height: windowHeight * 0.03,
+    width: windowHeight * 0.05,
+    // backgroundColor: 'red',
+    marginHorizontal: moderateScale(5, 0.3),
   },
 });
 

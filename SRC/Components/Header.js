@@ -87,7 +87,7 @@ const Header = props => {
               // }}
               source={
                 userRole == 'Qbid Member'
-                  ? require('../Assets/Images/Group.png')
+                  ? require('../Assets/Images/man1.jpg')
                   : user?.photo
                   ? {uri: `${user?.photo}`}
                   : require('../Assets/Images/man1.jpg')

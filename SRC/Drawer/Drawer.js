@@ -118,26 +118,15 @@ const Drawer = () => {
         style={{backgroundColor: 'red'}}
         statusBarBackgroundColor={'black'}
         statusBarContentStyle={'light-content'}>
-        {/* <View
+        <View
           style={{
             overflow: 'hidden',
             width: windowWidth * 0.71,
             backgroundColor: '#D3D3D3',
             height: windowHeight*.97,
             borderBottomRightRadius: moderateScale(35, 0.6),
-          }}> */}
-        <ImageBackground
-          style={{
-            height: windowHeight * 0.25,
-            justifyContent: 'center',
-          }}
-          source={
-            userRole == 'Customer'
-              ? require('../Assets/Images/bg3.png')
-              : userRole == 'Vendor'
-              ? require('../Assets/Images/bg2.png')
-              : require('../Assets/Images/bg1.png')
-          }>
+          }}>
+      
           <View
             style={{
               height: windowHeight * 0.25,
@@ -167,7 +156,7 @@ const Drawer = () => {
               </View>
             </View>
           </View>
-        </ImageBackground>
+        {/* </ImageBackground> */}
 
         <View style={styles.btn2View}>
           {data?.map((item, index) => (
@@ -210,7 +199,7 @@ const Drawer = () => {
             </CustomText>
           </TouchableOpacity>
         </View>
-        {/* </View> */}
+        </View>
       </ScreenBoiler>
     </>
   );

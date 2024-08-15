@@ -17,12 +17,8 @@ export default Color = {
   themeDarkGray: '#535353',
   themeLightGray: '#8D8D8D',
   themeBlack: '#3A3838',
-  themelightGreen: '#91E7BF',
-  themeGreen: '#214339',
-  themeDarkBlue: '#000147',
-  themeLightBlue: '#1CB4DF',
-  customerlightcolor: '#385D70',
-  customerdarkcolor: '#16232B',
+  themeColor: '#0000FE',
+  textColor:'#022150',
 
   //gradientColors
   CustomerColor: ['#385D70', '#16232B'],

@@ -140,8 +140,8 @@ const DropDownSingleSelect = ({
           return (
             <>
               <Icon
-                name="chevron-small-down"
-                as={Entypo}
+                name="arrow-drop-down"
+                as={MaterialIcons}
                 size={moderateScale(27, 0.3)}
                 style={[
                   styles.icon,
@@ -169,19 +169,19 @@ const DropDownSingleSelect = ({
 const styles = ScaledSheet.create({
   dropDownBtn: {
     backgroundColor: Color.white,
-    height: height * 0.07,
-    borderRadius: moderateScale(25, 0.3),
+    height: height * 0.06,
+    borderRadius: moderateScale(7, 0.3),
   },
   main: {
     position: 'relative',
     backgroundColor: Color.themeInputText,
     height: height * 0.06,
-    borderBottomWidth: moderateScale(1, 0.3),
+    // borderBottomWidth: moderateScale(1, 0.3),
     borderColor: 'lightgrey',
     marginTop: moderateScale(6, 0.3),
     // borderRadius: moderateScale(20, 0.3),
     paddingLeft: moderateScale(32, 0.3),
-    width: width * 0.81,
+    // width: width * 0.8,
   },
   dropDownBtnText: {
     //////
