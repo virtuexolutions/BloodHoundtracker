@@ -21,6 +21,7 @@ import SplashScreen from './SRC/Screens/SplashScreen';
 import AppNavigator from './SRC/appNavigation';
 import HomeScreen from './SRC/Screens/HomeScreen';
 import CreateNew from './SRC/Screens/CreateNew';
+import DetailScreen from './SRC/Screens/DetailsScreen';
 // import AddCard from './SRC/Screens/AddCard';
 
 const App = () => {
@@ -159,7 +160,9 @@ const MainContainer = () => {
   if (isloading == true) {
     return <SplashScreen />;
   }
-  return <AppNavigator />;
+  return <DetailScreen />
+  // <HomeScreen/>
+  //  <AppNavigator />;
   // <HomeScreen />
   //  <CreateNew />
 };

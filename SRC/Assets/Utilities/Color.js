@@ -1,4 +1,4 @@
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 
 export default Color = {
   // Basic Colors
@@ -6,13 +6,13 @@ export default Color = {
   black: '#000000',
   darkGray: '#4B4242',
   mediumGray: '#9B9B9B',
-  lightGrey: '#EBEBEB',
-  veryLightGray: '#A8A8A8',
+  lightGrey: '#808080',
+  veryLightGray: '#E9E9E9',
   green: '#528C00',
   red: 'red',
-  blue: '#00ADEF',
+  blue: '#0000FE',
   purple: '#0D668E',
-
+  background_color: "#F9F9F9",
   // theme colors
   themeDarkGray: '#535353',
   themeLightGray: '#8D8D8D',
