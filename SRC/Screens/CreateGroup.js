@@ -59,9 +59,7 @@ const CreateGroup = () => {
               {
                 borderWidth:1,
                 borderColor:Color.mediumGray,
-                // width: windowWidth * 0.8,
                 borderRadius: moderateScale(1, 0.6),
-                // marginTop: moderateScale(15, 0.3),
               }
             }
           />

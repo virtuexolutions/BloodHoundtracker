@@ -62,7 +62,7 @@ const SearchContainer = ({
             />
 
             <TextInput
-              placeholder="Search here"
+              placeholder="type here"
               placeholderTextColor={Color.themeLightGray}
               numberOfLines={1}
               value={data}
@@ -88,7 +88,7 @@ const SearchContainer = ({
                 fontSize: moderateScale(12, 0.6),
                 color: Color.veryLightGray,
               }}>
-              Search here
+              type here
             </CustomText>
           </>
         )}
@@ -105,7 +105,8 @@ const styles = ScaledSheet.create({
     marginTop: moderateScale(10, 0.3),
     // borderWidth: 0.5,
     borderRadius:20,
-    borderColor: Color.lightGrey,
+    borderWidth:1,
+    borderColor: Color.mediumGray,
     backgroundColor: Color.white,
     borderRadius: moderateScale(5, 0.3),
     paddingVertical: moderateScale(8, 0.3),

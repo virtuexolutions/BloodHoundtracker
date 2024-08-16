@@ -19,6 +19,7 @@ import AppNavigator from './SRC/appNavigation';
 import Numberverfication from './SRC/Screens/Numberverfication';
 import Groups from './SRC/Screens/Groups';
 import CreateGroup from './SRC/Screens/CreateGroup';
+import Profile from './SRC/Screens/Profile';
 // import AddCard from './SRC/Screens/AddCard';
 
 const App = () => {
@@ -157,7 +158,7 @@ const MainContainer = () => {
   if (isloading == true) {
     return <SplashScreen />;
   }
-  return <CreateGroup />;
+  return <Profile />;
   // <HomeScreen />
   //  <CreateNew />
 };
