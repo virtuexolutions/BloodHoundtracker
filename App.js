@@ -20,6 +20,9 @@ import Numberverfication from './SRC/Screens/Numberverfication';
 import Groups from './SRC/Screens/Groups';
 import CreateGroup from './SRC/Screens/CreateGroup';
 import Profile from './SRC/Screens/Profile';
+import HomeScreen from './SRC/Screens/HomeScreen';
+import CreateNew from './SRC/Screens/CreateNew';
+import DetailScreen from './SRC/Screens/DetailsScreen';
 // import AddCard from './SRC/Screens/AddCard';
 
 const App = () => {
@@ -159,6 +162,9 @@ const MainContainer = () => {
     return <SplashScreen />;
   }
   return <Profile />;
+  // return <DetailScreen />
+  // <HomeScreen/>
+  //  <AppNavigator />;
   // <HomeScreen />
   //  <CreateNew />
 };
