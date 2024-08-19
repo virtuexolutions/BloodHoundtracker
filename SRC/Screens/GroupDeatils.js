@@ -40,7 +40,10 @@ const GroupDeatils = () => {
             }}
           />
         </View>
-        <View>
+        <View style={{
+          paddingHorizontal:moderateScale(20,.6),
+          paddingTop:moderateScale(10,.6)
+        }}>
           <CustomText isBold style={styles.btn_text}>
             Newyork Electronic E-Bikes
           </CustomText>

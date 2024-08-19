@@ -15,21 +15,15 @@ import {FONTS} from '../Config/theme';
 import {Icon} from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import ImageSlider from 'react-native-image-slider';
 
-const Card = ({
-  item,
-  fromProfile,
-  setSelected,
-  selected
-}) => {
-
-  // const imageArray =[
-  //   require('../Assets/Images/Bike.png'),
-  //   require('../Assets/Images/.png'),
-  //   require('../Assets/Images/Bike.png'),
-  //   require('../Assets/Images/Bike.png'),
-
-  // ]
+const Card = ({item, fromProfile, setSelected, selected}) => {
+  const imageArray = [
+    require('../Assets/Images/Bike.png'),
+    require('../Assets/Images/Bike.png'),
+    require('../Assets/Images/Bike.png'),
+    require('../Assets/Images/Bike.png'),
+  ];
 
   return (
     <TouchableOpacity style={styles.cardstyle}>
@@ -60,7 +54,7 @@ const Card = ({
               }}
             />
           </View>
-          <View style={{paddingHorizontal:moderateScale(10,.6)}}>
+          <View style={{paddingHorizontal: moderateScale(10, 0.6)}}>
             <CustomText
               style={{
                 fontSize: moderateScale(13, 0.6),
@@ -85,18 +79,15 @@ const Card = ({
                 styles.founded_bnt,
                 {
                   backgroundColor:
-                  selected == 'stolen'
-                      ? Color.themeColor
-                      : Color.mediumGray,
+                    selected == 'stolen' ? Color.themeColor : Color.mediumGray,
                   padding: moderateScale(5, 0.6),
-               
                 },
               ]}>
               <CustomText
                 style={[
                   styles.founded_text,
                   {
-                    color:selected  == 'stolen' ? Color.white :Color.black
+                    color: selected == 'stolen' ? Color.white : Color.black,
                   },
                 ]}>
                 stolen
@@ -110,16 +101,20 @@ const Card = ({
                 styles.founded_bnt,
                 {
                   backgroundColor:
-                  selected == 'founded'
-                      ? Color.themeColor
-                      : Color.mediumGray,
+                    selected == 'founded' ? Color.themeColor : Color.mediumGray,
                   padding: moderateScale(5, 0.6),
                   width: '60%',
                 },
               ]}>
-              <CustomText style={[styles.founded_text,{
-                color:selected  == 'founded'? Color.white :Color.black
-              }]}>founded</CustomText>
+              <CustomText
+                style={[
+                  styles.founded_text,
+                  {
+                    color: selected == 'founded' ? Color.white : Color.black,
+                  },
+                ]}>
+                founded
+              </CustomText>
             </TouchableOpacity>
           </View>
         ) : (
@@ -149,6 +144,56 @@ const Card = ({
           alignSelf: 'center',
           marginTop: moderateScale(10, 0.6),
         }}>
+        <ImageSlider
+          loopBothSides
+          autoPlayWithInterval={3000}
+          images={imageArray}
+          customSlide={({index, item, style, width}) => (
+            // console.log(item)
+            // It's important to put style here because it's got offset inside
+            <View key={index} style={[style, styles.customSlide]}>
+              <CustomImage
+                source={item}
+                style={{
+                  width: '100%',
+                  height: '100%',
+
+                  // width: windowWidth * 0.8,
+                  // height: windowHeight * 0.4,
+                  // borderRadius: moderateScale(20, 0.6),
+                  // alignSelf: 'center',
+                  // marginTop: moderateScale(10, 0.6),
+                }}
+              />
+            </View>
+          )}
+          customButtons={(position, move) => (
+            <View style={styles.buttons}>
+              {imageArray.map((image, index) => {
+                return (
+                  <TouchableOpacity
+                    key={index}
+                    underlayColor="#ccc"
+                    onPress={() => move(index)}
+                    style={styles.button}>
+                    <Text style={position === index && styles.buttonSelected}>
+                      {index + 1}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          )}
+        />
+      </View>
+      {/* <View
+        style={{
+          width: windowWidth * 0.8,
+          height: windowHeight * 0.4,
+          borderRadius: moderateScale(20, 0.6),
+          alignSelf: 'center',
+          marginTop: moderateScale(10, 0.6),
+        }}>
         <CustomImage
           source={item?.images}
           style={{
@@ -158,7 +203,7 @@ const Card = ({
             borderRadius: moderateScale(20, 0.6),
           }}
         />
-      </View>
+      </View> */}
       <View
         style={{
           flexDirection: 'row',
@@ -266,12 +311,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'absolute',
     right: 0,
-    top:15
+    top: 15,
   },
 
   founded_text: {
     color: 'white',
     ...FONTS.Medium11,
     paddingHorizontal: moderateScale(10, 0.6),
+  },
+  customSlide: {
+    width: windowWidth * 0.8,
+    height: windowHeight * 0.4,
+    borderRadius: moderateScale(20, 0.6),
+    alignSelf: 'center',
+    marginTop: moderateScale(10, 0.6),
+    borderRadius: moderateScale(15, 0.6),
+    overflow: 'hidden',
   },
 });
