@@ -95,11 +95,8 @@ const GroupDeatils = () => {
           }}
           style={{
             marginVertical: moderateScale(10, 0.6),
-            marginBottom: moderateScale(40, 0.6),
+            marginBottom: moderateScale(30, 0.6),
           }}
-          ListFooterComponent={
-            <View style={{height: moderateScale(50, 0.6)}} />
-          }
           data={homeListData}
           renderItem={({item, index}) => {
             return <Card item={item} fromGroup={true} />;

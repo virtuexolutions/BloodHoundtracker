@@ -1,18 +1,19 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
-import {moderateScale} from 'react-native-size-matters';
-import {apiHeader, windowWidth} from '../Utillity/utils';
+import { moderateScale } from 'react-native-size-matters';
+import { apiHeader, windowWidth } from '../Utillity/utils';
 import CustomImage from './CustomImage';
 import CustomText from './CustomText';
 import Color from '../Assets/Utilities/Color';
 import moment from 'moment';
-import {useState} from 'react';
-import {useEffect} from 'react';
-import {useSelector} from 'react-redux';
-import {useNavigation} from '@react-navigation/native';
-import {Get, Post} from '../Axios/AxiosInterceptorFunction';
-import {Token} from '@stripe/stripe-react-native';
-import {FONTS} from '../Config/theme';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+import { Get, Post } from '../Axios/AxiosInterceptorFunction';
+import { Token } from '@stripe/stripe-react-native';
+import { FONTS } from '../Config/theme';
+import navigationService from '../navigationService';
 
 const ChatCard = ({
   item,
@@ -33,7 +34,7 @@ const ChatCard = ({
 
   return (
     <TouchableOpacity
-      onPress={() => {}}
+      onPress={() => navigationService.navigate('MessagesScreen')}
       activeOpacity={0.8}
       style={{
         width: windowWidth * 0.95,
@@ -100,8 +101,8 @@ const ChatCard = ({
                 userRole == 'Qbid Member'
                   ? Color.blue
                   : userRole == 'Qbid Negotiator'
-                  ? Color.themeColor
-                  : Color.black,
+                    ? Color.themeColor
+                    : Color.black,
               justifyContent: 'center',
               alignItems: 'center',
               overflow: 'hidden',

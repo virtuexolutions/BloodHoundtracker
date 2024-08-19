@@ -1,16 +1,17 @@
-import {StyleSheet, Text, View} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
-import {windowHeight, windowWidth} from '../Utillity/utils';
-import {moderateScale} from 'react-native-size-matters';
+import { windowHeight, windowWidth } from '../Utillity/utils';
+import { moderateScale } from 'react-native-size-matters';
 import CustomText from './CustomText';
 import CustomImage from './CustomImage';
 import CustomButton from './CustomButton';
 import { FONTS } from '../Config/theme';
+import navigationService from '../navigationService';
 
-const GroupCard = ({item}) => {
+const GroupCard = ({ item }) => {
   console.log("🚀 ~ GroupCard ~ item:", item)
   return (
-    <View style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={() => navigationService.navigate('GroupDeatils')}>
       <View style={styles.rowContainer}>
         <View style={styles.imageContainer}>
           <CustomImage
@@ -21,16 +22,16 @@ const GroupCard = ({item}) => {
             source={item?.assetsimage}
           />
         </View>
-        <View style={{width:windowWidth*0.55}}>
+        <View style={{ width: windowWidth * 0.55 }}>
           <CustomText isBold style={styles.text}>
-           {item?.assetsName}
+            {item?.assetsName}
           </CustomText>
           <View style={styles.row2}>
             <CustomText isBold style={styles.membertext}>
               {item?.members}
             </CustomText>
             <CustomText isBold style={styles.membertext}>
-             {item?.post}
+              {item?.post}
             </CustomText>
           </View>
         </View>
@@ -40,14 +41,14 @@ const GroupCard = ({item}) => {
           textColor={Color.white}
           width={windowWidth * 0.16}
           height={windowHeight * 0.035}
-        //   marginTop={moderateScale(20, 0.3)}
-          onPress={() => {}}
+          //   marginTop={moderateScale(20, 0.3)}
+          onPress={() => { }}
           bgColor={Color.themeColor}
           borderRadius={moderateScale(5, 0.3)}
           elevation
         />
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

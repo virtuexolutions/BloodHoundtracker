@@ -17,7 +17,7 @@ const DetailScreen = () => {
         <>
             <CustomStatusBar backgroundColor={Color.background_color} barStyle={'dark-content'} />
             <View style={styles.container}>
-                <CustomHeader text={'Detail'} leftIcon isCamer={true} RightIcon={true} />
+                <CustomHeader text={'Detail'} leftIcon isCamer={false} RightIcon={true} />
                 <View style={styles.main_view}>
                     <View style={{ width: windowWidth * 0.8, height: windowHeight * 0.3, borderRadius: SIZES.padding }}>
                         <CustomImage source={require('../Assets/Images/scoter_image.png')} style={{ width: '100%', height: "100%", borderRadius: moderateScale(20, 0.6) }} />

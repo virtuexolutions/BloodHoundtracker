@@ -1,14 +1,15 @@
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
-import {windowHeight, windowWidth} from '../Utillity/utils';
+import { windowHeight, windowWidth } from '../Utillity/utils';
 import Header from '../Components/Header';
 import CustomText from '../Components/CustomText';
-import {moderateScale} from 'react-native-size-matters';
+import { moderateScale } from 'react-native-size-matters';
 import Color from '../Assets/Utilities/Color';
 import GroupCard from '../Components/GroupCard';
 import CustomImage from '../Components/CustomImage';
-import {FONTS} from '../Config/theme';
+import { FONTS } from '../Config/theme';
 import CustomHeader from '../Components/CustomHeader';
+import navigationService from '../navigationService';
 
 const Groups = () => {
   const dummyGroupArray = [
@@ -130,7 +131,7 @@ const Groups = () => {
 
   return (
     <View style={styles.mainContainer}>
-      <CustomHeader leftIcon={true} text={'Groups'}/>
+      <CustomHeader leftIcon={true} text={'Groups'} />
       <FlatList
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{
@@ -156,10 +157,11 @@ const Groups = () => {
         <CustomText isBold style={styles.headingtxt}>
           Suggested Groups
         </CustomText>
-
-        <CustomText isBold style={styles.subtxt}>
-          Create Group
-        </CustomText>
+        <TouchableOpacity onPress={() => navigationService.navigate('CreateGroup')}>
+          <CustomText isBold style={styles.subtxt}>
+            Create Group
+          </CustomText>
+        </TouchableOpacity>
       </View>
       <FlatList
         showsVerticalScrollIndicator={false}

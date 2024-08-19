@@ -8,15 +8,15 @@ import {
 } from 'react-native';
 import React from 'react';
 import CustomHeader from '../Components/CustomHeader';
-import {windowHeight, windowWidth} from '../Utillity/utils';
+import { windowHeight, windowWidth } from '../Utillity/utils';
 import NotificationCard from '../Components/NotificationCard';
-import {moderateScale} from 'react-native-size-matters';
+import { moderateScale } from 'react-native-size-matters';
 import Color from '../Assets/Utilities/Color';
-import {notificationArray} from '../Config/dummyData';
+import { notificationArray } from '../Config/dummyData';
 import CustomText from '../Components/CustomText';
-import {FONTS} from '../Config/theme';
-import {SwipeListView} from 'react-native-swipe-list-view';
-import {Icon} from 'native-base';
+import { FONTS } from '../Config/theme';
+import { SwipeListView } from 'react-native-swipe-list-view';
+import { Icon } from 'native-base';
 import Entypo from 'react-native-vector-icons/Entypo';
 import CustomImage from '../Components/CustomImage';
 
@@ -65,19 +65,17 @@ const NotificationsScreen = () => {
         }}
       /> */}
       <SwipeListView
-
         contentContainerStyle={{
           paddingTop: moderateScale(10, 6),
         }}
         style={{
           width: windowWidth * 0.9,
         }}
-     
         rightOpenValue={-75}
         data={notificationArray}
         renderItem={(item, rowMap) => {
           return (
-            <TouchableOpacity activeOpacity={0.8} onPress={() => {}}>
+            <TouchableOpacity activeOpacity={0.8} onPress={() => { }}>
               <View
                 style={[
                   styles.NotificationCard,
@@ -124,7 +122,7 @@ const NotificationsScreen = () => {
               style={{
                 alignItems: 'center',
                 backgroundColor: Color.themeColor,
-                height: windowHeight * 0.073,
+                height: windowHeight * 0.065,
                 width: windowWidth * 0.15,
                 // padding:moderateScale(10,.6),
                 justifyContent: 'center',
@@ -148,7 +146,7 @@ const NotificationsScreen = () => {
             </TouchableOpacity>
           );
         }}
-        // leftOpenValue={75}
+      // leftOpenValue={75}
       />
     </ScrollView>
   );

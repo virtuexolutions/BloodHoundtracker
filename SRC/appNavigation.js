@@ -29,6 +29,8 @@ import MessagesScreen from './Screens/MessagesScreen';
 import MessageList from './Screens/MessageList';
 import Groups from './Screens/Groups';
 import DetailScreen from './Screens/DetailsScreen';
+import GroupDeatils from './Screens/GroupDeatils';
+import CreateGroup from './Screens/CreateGroup';
 
 
 const AppNavigator = () => {
@@ -69,7 +71,12 @@ const AppNavigator = () => {
           <RootNav.Screen name="LoginScreen" component={LoginScreen} />
           {/* <RootNav.Screen name="Walkthrough" component={Walkthrough} /> */}
           <RootNav.Screen name="Signup" component={Signup} />
-          <RootNav.Screen name="MyDrawer" component={MyDrawer} />
+          <RootNav.Screen name="DetailScreen" component={DetailScreen} />
+          <RootNav.Screen name="GroupDeatils" component={GroupDeatils} />
+          <RootNav.Screen name="MessagesScreen" component={MessagesScreen} />
+          <RootNav.Screen name="CreateGroup" component={CreateGroup} />
+
+          {/* <RootNav.Screen name="MyDrawer" component={MyDrawer} /> */}
         </RootNav.Navigator>
       </NavigationContainer>
     );

@@ -1,24 +1,22 @@
-import {View, Text, TouchableOpacity, FlatList, ScrollView} from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, ScrollView } from 'react-native';
 import React from 'react';
-import {moderateScale, ScaledSheet} from 'react-native-size-matters';
+import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import Color from '../Assets/Utilities/Color';
-import {windowHeight, windowWidth} from '../Utillity/utils';
+import { windowHeight, windowWidth } from '../Utillity/utils';
 import CustomText from './CustomText';
 import CustomImage from './CustomImage';
-import {Icon} from 'native-base';
-import {useSelector} from 'react-redux';
-import {FONTS} from '../Config/theme';
+import { Icon } from 'native-base';
+import { useSelector } from 'react-redux';
+import { FONTS } from '../Config/theme';
 import { color } from 'native-base/lib/typescript/theme/styled-system';
 import Entypo from 'react-native-vector-icons/Entypo'
 
-const NotificationCard = ({image, text, name, time, unread, onPress, item}) => {
+const NotificationCard = ({ image, text, name, time, unread, onPress, item }) => {
   console.log('🚀 ~ NotificationCard ~ item:', item);
   const userRole = useSelector(state => state.commonReducer.selectedRole);
   const userData = useSelector(state => state.commonReducer.userData);
 
   return (
-  
-
     <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
       <View
         style={[
@@ -56,7 +54,7 @@ const NotificationCard = ({image, text, name, time, unread, onPress, item}) => {
         </View>
       </View>
     </TouchableOpacity>
-  
+
   );
 };
 
