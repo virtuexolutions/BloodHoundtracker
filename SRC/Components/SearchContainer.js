@@ -58,7 +58,7 @@ const SearchContainer = ({
               name={'search'}
               as={FontAwesome}
               size={moderateScale(17, 0.3)}
-              color={Color.themeLightGray}
+              color={Color.textColor}
               // style={{backgroundColor : 'red'}}
             />
 
@@ -75,6 +75,8 @@ const SearchContainer = ({
                   marginLeft: moderateScale(10, 0.3),
                   width: windowWidth * 0.6,
                   color: Color.black,
+                  paddingBottom:moderateScale(3,.6)
+                  // marginTop:moderateScale(5,.6)
                   // height:windowHeight*0.06
                   // backgroundColor : 'red'
                 },

@@ -165,7 +165,7 @@ const MainContainer = () => {
   if (isloading == true) {
     return <SplashScreen />;
   }
-  return <GroupDeatils />;
+  return <MessagesScreen/>;
   // <NotificationsScreen />;
 
   // return <DetailScreen />
