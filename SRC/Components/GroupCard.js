@@ -5,6 +5,7 @@ import {moderateScale} from 'react-native-size-matters';
 import CustomText from './CustomText';
 import CustomImage from './CustomImage';
 import CustomButton from './CustomButton';
+import { FONTS } from '../Config/theme';
 
 const GroupCard = ({item}) => {
   console.log("🚀 ~ GroupCard ~ item:", item)
@@ -70,7 +71,9 @@ const styles = StyleSheet.create({
   text: {
     color: Color.textColor,
     width: windowWidth * 0.78,
-    fontSize: moderateScale(13, 0.6),
+    ...FONTS.Regular13,
+    // backgroundColor:'red',
+    // fontSize: moderateScale(13, 0.6),
     paddingHorizontal: moderateScale(10, 0.6),
     width: windowWidth * 0.45,
   },

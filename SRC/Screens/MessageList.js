@@ -1,5 +1,5 @@
 import {FlatList, ScrollView, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import {moderateScale} from 'react-native-size-matters';
 import {windowHeight, windowWidth} from '../Utillity/utils';
 import CustomHeader from '../Components/CustomHeader';
@@ -8,6 +8,7 @@ import { chatlist } from '../Config/dummyData';
 import ChatCard from '../Components/ChatCard';
 
 const MessageList = () => {
+  const [serachData ,setSearchData] =useState('')
 
   return (
     <ScrollView
@@ -21,7 +22,18 @@ const MessageList = () => {
         leftIcon
       />
       <SearchContainer
-      placeholder={'search'}
+      style={{
+        height:windowHeight*0.06
+      }}
+      data={serachData}
+      setData={setSearchData}
+     input={true}
+     inputStyle={{
+      // height:windowHeight*0.03
+
+     }}
+    //  height={windowHeight*0.02}
+      // placeholder={'search'}
       width={windowWidth*0.86}/>
       <FlatList
       showsVerticalScrollIndicator={false}

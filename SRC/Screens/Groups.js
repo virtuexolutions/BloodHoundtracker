@@ -7,6 +7,8 @@ import {moderateScale} from 'react-native-size-matters';
 import Color from '../Assets/Utilities/Color';
 import GroupCard from '../Components/GroupCard';
 import CustomImage from '../Components/CustomImage';
+import {FONTS} from '../Config/theme';
+import CustomHeader from '../Components/CustomHeader';
 
 const Groups = () => {
   const dummyGroupArray = [
@@ -128,8 +130,7 @@ const Groups = () => {
 
   return (
     <View style={styles.mainContainer}>
-      {/* <Header showBack={true} title={'Groups'}/> */}
-      <View style={styles.header}></View>
+      <CustomHeader leftIcon={true} text={'Groups'}/>
       <FlatList
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{
@@ -169,7 +170,6 @@ const Groups = () => {
         }}
         data={dummyGroupArray}
         renderItem={(item, index) => {
-          // console.log("🚀 ~ Groups ~ item:", item?.item)
           return <GroupCard item={item?.item} />;
         }}
       />
@@ -197,11 +197,14 @@ const styles = StyleSheet.create({
   },
   headingtxt: {
     color: Color.mediumGray,
-    fontSize: moderateScale(15, 0.6),
+    ...FONTS.Medium17,
+    letterSpacing: 0.5,
   },
   subtxt: {
     color: Color.themeColor,
-    fontSize: moderateScale(12, 0.6),
+    ...FONTS.Medium13,
+    borderBottomWidth: 1,
+    borderColor: Color.themeColor,
   },
   imageContainer: {
     height: windowHeight * 0.1,

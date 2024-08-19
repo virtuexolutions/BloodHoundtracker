@@ -25,9 +25,20 @@ const MessagesScreen = props => {
   
   useEffect(() => {
     setMessages([
+   
       {
         _id: 1,
-        text: 'Hello developer',
+        text: "Hi,. It is very nice to meet you.",
+        createdAt: new Date(),
+        user: {
+          _id: 1,
+          name: 'React Native',
+          avatar: 'https://placeimg.com/140/140/any',
+        },
+      },
+      {
+        _id: 1,
+        text: "Hello,Tsamara...How are you? It's nice to meet you!",
         createdAt: new Date(),
         user: {
           _id: 2,
@@ -76,7 +87,7 @@ const MessagesScreen = props => {
               width: windowWidth * 0.7,
             }}>
             <CustomText isBold style={styles.text}>
-            hsdjkahsjkd
+            john
             </CustomText>
             {/* <CustomText style={styles.text2}>from</CustomText> */}
           </View>
@@ -86,6 +97,7 @@ const MessagesScreen = props => {
             color: Color.black,
             marginTop: moderateScale(5, 0.3),
           }}
+          
           placeholderTextColor={Color.lightGrey}
           messages={messages}
           isTyping={false}
