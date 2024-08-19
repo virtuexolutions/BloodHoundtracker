@@ -21,6 +21,7 @@ const SearchContainer = ({
   style,
   places,
   inputStyle,
+  placeholder,
 }) => {
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.9}>
@@ -62,7 +63,7 @@ const SearchContainer = ({
             />
 
             <TextInput
-              placeholder="type here"
+              placeholder="search here"
               placeholderTextColor={Color.themeLightGray}
               numberOfLines={1}
               value={data}
@@ -74,6 +75,7 @@ const SearchContainer = ({
                   marginLeft: moderateScale(10, 0.3),
                   width: windowWidth * 0.6,
                   color: Color.black,
+                  // height:windowHeight*0.06
                   // backgroundColor : 'red'
                 },
                 inputStyle && inputStyle,
@@ -86,9 +88,9 @@ const SearchContainer = ({
               style={{
                 // backgroundColor: 'green',
                 fontSize: moderateScale(12, 0.6),
-                color: Color.veryLightGray,
+                color: Color.lightGrey,
               }}>
-              type here
+            { placeholder ?placeholder :'type here'}
             </CustomText>
           </>
         )}

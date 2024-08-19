@@ -9,6 +9,9 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {windowWidth} from '../Utillity/utils';
+import CustomText from './CustomText';
+import { color, position } from 'native-base/lib/typescript/theme/styled-system';
+import { FONTS } from '../Config/theme';
 
 
 const width = Dimensions.get('window').width;
@@ -152,6 +155,7 @@ const DropDownSingleSelect = ({
                   backgroundColor && {color: Color.themeGray},
                 ]}
               />
+            
             </>
           );
         }}
@@ -171,23 +175,19 @@ const styles = ScaledSheet.create({
     backgroundColor: Color.white,
     height: height * 0.06,
     borderRadius: moderateScale(7, 0.3),
+    borderColor: Color.mediumGray,
+    borderWidth:1
   },
   main: {
     position: 'relative',
     backgroundColor: Color.themeInputText,
     height: height * 0.06,
-    // borderBottomWidth: moderateScale(1, 0.3),
     borderColor: 'lightgrey',
     marginTop: moderateScale(6, 0.3),
-    // borderRadius: moderateScale(20, 0.3),
     paddingLeft: moderateScale(32, 0.3),
-    // width: width * 0.8,
   },
   dropDownBtnText: {
-    //////
-    // backgroundColor: "red",
     width: width * 0.75,
-    // marginLeft: 38,
     fontSize: moderateScale(15, 0.3),
     color: Color.themeLightGray,
     textAlign: 'left',

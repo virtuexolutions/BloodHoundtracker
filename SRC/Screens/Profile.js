@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {moderateScale} from 'react-native-size-matters';
 import {windowHeight, windowWidth} from '../Utillity/utils';
 import Color from '../Assets/Utilities/Color';
@@ -17,9 +17,15 @@ import StolenAssetsCard from '../Components/StolenAssetsCard';
 import SearchContainer from '../Components/SearchContainer';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Icon} from 'native-base';
-import { color } from 'native-base/lib/typescript/theme/styled-system';
+import {color} from 'native-base/lib/typescript/theme/styled-system';
+import Card from '../Components/Card';
+import {homeListData} from '../Config/dummyData';
+import CustomHeader from '../Components/CustomHeader';
+import { FONTS } from '../Config/theme';
+import { useNavigation } from '@react-navigation/native';
 
 const Profile = () => {
+    // const navigation =useNavigation()
   const stolenAssetsArray = [
     {
       id: 1,
@@ -50,14 +56,23 @@ const Profile = () => {
       post: '10K Posts',
     },
   ];
+  const [stolenAssets, setStolenAssets] = useState('');
+  const [foundedAssets, setFoundedAssets] = useState('');
+  const [selected, setSelected] = useState('');
 
   return (
     <ScrollView
+    showsVerticalScrollIndicator={false}
       style={styles.mainContainer}
       contentContainerStyle={{
         alignItems: 'center',
         paddingBottom: moderateScale(20, 0.6),
       }}>
+      <CustomHeader
+        text={'profile'}
+        leftIcon
+
+      />
       <View style={styles.border}>
         <View style={styles.imageContainer}>
           <CustomImage
@@ -214,7 +229,12 @@ const Profile = () => {
           return <StolenAssetsCard item={item?.item} />;
         }}
       />
-      <CustomText  style={{fontSize: moderateScale(13, 0.6) ,paddingVertical:moderateScale(10,.6) ,color:Color.textColor}}>
+      <CustomText
+        style={{
+          fontSize: moderateScale(13, 0.6),
+          paddingVertical: moderateScale(10, 0.6),
+          color: Color.textColor,
+        }}>
         View all
       </CustomText>
       <View style={styles.post_card}>
@@ -238,6 +258,25 @@ const Profile = () => {
           />
         </View>
       </View>
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        style={{
+          marginVertical: moderateScale(20, 0.6),
+          marginBottom: moderateScale(40, 0.6),
+        }}
+        ListFooterComponent={<View style={{height: moderateScale(50, 0.6)}} />}
+        data={homeListData}
+        renderItem={({item, index}) => {
+          return (
+            <Card
+              setSelected={setSelected}
+              selected={selected}
+              fromProfile={true}
+              item={item}
+            />
+          );
+        }}
+      />
     </ScrollView>
   );
 };
@@ -256,7 +295,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   border: {
-    marginTop: windowHeight * 0.1,
+    marginTop: windowHeight * 0.03,
     height: windowHeight * 0.155,
     width: windowHeight * 0.155,
     borderRadius: (windowHeight * 0.155) / 2,
@@ -301,7 +340,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttons_text: {
-    fontSize: moderateScale(13, 0.6),
+    ...FONTS.Medium13,
     color: Color.textColor,
   },
   container: {
@@ -309,7 +348,7 @@ const styles = StyleSheet.create({
     paddingVertical: moderateScale(10, 0.6),
   },
   contact: {
-    fontSize: moderateScale(16, 0.6),
+    ...FONTS.Medium17,
     color: Color.textColor,
   },
   text_row: {
@@ -322,7 +361,7 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(5, 0.6),
   },
   post_text: {
-    fontSize: moderateScale(15, 0.6),
+    ...FONTS.Medium15,
     color: Color.textColor,
     paddingHorizontal: moderateScale(10, 0.6),
     paddingTop: moderateScale(5, 0.6),
@@ -333,8 +372,7 @@ const styles = StyleSheet.create({
     // alignItems:'center',
     justifyContent: 'space-between',
     paddingHorizontal: moderateScale(10, 0.6),
-    paddingBottom:moderateScale(10,.6)
-
+    paddingBottom: moderateScale(10, 0.6),
   },
   post_image: {
     height: windowHeight * 0.05,

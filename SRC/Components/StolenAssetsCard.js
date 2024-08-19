@@ -1,13 +1,14 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {windowHeight, windowWidth} from '../Utillity/utils';
 import Color from '../Assets/Utilities/Color';
 import {moderateScale} from 'react-native-size-matters';
 import CustomText from './CustomText';
 import CustomImage from './CustomImage';
+import { FONTS } from '../Config/theme';
 
 const StolenAssetsCard = ({item}) => {
-  console.log("🚀 ~ StolenAssetsCard ~ item:", item)
+  console.log('🚀 ~ StolenAssetsCard ~ item:', item);
   return (
     <View style={styles.card}>
       <View
@@ -24,7 +25,7 @@ const StolenAssetsCard = ({item}) => {
                 paddingHorizontal: moderateScale(5, 0.6),
               },
             ]}>
-          {item?.assetsName}
+            {item?.assetsName}
           </CustomText>
         </View>
         <View style={styles.text_row}>
@@ -63,6 +64,7 @@ const StolenAssetsCard = ({item}) => {
           source={require('../Assets/Images/Bike.png')}
         />
       </View>
+    
     </View>
   );
 };
@@ -81,7 +83,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   buttons_text: {
-    fontSize: moderateScale(13, 0.6),
+    ...FONTS.Medium13,
     color: Color.textColor,
   },
   text_row: {
@@ -89,7 +91,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: moderateScale(10, 0.6),
   },
   imageContainer: {
-    paddingTop:moderateScale(5,.6),
+    paddingTop: moderateScale(5, 0.6),
     height: windowHeight * 0.1,
     width: windowWidth * 0.2,
     borderRadius: moderateScale(5, 0.6),

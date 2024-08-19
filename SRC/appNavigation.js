@@ -1,13 +1,13 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import { moderateScale } from 'react-native-size-matters';
+import {moderateScale} from 'react-native-size-matters';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 import Color from './Assets/Utilities/Color';
 import Drawer from './Drawer/Drawer';
 import navigationService from './navigationService';
@@ -15,11 +15,11 @@ import HomeScreen from './Screens/HomeScreen';
 import LoginScreen from './Screens/LoginScreen';
 import Signup from './Screens/Signup';
 
-import { Icon } from 'native-base';
-import { View } from 'react-native';
+import {Icon} from 'native-base';
+import {View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Settings from './Screens/Settings';
-import { windowHeight } from './Utillity/utils';
+import {windowHeight, windowWidth} from './Utillity/utils';
 
 const AppNavigator = () => {
   // const isLogin = false;
@@ -33,7 +33,7 @@ const AppNavigator = () => {
   const RootNavLogged = createNativeStackNavigator();
 
   const AppNavigatorContainer = () => {
-    const firstScreen = 'LoginScreen';
+    const firstScreen = 'TabNavigation';
     // walkThrough == false
     //   ? 'Walkthrough'
     //   : token != null &&
@@ -59,7 +59,7 @@ const AppNavigator = () => {
           <RootNav.Screen name="LoginScreen" component={LoginScreen} />
           {/* <RootNav.Screen name="Walkthrough" component={Walkthrough} /> */}
           <RootNav.Screen name="Signup" component={Signup} />
-        
+
           <RootNav.Screen name="MyDrawer" component={MyDrawer} />
         </RootNav.Navigator>
       </NavigationContainer>
@@ -74,8 +74,6 @@ export const TabNavigation = () => {
   const Tabs = createBottomTabNavigator();
   return (
     <Tabs.Navigator
-      // style={{ backgroundColor: 'green' }}
-
       screenOptions={({route}) => ({
         headerShown: false,
         tabBarIcon: ({focused}) => {
@@ -83,7 +81,9 @@ export const TabNavigation = () => {
           let color = Color.white;
           let size = moderateScale(20, 0.3);
           let type = Ionicons;
-
+          let iconview = (
+            <View style={{height: 20, width: 20, backgroundColor: 'red'}} />
+          );
           if (
             route.name === 'HomeScreen' ||
             route.name === 'NegotiatorHomeScreen'
@@ -146,48 +146,70 @@ export const TabNavigation = () => {
             // color = focused  && ? ? Color.blue : userRole == 'Vendor' ? '#91E7BF' : userRole == 'Manager'? '#000147'  : Color.white;
             size = focused ? moderateScale(30, 0.3) : moderateScale(20, 0.3);
           }
-          return route.name == 'CreateNew' ? (
+          return focused ? (
             <View
               style={{
-                borderWidth: 5,
-                borderColor: Color.lightGrey,
-                height: moderateScale(60, 0.3),
-                width: moderateScale(60, 0.3),
-                borderRadius: moderateScale(30, 0.3),
-                backgroundColor: '#16232B',
-                justifyContent: 'center',
+                width: moderateScale(80, 0.6),
+                height: moderateScale(70, 0.5),
+                backgroundColor: Color.themeColor,
+                borderRadius: moderateScale(100, 0.6),
                 alignItems: 'center',
-                marginTop: moderateScale(-30, 0.3),
+                justifyContent: 'center',
+                position: 'absolute',
+                bottom: moderateScale(6, 0.6),
               }}>
-              <Icon
-                name={'plus'}
-                as={type}
-                color={Color.white}
-                size={moderateScale(30, 0.3)}
-              />
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  width: 45,
+                  height: 45,
+                  borderRadius: moderateScale(20, 0.6),
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Icon name={iconName} as={type} color={color} size={size} />
+              </View>
             </View>
           ) : (
             <Icon name={iconName} as={type} color={color} size={size} />
           );
+
+          // route.name == 'CreateNew' ? (
+          //   <View
+          //     style={{
+          //       borderWidth: 5,
+          //       borderColor: Color.lightGrey,
+          //       height: moderateScale(60, 0.3),
+          //       width: moderateScale(60, 0.3),
+          //       borderRadius: moderateScale(30, 0.3),
+          //       backgroundColor: '#16232B',
+          //       justifyContent: 'center',
+          //       alignItems: 'center',
+          //       marginTop: moderateScale(-30, 0.3),
+          //     }}>
+          //     <Icon
+          //       name={'plus'}
+          //       as={type}
+          //       color={Color.white}
+          //       size={moderateScale(30, 0.3)}
+          //     />
+          //   </View>
+          // ) : (
+          //   <Icon name={iconName} as={type} color={color} size={size} />
+          // );
         },
         tabBarBackground: () => (
           <View
             style={{
-              flex: 1,
-              // backgroundColor: 'red',
-            }}>
-            <LinearGradient
-              start={{x: 0, y: 0}}
-              end={{x: 0, y: 1}}
-              colors={['#16232B', '#464646']}
-              style={{height: windowHeight * 0.1}}
-            />
-          </View>
+              backgroundColor: '#0000FE',
+              height: moderateScale(50, 0.6),
+              width: windowWidth,
+            }}
+          />
         ),
         tabBarShowLabel: false,
       })}>
       <Tabs.Screen name={'HomeScreen'} component={HomeScreen} />
-   
       <Tabs.Screen name={'Settings'} component={Settings} />
     </Tabs.Navigator>
   );

@@ -9,10 +9,10 @@ import {Icon} from 'native-base';
 import {useSelector} from 'react-redux';
 
 const NotificationCard = ({image, text, name, time, unread, onPress, item}) => {
- 
+  console.log("🚀 ~ NotificationCard ~ item:", item)
   const userRole = useSelector(state => state.commonReducer.selectedRole);
   const userData = useSelector(state => state.commonReducer.userData);
- 
+
   return (
     <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
       <View
@@ -26,17 +26,12 @@ const NotificationCard = ({image, text, name, time, unread, onPress, item}) => {
           },
         ]}>
         <View style={styles.image}>
-          <CustomImage
-            source={userRole == 'Qbid Member' ? item?.image :{uri: image}}
-
-            style={styles.imageBg}
-          />
+          <CustomImage source={item?.profile_image} style={styles.imageBg} />
         </View>
         <View style={{marginLeft: moderateScale(10, 0.3)}}>
-          <View
-            style={styles.row}>
+          <View style={styles.row}>
             <CustomText style={styles.subHeading}>
-              {name ? name  : 'Dimebag Darrel'}
+              {item?.name}
             </CustomText>
             <CustomText style={styles.time}>
               {time ? time : '- Just Now'}
@@ -50,7 +45,7 @@ const NotificationCard = ({image, text, name, time, unread, onPress, item}) => {
               color: Color.themeBlack,
               //   backgroundColor: "red",
             }}>
-            {userRole == 'Qbid Member' ?  text :`Mr ${name} is looking for an ${item?.service_preference} expert to help him .`}
+           {item?.text}
           </CustomText>
         </View>
       </View>
@@ -103,10 +98,13 @@ const styles = ScaledSheet.create({
   NotificationCard: {
     width: windowWidth,
     flexDirection: 'row',
-    paddingVertical: moderateScale(10, 0.3),
+    paddingVertical: moderateScale(6, 0.3),
     paddingLeft: moderateScale(10, 0.3),
     borderColor: Color.themeLightGray,
     alignItems: 'center',
+    width:windowWidth*0.9,
+    backgroundColor:'white',
+    marginBottom:moderateScale(10,.6)
   },
   row: {
     width: windowWidth * 0.7,
@@ -114,7 +112,7 @@ const styles = ScaledSheet.create({
     justifyContent: 'space-between',
     marginTop: moderateScale(10, 0.3),
     marginHorizontal: moderateScale(15, 0.3),
-  }
+  },
 });
 
 export default NotificationCard;

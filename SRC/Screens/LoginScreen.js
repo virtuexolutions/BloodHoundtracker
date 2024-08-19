@@ -121,7 +121,7 @@ const LoginScreen = () => {
           width={windowWidth * 0.85}
           height={windowHeight * 0.07}
           marginTop={moderateScale(20, 0.3)}
-          onPress={() => {}}
+          onPress={() => navigation.navigate('TabNavigation')}
           bgColor={Color.themeColor}
           borderRadius={moderateScale(30, 0.3)}
           elevation
@@ -183,7 +183,7 @@ const LoginScreen = () => {
 
 const styles = ScaledSheet.create({
   imageContainer: {
-    marginTop:windowHeight * 0.08 ,
+    marginTop: windowHeight * 0.08,
     height: windowHeight * 0.25,
     width: windowWidth * 0.8,
   },
@@ -229,7 +229,7 @@ const styles = ScaledSheet.create({
   heading: {
     color: Color.black,
     fontSize: moderateScale(18, 0.6),
-    marginTop:windowHeight*0.025,
+    marginTop: windowHeight * 0.025,
   },
   text: {
     color: Color.darkGray,
