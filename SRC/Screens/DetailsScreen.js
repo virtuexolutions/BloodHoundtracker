@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native'
+import { FlatList, StyleSheet, ScrollView, View } from 'react-native'
 import React from 'react'
 import CustomStatusBar from '../Components/CustomStatusBar'
 import Color from '../Assets/Utilities/Color'

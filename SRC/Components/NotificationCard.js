@@ -18,7 +18,6 @@ const NotificationCard = ({image, text, name, time, unread, onPress, item}) => {
       <View
         style={[
           styles.NotificationCard,
-
           unread && {
             backgroundColor: 'rgba(223, 254, 250,0.7)',
             // borderWidth: 0,

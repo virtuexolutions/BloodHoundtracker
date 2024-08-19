@@ -10,30 +10,30 @@ import { notificationArray } from '../Config/dummyData'
 const NotificationsScreen = () => {
   return (
     <ScrollView
-    style={styles.mainContainer}
-    contentContainerStyle={{
-      paddingBottom: moderateScale(20, 0.6),
-        alignItems:'center'
-    }}>
-    <CustomHeader
-      text={'message'}
-      leftIcon
-    />
-  <FlatList
-    showsVerticalScrollIndicator={false}
-    contentContainerStyle={{
-      paddingTop:windowHeight*0.02,
-    }}
-    numColumns={1}
-    data={notificationArray}
-    renderItem={(item ,index) => {
-      console.log("🚀 ~ MessageList ~ item:", item?.item)
-      return(
-          <NotificationCard item={item?.item}/>
-      )
-    }}
-    />
-  </ScrollView>
+      style={styles.mainContainer}
+      contentContainerStyle={{
+        paddingBottom: moderateScale(20, 0.6),
+        alignItems: 'center'
+      }}>
+      <CustomHeader
+        text={'message'}
+        leftIcon
+      />
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingTop: windowHeight * 0.02,
+        }}
+        numColumns={1}
+        data={notificationArray}
+        renderItem={(item, index) => {
+          console.log("🚀 ~ MessageList ~ item:", item?.item)
+          return (
+            <NotificationCard item={item?.item} />
+          )
+        }}
+      />
+    </ScrollView>
   )
 }
 
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: moderateScale(10, 0.6),
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop:windowHeight*0.03
+    paddingTop: windowHeight * 0.03
   },
   text2: {
     fontSize: moderateScale(10, 0.6),

@@ -27,8 +27,8 @@ const HomeScreen = () => {
           </View>
           <FlatList
             showsVerticalScrollIndicator={false}
-            style={{ marginVertical: moderateScale(20, 0.6), marginBottom: moderateScale(40, 0.6) }}
-            ListFooterComponent={<View style={{ height: moderateScale(50, 0.6) }} />}
+            style={{ marginVertical: moderateScale(20, 0.6), marginBottom: moderateScale(70, 0.6) }}
+            ListFooterComponent={<View style={{ paddingBottom: moderateScale(80, 0.6) }} />}
             data={homeListData}
             renderItem={({ item, index }) => {
               return <Card item={item} />

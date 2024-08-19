@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {Platform} from 'react-native';
-import {PersistGate} from 'redux-persist/integration/react';
-import {Provider, useDispatch, useSelector} from 'react-redux';
-import {PermissionsAndroid} from 'react-native';
-import {NativeBaseProvider} from 'native-base';
-import {store, persistor} from './SRC/Store/index';
+import React, { useEffect, useState } from 'react';
+import { Platform } from 'react-native';
+import { PersistGate } from 'redux-persist/integration/react';
+import { Provider, useDispatch, useSelector } from 'react-redux';
+import { PermissionsAndroid } from 'react-native';
+import { NativeBaseProvider } from 'native-base';
+import { store, persistor } from './SRC/Store/index';
 // import {stripeKey} from './SRC/Config';
 // import {
 //   requestCameraPermission,
@@ -165,7 +165,8 @@ const MainContainer = () => {
   if (isloading == true) {
     return <SplashScreen />;
   }
-  return <GroupDeatils />;
+  return <AppNavigator />
+  // <GroupDeatils />;
   // <NotificationsScreen />;
 
   // return <DetailScreen />
