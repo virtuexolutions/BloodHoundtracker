@@ -18,33 +18,41 @@ import { Post } from '../Axios/AxiosInterceptorFunction';
 import { setUserToken } from '../Store/slices/auth';
 import { setUserData } from '../Store/slices/common';
 
-const LoginScreen = () => {
+const ResetPassword = ({route, navigation}) => {
+const changePasswordEmail = route?.params?.email
   const dispatch = useDispatch();
-  const navigation = useNavigation();
+//   const navigation = useNavigation();
   const userRole = useSelector(state => state.commonReducer.selectedRole);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(changePasswordEmail);
   const [password, setPassword] = useState('');
-  const [selectedRole, setSelectedType] = useState(
-    userRole ? userRole : 'Customer',
-  );
+  const [confirmPassword, setConfirmPassword] = useState('');
 
-  const Login = async () => {
-    const url = 'login';
-    const body = {email: email, password: password};
+  const resetPassword = async () => {
+    const url = 'password/reset';
+    const body = {email: email, password: password, confirm_password: confirmPassword};
+for (let key in body){
+  if(body[key] == ''){
+    return Platform.OS == 'android'
+    ? ToastAndroid.show(`${key} field is empty`, ToastAndroid.SHORT)
+    : Alert.alert(`${key} field is empty`);
+  }
+}
+    if(password !== confirmPassword) {
+      return   Platform.OS == 'android'
+      ? ToastAndroid.show("Passwords didn't match", ToastAndroid.SHORT)
+      : Alert.alert("Passwords didn't match");
+    }
     setIsLoading(true);
     const response = await Post(url, body, apiHeader());
     setIsLoading(false);
 
     if (response != undefined) {
       Platform.OS == 'android'
-        ? ToastAndroid.show('User LoggedIn successfully', ToastAndroid.SHORT)
-        : Alert.alert('User LoggedIn successfully');
-
-      dispatch(setUserToken({token: response?.data?.token}));
-      dispatch(setUserData(response?.data?.user_info));
-    
+        ? ToastAndroid.show('Password Changed Successfully!', ToastAndroid.SHORT)
+        : Alert.alert('Password Changed Successfully!');
+        navigation.navigate('LoginScreen')
     }
   };
 
@@ -74,10 +82,10 @@ const LoginScreen = () => {
           />
         </View>
         <CustomText isBold style={styles.heading}>
-          welcome back!
+          Create New Password
         </CustomText>
         <CustomText style={styles.text}>
-          Let’s login for explore continues
+          Passwords must Match
         </CustomText>
 
         <View style={styles.titleContainer}>
@@ -107,9 +115,9 @@ const LoginScreen = () => {
           <TextInputWithTitle
             iconName={'lock'}
             iconType={AntDesign}
-            titleText={'Enter your password'}
+            titleText={'Password'}
             secureText={true}
-            placeholder={'Enter your password'}
+            placeholder={'Password'}
             setText={setPassword}
             value={password}
             viewHeight={0.06}
@@ -122,81 +130,54 @@ const LoginScreen = () => {
             marginBottom={moderateScale(10, 0.3)}
           />
         </View>
-        <CustomText
+        <View style={{paddingTop: windowHeight * 0.015}}>
+          <CustomText style={styles.title}>Confirm Password</CustomText>
+
+          <TextInputWithTitle
+            iconName={'lock'}
+            iconType={AntDesign}
+            titleText={'Confirm Password'}
+            secureText={true}
+            placeholder={'Confirm Password'}
+            setText={setConfirmPassword}
+            value={confirmPassword}
+            viewHeight={0.06}
+            viewWidth={0.85}
+            inputWidth={0.8}
+            backgroundColor={'#FFFFFF'}
+            marginTop={moderateScale(5, 0.6)}
+            color={Color.darkGray}
+            placeholderColor={Color.themeLightGray}
+            marginBottom={moderateScale(10, 0.3)}
+          />
+        </View>
+        
+        {/* <CustomText
           onPress={() => {
-            navigationService.navigate('EnterEmail');
+            navigationService.navigate('EnterPhone', {fromForgot: true});
           }}
           style={styles.txt3}>
           {'Forgot Password?'}
-        </CustomText>
+        </CustomText> */}
 
         <CustomButton
           text={
             isLoading ? (
               <ActivityIndicator color={'#FFFFFF'} size={'small'} />
             ) : (
-              'Login'
+              'Change Passsword'
             )
           }
           textColor={Color.white}
           width={windowWidth * 0.85}
           height={windowHeight * 0.07}
           marginTop={moderateScale(20, 0.3)}
-          onPress={Login}
+          onPress={resetPassword}
           bgColor={Color.themeColor}
           borderRadius={moderateScale(30, 0.3)}
           elevation
         />
-        <View style={styles.row}>
-          <View style={styles.line}></View>
-          <CustomText style={styles.connect}>You can Connect </CustomText>
-          <View style={styles.line}></View>
-        </View>
-        <View style={styles.second_row}>
-          <View style={styles.icon}>
-            <CustomImage
-              style={{
-                height: '100%',
-                width: '100%',
-              }}
-              source={require('../Assets/Images/google.png')}
-            />
-          </View>
-          <View style={styles.icon}>
-            <CustomImage
-              style={{
-                height: '100%',
-                width: '100%',
-              }}
-              source={require('../Assets/Images/mac.png')}
-            />
-          </View>
-        </View>
-
-        <View style={styles.container2}>
-          <CustomText style={styles.txt5}>
-            {"Don't have an account? "}
-          </CustomText>
-
-          <TouchableOpacity
-            activeOpacity={0.8}
-            style={{
-              marginLeft: windowWidth * 0.01,
-              borderBottomWidth: 1,
-              borderColor: Color.themeColor,
-            }}
-            onPress={() => navigationService.navigate('Signup')}>
-            <CustomText
-              style={[
-                styles.txt4,
-                {
-                  color: Color.themeColor,
-                },
-              ]}>
-              {'Sign Up here'}
-            </CustomText>
-          </TouchableOpacity>
-        </View>
+ 
       </ScrollView>
     </>
   );
@@ -218,8 +199,8 @@ const styles = ScaledSheet.create({
   },
 
   txt3: {
-    fontSize: moderateScale(13, 0.6),
-    alignSelf: 'flex-end',
+    fontSize: moderateScale(10, 0.6),
+    alignSelf: 'center',
     fontWeight: '600',
   },
 
@@ -279,4 +260,4 @@ const styles = ScaledSheet.create({
   },
 });
 
-export default LoginScreen;
+export default ResetPassword;

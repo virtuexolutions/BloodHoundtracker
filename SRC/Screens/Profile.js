@@ -23,9 +23,13 @@ import { homeListData } from '../Config/dummyData';
 import CustomHeader from '../Components/CustomHeader';
 import { FONTS } from '../Config/theme';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+import { baseUrl } from '../Config';
 
 const Profile = () => {
   // const navigation =useNavigation()
+  const profileData = useSelector(state => state.commonReducer.userData)
+  console.log("🚀 ~ Profile ~ profileData:", profileData)
   const stolenAssetsArray = [
     {
       id: 1,
@@ -71,6 +75,7 @@ const Profile = () => {
       <CustomHeader
         text={'profile'}
         leftIcon
+        logout
 
       />
       <View style={styles.border}>
@@ -80,12 +85,14 @@ const Profile = () => {
               height: '100%',
               width: '100%',
             }}
-            source={require('../Assets/Images/dummyman1.png')}
+            source={{uri:`${baseUrl}${profileData?.photo}`}}
+            // source={require('../Assets/Images/dummyman1.png')}
           />
         </View>
       </View>
       <CustomText isBold style={styles.user_name}>
-        Emmanuel robertsen
+        {/* Emmanuel robertsen */}
+        {profileData?.name}
       </CustomText>
       <TouchableOpacity>
         <CustomText style={styles.btn}>edit profile</CustomText>
@@ -142,7 +149,7 @@ const Profile = () => {
                 paddingHorizontal: moderateScale(5, 0.6),
               },
             ]}>
-            +1 000 000
+            {profileData?.phone}
           </CustomText>
         </View>
         <View style={styles.text_row}>
@@ -155,7 +162,8 @@ const Profile = () => {
                 paddingHorizontal: moderateScale(5, 0.6),
               },
             ]}>
-            Example@g`mail.com
+            {/* Example@g`mail.com */}
+{profileData?.email}
           </CustomText>
         </View>
         <View style={styles.text_row}>
@@ -168,7 +176,8 @@ const Profile = () => {
                 paddingHorizontal: moderateScale(5, 0.6),
               },
             ]}>
-            +1 000 000
+            {/* +1 000 000 */}
+            {profileData?.phone}
           </CustomText>
         </View>
         <View style={styles.text_row}>
@@ -181,7 +190,7 @@ const Profile = () => {
                 paddingHorizontal: moderateScale(5, 0.6),
               },
             ]}>
-            Example Office
+            {profileData?.work}
           </CustomText>
         </View>
         <View style={styles.text_row}>
@@ -194,7 +203,7 @@ const Profile = () => {
                 paddingHorizontal: moderateScale(5, 0.6),
               },
             ]}>
-            Newyork
+            {profileData?.live_in}
           </CustomText>
         </View>
         <View style={styles.text_row}>
@@ -207,7 +216,7 @@ const Profile = () => {
                 paddingHorizontal: moderateScale(5, 0.6),
               },
             ]}>
-            Broklyn
+            {profileData?.from}
           </CustomText>
         </View>
       </View>

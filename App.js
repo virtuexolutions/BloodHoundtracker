@@ -27,6 +27,9 @@ import MessageList from './SRC/Screens/MessageList';
 import MessagesScreen from './SRC/Screens/MessagesScreen';
 import NotificationsScreen from './SRC/Screens/NotificationsScreen';
 import GroupDeatils from './SRC/Screens/GroupDeatils';
+import ResetPassword from './SRC/Screens/ResetPassword';
+import EnterEmail from './SRC/Screens/EnterEmail';
+import { requestCameraPermission, requestLocationPermission, requestReadPermission, requestWritePermission } from './SRC/Utillity/utils';
 // import AddCard from './SRC/Screens/AddCard';
 
 const App = () => {
@@ -161,11 +164,30 @@ const MainContainer = () => {
   //     GetPermission();
   //   }, []);
 
+  useEffect(() => {
+    async function GetPermission() {
+      await requestCameraPermission();
+      await requestWritePermission();
+      await requestLocationPermission();
+      await requestReadPermission();
+  //  await   requestNotificationPermission()
+      // await requestManagePermission();
+
+    }
+    GetPermission();
+  }, []);
+
+
   const [isloading] = useloader(true);
   if (isloading == true) {
     return <SplashScreen />;
   }
   return <AppNavigator />
+  // return <ResetPassword/>
+  // return <EnterEmail/>
+  // return <VerifyNumber/>
+  // return <Numberverfication/>
+  // return <ResetPassword/>
   // <GroupDeatils />;
   // <NotificationsScreen />;
 

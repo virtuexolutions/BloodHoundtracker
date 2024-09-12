@@ -42,8 +42,8 @@ const ImagePickerModal = props => {
         },
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        return true
         console.log('You can use the camera');
+        return true
         // openCamera()
       } else {
         // ToastAndroid.show('Camera permission denied' , ToastAndroid.SHORT)

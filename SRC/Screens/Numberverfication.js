@@ -1,11 +1,12 @@
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
-import React, {useState} from 'react';
+import {StyleSheet, Text,ScrollView, View, TouchableOpacity, ToastAndroid, Platform, ActivityIndicator} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import CustomImage from '../Components/CustomImage';
 import CustomText from '../Components/CustomText';
-import {windowHeight, windowWidth} from '../Utillity/utils';
+import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
 import Color from '../Assets/Utilities/Color';
 import {moderateScale} from 'react-native-size-matters';
 import CustomButton from '../Components/CustomButton';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import CardContainer from '../Components/CardContainer';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {
@@ -14,8 +15,13 @@ import {
   useBlurOnFulfill,
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
+import navigationService from '../navigationService';
+import { Post } from '../Axios/AxiosInterceptorFunction';
+import { Icon } from 'native-base';
 
-const Numberverfication = () => {
+const Numberverfication = (props) => {
+  const email = props?.route?.params?.email;
+  const Code= props?.route?.params?.code;
   const [code, setCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [abcd, getCellOnLayoutHandler] = useClearByFocusCell({
@@ -35,22 +41,65 @@ const Numberverfication = () => {
   const label = () => {
     time == 0 && (settimerLabel('Resend Code '), settime(''));
   };
+  const VerifyOTP = async () => {
+    const url = 'password/code/check';
+    setIsLoading(true);
+    console.log(code);
+    const response = await Post(url, {code: code}, apiHeader());
+    setIsLoading(false);
+    if (response != undefined) {
+      Platform.OS == 'android'
+        ? ToastAndroid.show(`otp verified`, ToastAndroid.SHORT)
+        : alert(`otp verified`);
 
+      navigationService.navigate('ResetPassword', {email: email});
+    }
+  };
+
+  useEffect(() => {
+    label();
+  }, [time]);
   return (
-    <View style={styles.mainContainer}>
+    <ScrollView 
+    contentContainerStyle={styles.mainContainer}
+    // style={styles.mainContainer}
+    >
       <View style={styles.imageContainer}>
         <CustomImage
           style={{height: '100%', width: '100%'}}
           source={require('../Assets/Images/otp.png')}
         />
       </View>
+      <Icon
+          name={'arrow-back'}
+          as={MaterialIcons}
+          size={moderateScale(27, 0.3)}
+          color={Color.lightGrey}
+          style={{
+            position: 'absolute',
+            top: moderateScale(12,0.2),
+            left: moderateScale(10, 0.3),
+          }}
+          onPress={() => {
+            // navigation.goBack()
+          }}
+        />
       <CustomText isBold style={styles.heading}>
         Verification
       </CustomText>
       <CustomText style={styles.text}>
-        We send OPT number on your phone
-      </CustomText>
+      Enter the Code that has been sent to your email address :
 
+      <CustomText isBold style={styles.text}>
+                  user3@gmail.com
+                  {/* {email} */}
+                </CustomText>
+        {/* We send OPT number on your phone */}
+      </CustomText>
+     
+      <CustomText style={[styles.text, {fontSize: moderateScale(24,0.3)}]}>
+{Code}
+      </CustomText>
      
         <CodeField
           placeholder={'4'}
@@ -73,19 +122,37 @@ const Numberverfication = () => {
             </View>
           )}
         />
+             <CustomText style={[styles.txt3, {width: windowWidth * 0.6}]}>
+              Haven't Recieved Verification Code ?{' '}
+              {
+                <TouchableOpacity
+                  disabled={timerLabel == 'Resend Code ' ? false : true}
+                  onPress={() => {
+                    settimerLabel('ReSend in '), settime(120);
+                  }}>
+                  <CustomText style={{color: Color.themeColor}}>
+
+                    {timerLabel} {time}
+                  </CustomText>
+                </TouchableOpacity>
+              }
+            </CustomText>
        
       <CustomButton
-        text={'Verify'}
+        text={ 
+          isLoading ? <ActivityIndicator  size={'small'} color={'white'}/> :
+          'Verify'}
         textColor={Color.white}
         width={windowWidth * 0.8}
         height={windowHeight * 0.06}
         marginTop={moderateScale(30, 0.3)}
         onPress={() => {
+          VerifyOTP( )
         }}
         bgColor={Color.themeColor}
         borderRadius={moderateScale(30, 0.3)}
       />
-    </View>
+    </ScrollView>
   );
 };
 

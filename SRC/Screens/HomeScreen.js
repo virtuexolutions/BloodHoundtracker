@@ -9,8 +9,12 @@ import { moderateScale } from 'react-native-size-matters';
 import { homeListData } from '../Config/dummyData';
 import Card from '../Components/Card';
 import { SIZES } from '../Config/theme';
+import { useSelector } from 'react-redux';
 
 const HomeScreen = () => {
+  const profileData = useSelector(state => state.commonReducer.userData)
+  console.log("🚀 ~ Profile ~ profileData:", profileData)
+
   return (
     <>
       <CustomStatusBar backgroundColor={Color.background_color} barStyle={'dark-content'} />

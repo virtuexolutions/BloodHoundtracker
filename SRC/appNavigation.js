@@ -31,6 +31,9 @@ import Groups from './Screens/Groups';
 import DetailScreen from './Screens/DetailsScreen';
 import GroupDeatils from './Screens/GroupDeatils';
 import CreateGroup from './Screens/CreateGroup';
+import EnterEmail from './Screens/EnterEmail';
+import Numberverfication from './Screens/Numberverfication';
+import ResetPassword from './Screens/ResetPassword';
 
 
 const AppNavigator = () => {
@@ -45,7 +48,7 @@ const AppNavigator = () => {
   const RootNavLogged = createNativeStackNavigator();
 
   const AppNavigatorContainer = () => {
-    const firstScreen = 'LoginScreen';
+    // const firstScreen = 'LoginScreen';
     // walkThrough == false
     //   ? 'Walkthrough'
     //   : token != null &&
@@ -55,12 +58,16 @@ const AppNavigator = () => {
     //   : token != null
     //   ? ''
     //   : 'LoginScreen';
+    const firstScreen =
+   token == null
+    ? 'LoginScreen'
+    : 'TabNavigation';
     // const firstScreen =
     // walkThrough == false
     // ? 'WalkThroughScreen'
     // : token == null
     // ? 'LoginScreen'
-    // : 'drawer';
+    // : 'TabNavigation';
 
     return (
       <NavigationContainer ref={navigationService.navigationRef}>
@@ -75,6 +82,11 @@ const AppNavigator = () => {
           <RootNav.Screen name="GroupDeatils" component={GroupDeatils} />
           <RootNav.Screen name="MessagesScreen" component={MessagesScreen} />
           <RootNav.Screen name="CreateGroup" component={CreateGroup} />
+          <RootNav.Screen name="EnterEmail" component={EnterEmail} />
+          <RootNav.Screen name="VerifyNumber" component={Numberverfication} />
+          <RootNav.Screen name="ResetPassword" component={ResetPassword} />
+
+
 
           {/* <RootNav.Screen name="MyDrawer" component={MyDrawer} /> */}
         </RootNav.Navigator>

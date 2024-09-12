@@ -36,16 +36,86 @@ import {Post} from '../Axios/AxiosInterceptorFunction';
 import {useNavigation} from '@react-navigation/native';
 
 const Signup = () => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
+
   const [image, setImage] = useState({});
   const [firstName, setFirstName] = useState('');
   const [email, setEmail] = useState('');
   const [contact, setContact] = useState('');
+  const [workPlace, setWorkPlace] = useState('');
+  const [residence, setResidence] = useState('');
+  const [homeTown, setHomeTown] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
+  const SignUp = async () => {
+    const body = {
+      name: firstName,
+      email: email,
+      phone: contact,
+      from: homeTown,
+      live_in: residence,
+      work: workPlace,
+      password: password,
+      confirm_password: confirmPassword,
+    };
+    const formData = new FormData();
+
+    if (Object.keys(image).length > 0) {
+      formData.append('photo', image);
+    } 
+    for (let key in body) {
+    //   if (body[key] === '') {
+    //     return Platform.OS == 'android'
+    //       ? ToastAndroid.show(` ${key} field is empty`, ToastAndroid.SHORT)
+    //       : Alert.alert(` ${key} field is empty`);
+    //   }
+    // }
+    if (body[key] == '') {
+      return Platform.OS == 'android'
+        ? ToastAndroid.show(`${key} field is empty`, ToastAndroid.SHORT)
+        : Alert.alert(`${key} field is empty`);
+    }
+    formData.append(key, body[key]);
+  }
+    if (!validateEmail(email)) {
+      return Platform.OS == 'android'
+        ? ToastAndroid.show('email is not validate', ToastAndroid.SHORT)
+        : Alert.alert('email is not validate');
+    }
+    if (password.length < 8) {
+      return Platform.OS == 'android'
+        ? ToastAndroid.show(
+            'Password should atleast 8 character long',
+            ToastAndroid.SHORT,
+          )
+        : Alert.alert('Password should atleast 8 character long');
+    }
+    if (password != confirmPassword) {
+      return Platform.OS == 'android'
+        ? ToastAndroid.show('Password does not match', ToastAndroid.SHORT)
+        : Alert.alert('Password does not match');
+    }
+
+    const url = 'register';
+    // return console.log("🚀 ~ SignUp ~ body:", JSON.stringify(formData, null, 2))
+  
+    setIsLoading(true);
+    const response = await Post(url, formData, apiHeader());
+    setIsLoading(false);
+    if (response != undefined) {
+      Platform.OS === 'android'
+        ? ToastAndroid.show('User Registered Succesfully', ToastAndroid.SHORT)
+        : Alert.alert('User Registered Succesfully');
+      dispatch(setUserData(response?.data?.user_info));
+      dispatch(setUserToken({token: response?.data?.token}));      
+      // navigation.navigate('TabNavigation');
+
+    }
+  };
   return (
     <>
       <CustomStatusBar backgroundColor={'#F9F9F9'} barStyle={'dark-content'} />
@@ -107,9 +177,45 @@ const Signup = () => {
           welcome back!
         </CustomText>
         <CustomText style={styles.text}>
-          Let’s login for explore continues
+          Let’s Signup for explore continues
         </CustomText>
+        <View>
+        <View
+              style={[
+                styles.profileSection,
+              ]}>
+              <CustomImage
+                source={
+                  Object.keys(image).length > 0 
+                    ?  
+                   {uri:image?.uri}
+                    : require('../Assets/Images/dummyUser.png')
+                }
+                style={{
+                  height: '100%',
+                  width: '100%',
+                }}
+                resizeMode={'cover'}
+              />
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                // setImagePickerModal(true);
+                // openGallery()
+              }}
+              style={styles.editButton}>
+              <Icon
+                name={'pencil'}
+                as={FontAwesome}
+                color={'white'}
+                size={moderateScale(15,0.2)}
+                onPress={() => {
+                  setShowModal(true);
+                }}
+              />
+            </TouchableOpacity>
 
+        </View>
         <TextInputWithTitle
           titleText={'full Name'}
           secureText={false}
@@ -158,6 +264,53 @@ const Signup = () => {
           keyboardType={'numeric'}
         />
 
+<TextInputWithTitle
+          titleText={'Works at'}
+          secureText={false}
+          placeholder={'Where do you work? (Company Name)'}
+          setText={setWorkPlace}
+          value={workPlace}
+          viewHeight={0.06}
+          viewWidth={0.8}
+          inputWidth={0.8}
+          borderColor={'#ffffff'}
+          backgroundColor={'#FFFFFF'}
+          marginTop={moderateScale(15, 0.3)}
+          color={Color.themeColor}
+          placeholderColor={Color.themeLightGray}
+        />
+        
+        <TextInputWithTitle
+          titleText={'Email'}
+          secureText={false}
+          placeholder={'Where do you live? (State, city, or country)'}
+          setText={setResidence}
+          value={residence}
+          viewHeight={0.06}
+          viewWidth={0.8}
+          inputWidth={0.8}
+          borderColor={'#ffffff'}
+          backgroundColor={'#FFFFFF'}
+          marginTop={moderateScale(15, 0.3)}
+          color={Color.themeColor}
+          placeholderColor={Color.themeLightGray}
+        />
+        
+        <TextInputWithTitle
+          titleText={'Email'}
+          secureText={false}
+          placeholder={'Where are you from? (Hometown)' }
+          setText={setHomeTown}
+          value={homeTown}
+          viewHeight={0.06}
+          viewWidth={0.8}
+          inputWidth={0.8}
+          borderColor={'#ffffff'}
+          backgroundColor={'#FFFFFF'}
+          marginTop={moderateScale(15, 0.3)}
+          color={Color.themeColor}
+          placeholderColor={Color.themeLightGray}
+        /> 
         <TextInputWithTitle
           titleText={'Password'}
           secureText={true}
@@ -201,10 +354,11 @@ const Signup = () => {
           marginTop={moderateScale(10, 0.3)}
           onPress={() => {
             // Register();
-            navigation.navigate('HomeScreen');
+            SignUp()
           }}
           bgColor={Color.themeColor}
           borderRadius={moderateScale(30, 0.3)}
+          disabled={isLoading}
         />
         <View style={styles.container2}>
           <CustomText style={styles.txt5}>
@@ -242,11 +396,30 @@ const styles = ScaledSheet.create({
   bottomImage: {
     width: windowWidth * 0.4,
   },
-
+  editButton:{
+    backgroundColor:'blue',
+    borderRadius: (windowWidth * 0.08) / 2,
+    width: windowWidth * 0.08,
+    height: windowWidth * 0.08,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    right: 5,
+    bottom:20
+  
+  },
   textContainer: {
     marginTop: moderateScale(20, 0.3),
   },
-
+  profileSection: {
+    height: windowWidth * 0.4,
+    width: windowWidth * 0.4,
+    backgroundColor: '#EEEEEE',
+    borderRadius: (windowWidth * 0.4) / 2,
+    marginTop: moderateScale(40, 0.3),
+    overflow: 'hidden',
+    // borderWidth: 4,
+  },
   Heading: {
     fontSize: moderateScale(20, 0.3),
     color: '#ffffff',
