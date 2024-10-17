@@ -6,6 +6,8 @@ import React from 'react';
 import { moderateScale } from 'react-native-size-matters';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useSelector } from 'react-redux';
 import Color from './Assets/Utilities/Color';
@@ -19,7 +21,17 @@ import { Icon } from 'native-base';
 import { View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Settings from './Screens/Settings';
-import { windowHeight } from './Utillity/utils';
+import { windowHeight, windowWidth } from './Utillity/utils';
+import NotificationsScreen from './Screens/NotificationsScreen';
+import Profile from './Screens/Profile';
+import GroupCard from './Components/GroupCard';
+import MessagesScreen from './Screens/MessagesScreen';
+import MessageList from './Screens/MessageList';
+import Groups from './Screens/Groups';
+import DetailScreen from './Screens/DetailsScreen';
+import GroupDeatils from './Screens/GroupDeatils';
+import CreateGroup from './Screens/CreateGroup';
+
 
 const AppNavigator = () => {
   // const isLogin = false;
@@ -54,18 +66,21 @@ const AppNavigator = () => {
       <NavigationContainer ref={navigationService.navigationRef}>
         <RootNav.Navigator
           initialRouteName={firstScreen}
-          screenOptions={{headerShown: false}}>
+          screenOptions={{ headerShown: false }}>
           <RootNav.Screen name="TabNavigation" component={TabNavigation} />
           <RootNav.Screen name="LoginScreen" component={LoginScreen} />
           {/* <RootNav.Screen name="Walkthrough" component={Walkthrough} /> */}
           <RootNav.Screen name="Signup" component={Signup} />
-        
-          <RootNav.Screen name="MyDrawer" component={MyDrawer} />
+          <RootNav.Screen name="DetailScreen" component={DetailScreen} />
+          <RootNav.Screen name="GroupDeatils" component={GroupDeatils} />
+          <RootNav.Screen name="MessagesScreen" component={MessagesScreen} />
+          <RootNav.Screen name="CreateGroup" component={CreateGroup} />
+
+          {/* <RootNav.Screen name="MyDrawer" component={MyDrawer} /> */}
         </RootNav.Navigator>
       </NavigationContainer>
     );
   };
-
   return <AppNavigatorContainer />;
 };
 
@@ -74,121 +89,123 @@ export const TabNavigation = () => {
   const Tabs = createBottomTabNavigator();
   return (
     <Tabs.Navigator
-      // style={{ backgroundColor: 'green' }}
-
-      screenOptions={({route}) => ({
+      initialRouteName='HomeScreen'
+      screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarIcon: ({focused}) => {
+        tabBarIcon: ({ focused }) => {
           let iconName;
           let color = Color.white;
           let size = moderateScale(20, 0.3);
           let type = Ionicons;
-
-          if (
-            route.name === 'HomeScreen' ||
-            route.name === 'NegotiatorHomeScreen'
-          ) {
-            iconName = focused ? 'home' : 'home-outline';
-            color = focused
-              ? userRole == 'Customer'
-                ? Color.blue
-                : userRole == 'Vendor'
-                ? '#91E7BF'
-                : '#000147'
-              : Color.white;
-            size = focused ? moderateScale(30, 0.3) : moderateScale(20, 0.3);
-          } else if (route.name === 'ChatScreen') {
-            type = Ionicons;
-            iconName = focused
-              ? 'chatbubble-ellipses-sharp'
-              : 'chatbubble-ellipses-outline';
-            color = focused
-              ? userRole == 'Customer'
-                ? Color.blue
-                : userRole == 'Vendor'
-                ? '#91E7BF'
-                : '#000147'
-              : Color.white;
-            size = focused ? moderateScale(30, 0.3) : moderateScale(20, 0.3);
-          } else if (route.name === 'NotificationScreen') {
+          if (route.name === 'MessageList') {
+            iconName = focused ? 'tune' : 'tune';
+            type = MaterialIcons;
+            color = focused ? Color.themeColor : Color.white;
+            size = focused ? moderateScale(25, 0.3) : moderateScale(20, 0.3);
+          }
+          else if (route.name === 'Groups') {
+            iconName = focused ? 'search' : 'search';
             type = FontAwesome;
-            iconName = focused ? 'bell' : 'bell-o';
-
-            color = focused
-              ? userRole == 'Customer'
-                ? Color.blue
-                : userRole == 'Vendor'
-                ? '#91E7BF'
-                : '#000147'
-              : Color.white;
-            size = focused ? moderateScale(30, 0.3) : moderateScale(20, 0.3);
-          } else if (route.name === 'CreateNew') {
-            type = AntDesign;
-            iconName = focused ? 'Plus' : 'Plus';
-            color = focused
-              ? userRole == 'Customer'
-                ? Color.blue
-                : userRole == 'Vendor'
-                ? '#91E7BF'
-                : '#000147'
-              : Color.white;
-            size = focused ? moderateScale(30, 0.3) : moderateScale(20, 0.3);
-          } else {
-            iconName = focused ? 'settings-outline' : 'settings-sharp';
-            color = focused
-              ? userRole == 'Customer'
-                ? Color.blue
-                : userRole == 'Vendor'
-                ? '#91E7BF'
-                : '#000147'
-              : Color.white;
-
-            // color = focused  && ? ? Color.blue : userRole == 'Vendor' ? '#91E7BF' : userRole == 'Manager'? '#000147'  : Color.white;
+            color = focused ? Color.themeColor : Color.white;
             size = focused ? moderateScale(30, 0.3) : moderateScale(20, 0.3);
           }
-          return route.name == 'CreateNew' ? (
+          else if (route.name === 'HomeScreen') {
+            iconName = focused ? 'home-outline' : 'home';
+            type = Ionicons;
+            color = focused ? Color.themeColor : Color.white;
+            size = focused ? moderateScale(30, 0.3) : moderateScale(20, 0.3);
+          }
+          else if (route?.name == 'NotificationsScreen') {
+            // size = focused ? moderateScale(30, 0.3) : moderateScale(20, 0.3);
+            // iconName = focused ? 'user-circle-o' : 'user-circle';
+            // color = focused ? Color.themeColor : Color.white;
+            // type = FontAwesome
+            iconName = focused ? 'notifications-outline' : 'notifications';
+            color = focused ? Color.themeColor : Color.white;
+            size = focused ? moderateScale(30, 0.3) : moderateScale(20, 0.3);
+          } else {
+            size = focused ? moderateScale(30, 0.3) : moderateScale(20, 0.3);
+            iconName = focused ? 'user-circle-o' : 'user-circle';
+            color = focused ? Color.themeColor : Color.white;
+            type = FontAwesome
+          }
+          return focused ? (
             <View
               style={{
-                borderWidth: 5,
-                borderColor: Color.lightGrey,
-                height: moderateScale(60, 0.3),
-                width: moderateScale(60, 0.3),
-                borderRadius: moderateScale(30, 0.3),
-                backgroundColor: '#16232B',
-                justifyContent: 'center',
+                width: moderateScale(80, 0.6),
+                height: moderateScale(70, 0.5),
+                backgroundColor: Color.themeColor,
+                // borderRadius: moderateScale(80, 0.6),
                 alignItems: 'center',
-                marginTop: moderateScale(-30, 0.3),
+                justifyContent: 'center',
+                position: 'absolute',
+                bottom: moderateScale(6, 0.6),
+                borderTopLeftRadius: moderateScale(40, 0.6),
+                borderTopRightRadius: moderateScale(40, 0.6)
               }}>
-              <Icon
-                name={'plus'}
-                as={type}
-                color={Color.white}
-                size={moderateScale(30, 0.3)}
-              />
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  width: windowHeight * 0.07,
+                  height: windowHeight * 0.07,
+                  borderRadius: moderateScale(windowHeight * 0.08) / 2,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+
+                }}>
+                <Icon name={iconName} as={type} color={color} size={size} />
+              </View>
             </View>
+            // <ReanimatedCurvedTabBar height={230} reactNaviagtionBar={true}   {...props} iconsArray={[...Array(ARRAY_LENGTH)].map((item, index) => (
+            //   <View style={styles.icon}>
+            //     <Text>{index + 1}</Text>
+            //   </View>
+            // ))}
+            //   allowDropAnime={true} />
           ) : (
             <Icon name={iconName} as={type} color={color} size={size} />
           );
+
+          // route.name == 'CreateNew' ? (
+          //   <View
+          //     style={{
+          //       borderWidth: 5,
+          //       borderColor: Color.lightGrey,
+          //       height: moderateScale(60, 0.3),
+          //       width: moderateScale(60, 0.3),
+          //       borderRadius: moderateScale(30, 0.3),
+          //       backgroundColor: '#16232B',
+          //       justifyContent: 'center',
+          //       alignItems: 'center',
+          //       marginTop: moderateScale(-30, 0.3),
+          //     }}>
+          //     <Icon
+          //       name={'plus'}
+          //       as={type}
+          //       color={Color.white}
+          //       size={moderateScale(30, 0.3)}
+          //     />
+          //   </View>
+          // ) : (
+          //   <Icon name={iconName} as={type} color={color} size={size} />
+          // );
         },
         tabBarBackground: () => (
           <View
             style={{
-              flex: 1,
-              // backgroundColor: 'red',
-            }}>
-            <LinearGradient
-              start={{x: 0, y: 0}}
-              end={{x: 0, y: 1}}
-              colors={['#16232B', '#464646']}
-              style={{height: windowHeight * 0.1}}
-            />
-          </View>
+              backgroundColor: '#0000FE',
+              height: moderateScale(50, 0.6),
+              width: windowWidth,
+            }}
+          />
         ),
         tabBarShowLabel: false,
       })}>
+      <Tabs.Screen name={'MessageList'} component={MessageList} />
+      <Tabs.Screen name='Groups' component={Groups} />
       <Tabs.Screen name={'HomeScreen'} component={HomeScreen} />
-   
-      <Tabs.Screen name={'Settings'} component={Settings} />
+      <Tabs.Screen name={'NotificationsScreen'} component={NotificationsScreen} />
+      <Tabs.Screen name={'Profile'} component={Profile} />
     </Tabs.Navigator>
   );
 };

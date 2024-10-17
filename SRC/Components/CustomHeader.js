@@ -13,10 +13,11 @@ import CustomText from './CustomText';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { FONTS } from '../Config/theme';
+import { useNavigation } from '@react-navigation/native';
 
 const CustomHeader = ({ leftIcon, RightIcon, isCamer, text, style }) => {
   const dispatch = useDispatch()
-  // const navigation = useNavigation();
+  const navigation = useNavigation();
 
   return (
     <View style={[styles.header, style && style]}>
@@ -31,7 +32,7 @@ const CustomHeader = ({ leftIcon, RightIcon, isCamer, text, style }) => {
             left: moderateScale(10, 0.3),
           }}
           onPress={() => {
-            // navigation.goBack()
+            navigation.goBack()
           }}
         />
       }
@@ -47,8 +48,9 @@ const CustomHeader = ({ leftIcon, RightIcon, isCamer, text, style }) => {
             right: moderateScale(10, 0.3),
           }}
           onPress={() => {
-            dispatch(setUserLogOut())
-            dispatch(setUserLogoutAuth())
+            navigation.navigate('MessageList')
+            // dispatch(setUserLogOut())
+            // dispatch(setUserLogoutAuth())
           }}
         />
       }

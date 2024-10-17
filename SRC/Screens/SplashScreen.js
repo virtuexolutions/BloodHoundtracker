@@ -13,36 +13,26 @@ const SplashScreen = () => {
   return (
     <ScreenBoiler
      
-      statusBarBackgroundColor={'#2c3e50'}
+      statusBarBackgroundColor={Color.themeColor}
       statusBarContentStyle={"light-content"}
     >
- <ImageBackground
-        style={{
-          flex: 1,
-          justifyContent : 'center',
-          alignItems : 'center',
-          // width: windowWidth,
-          // height: windowHeight,
-         
-        }}
-        resizeMode={'stretch'}
-        source={require('../Assets/Images/bg3.png')}>
+      <View style={styles.container}>
+    <View style={{
+      // backgroundColor:'red',
+      height:windowHeight*0.25,
+      width:windowWidth*0.49
+    }}>
+      <CustomImage
+      style={{width:'100%',height:'100%'}}
+      source={require('../Assets/Images/splash.png')}
+      />
+    </View>
+
+      </View>
+ 
      
-        <Animatable.View
-          animation="zoomInUp"
-          duration={2500}
-          useNativeDriver
-          style={[styles?.textContainer]}
-        
-          
-        >
-          <CustomImage
-            source={backgroundImage}
-            resizeMode={"contain"}
-            style={[styles.bottomImage]}
-          />
-        </Animatable.View>
-    </ImageBackground>
+  
+
     </ScreenBoiler>
   );
 };
@@ -50,7 +40,7 @@ const SplashScreen = () => {
 const styles = ScaledSheet.create({
   container: {
     flex: 1,
-    // alignItems: "center",
+    alignItems: "center",
     justifyContent: "center",
     height: windowHeight,
     width: windowWidth,

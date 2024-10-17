@@ -1,19 +1,22 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
-import {moderateScale} from 'react-native-size-matters';
-import {apiHeader, windowWidth} from '../Utillity/utils';
+import { moderateScale } from 'react-native-size-matters';
+import { apiHeader, windowWidth } from '../Utillity/utils';
 import CustomImage from './CustomImage';
 import CustomText from './CustomText';
 import Color from '../Assets/Utilities/Color';
 import moment from 'moment';
-import {useState} from 'react';
-import {useEffect} from 'react';
-import {useSelector} from 'react-redux';
-import {useNavigation} from '@react-navigation/native';
-import {Get, Post} from '../Axios/AxiosInterceptorFunction';
-import {Token} from '@stripe/stripe-react-native';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+import { Get, Post } from '../Axios/AxiosInterceptorFunction';
+import { Token } from '@stripe/stripe-react-native';
+import { FONTS } from '../Config/theme';
+import navigationService from '../navigationService';
 
 const ChatCard = ({
+  item,
   name,
   image,
   lastmessage,
@@ -23,45 +26,25 @@ const ChatCard = ({
   target_id,
   conversationId,
 }) => {
+  console.log('🚀 ~ item:', item);
   const token = useSelector(state => state.authReducer.token);
 
   const userRole = useSelector(state => state.commonReducer.selectedRole);
   const [isLoading, setIsLoading] = useState(false);
-  const navigation = useNavigation();
-
-  const ReadMessages = async () => {
-    const url = `auth/message_read/${conversationId}`;
-    setIsLoading(true);
-    const response = await Get(url, token);
-    setIsLoading(false);
-    if (response != undefined) {
-    
-      navigation.navigate('MessagesScreen', {
-        data: target_id,
-        name: name,
-        image: image,
-        conversationId: conversationId,
-      });
-    }
-  };
-
 
   return (
     <TouchableOpacity
-      onPress={() => {
-        ReadMessages();
-      }}
+      onPress={() => navigationService.navigate('MessagesScreen')}
       activeOpacity={0.8}
       style={{
         width: windowWidth * 0.95,
         alignSelf: 'center',
         flexDirection: 'row',
         paddingVertical: moderateScale(5, 0.4),
-        // backgroundColor: 'yellow',
       }}>
       <View style={styles.image}>
         <CustomImage
-          source={{uri: image}}
+          source={item?.profile_image}
           style={{
             width: '100%',
             height: '100%',
@@ -74,15 +57,10 @@ const ChatCard = ({
         <CustomText
           isBold
           style={{
-            fontSize: moderateScale(12, 0.3),
-            color:
-              userRole == 'Qbid Member'
-                ? Color.blue
-                : userRole == 'Qbid Negotiator'
-                ? Color.themeColor
-                : Color.black,
+            ...FONTS.Regular12,
+            color: Color.textColor,
           }}>
-          {name}
+          {item?.name}
         </CustomText>
         <CustomText
           numberOfLines={1}
@@ -90,7 +68,7 @@ const ChatCard = ({
             fontSize: moderateScale(11, 0.3),
             color: Color.themeBlack,
           }}>
-          {lastmessage}
+          {item?.text}
         </CustomText>
       </View>
       <View
@@ -100,7 +78,7 @@ const ChatCard = ({
           width: windowWidth * 0.2,
           marginTop: moderateScale(5, 0.3),
         }}>
-        {/* <CustomText
+        <CustomText
           isBold
           style={{
             fontSize: moderateScale(9, 0.3),
@@ -111,8 +89,9 @@ const ChatCard = ({
           {moment.duration(moment().diff(date)).asDays() >= 6
             ? moment(date).format('ll')
             : moment(date).fromNow()}
-        </CustomText> */}
-        {unreadCount > 0 && (
+        </CustomText>
+
+        {item?.undread > 0 && (
           <View
             style={{
               width: moderateScale(15, 0.3),
@@ -122,8 +101,8 @@ const ChatCard = ({
                 userRole == 'Qbid Member'
                   ? Color.blue
                   : userRole == 'Qbid Negotiator'
-                  ? Color.themeColor
-                  : Color.black,
+                    ? Color.themeColor
+                    : Color.black,
               justifyContent: 'center',
               alignItems: 'center',
               overflow: 'hidden',
@@ -137,7 +116,7 @@ const ChatCard = ({
                 color: Color.white,
               }}>
               {/* 5 */}
-              {unreadCount}
+              {item?.undread}
             </CustomText>
           </View>
         )}

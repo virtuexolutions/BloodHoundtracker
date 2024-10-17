@@ -21,6 +21,7 @@ const SearchContainer = ({
   style,
   places,
   inputStyle,
+  placeholder,
 }) => {
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.9}>
@@ -57,12 +58,12 @@ const SearchContainer = ({
               name={'search'}
               as={FontAwesome}
               size={moderateScale(17, 0.3)}
-              color={Color.themeLightGray}
+              color={Color.textColor}
               // style={{backgroundColor : 'red'}}
             />
 
             <TextInput
-              placeholder="Search here"
+              placeholder="search here"
               placeholderTextColor={Color.themeLightGray}
               numberOfLines={1}
               value={data}
@@ -74,6 +75,9 @@ const SearchContainer = ({
                   marginLeft: moderateScale(10, 0.3),
                   width: windowWidth * 0.6,
                   color: Color.black,
+                  paddingBottom:moderateScale(3,.6)
+                  // marginTop:moderateScale(5,.6)
+                  // height:windowHeight*0.06
                   // backgroundColor : 'red'
                 },
                 inputStyle && inputStyle,
@@ -86,9 +90,9 @@ const SearchContainer = ({
               style={{
                 // backgroundColor: 'green',
                 fontSize: moderateScale(12, 0.6),
-                color: Color.veryLightGray,
+                color: Color.lightGrey,
               }}>
-              Search here
+            { placeholder ?placeholder :'type here'}
             </CustomText>
           </>
         )}
@@ -105,7 +109,8 @@ const styles = ScaledSheet.create({
     marginTop: moderateScale(10, 0.3),
     // borderWidth: 0.5,
     borderRadius:20,
-    borderColor: Color.lightGrey,
+    borderWidth:1,
+    borderColor: Color.mediumGray,
     backgroundColor: Color.white,
     borderRadius: moderateScale(5, 0.3),
     paddingVertical: moderateScale(8, 0.3),

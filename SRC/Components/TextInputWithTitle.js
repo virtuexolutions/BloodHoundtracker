@@ -26,7 +26,7 @@ const TextInputWithTitle = props => {
     {props?.title &&
 
       <CustomText style={{
-        color : Color.white,
+        color : Color.black,
         fontSize : moderateScale(12,0.3),
         marginBottom : moderateScale(5,0.3),
         width : windowWidth * props.viewWidth,
@@ -39,8 +39,8 @@ const TextInputWithTitle = props => {
         styles.fieldSet,
         {
           width: windowWidth * props.viewWidth,
-          borderWidth: props.border,
-          borderColor: props.borderColor,
+            borderWidth: props.border,
+            borderColor: props.borderColor,
           backgroundColor: props.backgroundColor,
         },
         props.elevation &&{

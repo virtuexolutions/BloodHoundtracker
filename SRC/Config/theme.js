@@ -41,6 +41,14 @@ export const FONTS = {
         fontFamily: 'Rubik-Regular',
         fontSize: SIZES.h10,
     },
+    Regular11: {
+        fontFamily: 'Rubik-Regular',
+        fontSize: SIZES.h11,
+    },
+    Regular13: {
+        fontFamily: 'Rubik-Regular',
+        fontSize: SIZES.h13,
+    },
     Regular12: {
         fontFamily: 'Rubik-Regular',
         fontSize: SIZES.h12,
@@ -72,6 +80,10 @@ export const FONTS = {
     Medium11: {
         fontFamily: 'Rubik-Medium',
         fontSize: SIZES.h11,
+    },
+    Medium12: {
+        fontFamily: 'Rubik-Medium',
+        fontSize: SIZES.h12,
     },
     Medium13: {
         fontFamily: 'Rubik-Medium',

@@ -2,9 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Platform } from 'react-native';
 import { PersistGate } from 'redux-persist/integration/react';
 import { Provider, useDispatch, useSelector } from 'react-redux';
-// import {StripeProvider} from '@stripe/stripe-react-native';
-// import messaging, { firebase } from '@react-native-firebase/messaging';
-// import PushNotification, {Notifications} from 'react-native-push-notification'
 import { PermissionsAndroid } from 'react-native';
 import { NativeBaseProvider } from 'native-base';
 import { store, persistor } from './SRC/Store/index';
@@ -19,9 +16,17 @@ import { store, persistor } from './SRC/Store/index';
 // } from './SRC/Utillity/utils';
 import SplashScreen from './SRC/Screens/SplashScreen';
 import AppNavigator from './SRC/appNavigation';
+import Numberverfication from './SRC/Screens/Numberverfication';
+import Groups from './SRC/Screens/Groups';
+import CreateGroup from './SRC/Screens/CreateGroup';
+import Profile from './SRC/Screens/Profile';
 import HomeScreen from './SRC/Screens/HomeScreen';
-import CreateNew from './SRC/Screens/CreateNew';
 import DetailScreen from './SRC/Screens/DetailsScreen';
+import CreatePost from './SRC/Screens/CreatePost';
+import MessageList from './SRC/Screens/MessageList';
+import MessagesScreen from './SRC/Screens/MessagesScreen';
+import NotificationsScreen from './SRC/Screens/NotificationsScreen';
+import GroupDeatils from './SRC/Screens/GroupDeatils';
 // import AddCard from './SRC/Screens/AddCard';
 
 const App = () => {
@@ -160,7 +165,11 @@ const MainContainer = () => {
   if (isloading == true) {
     return <SplashScreen />;
   }
-  return <DetailScreen />
+  return <AppNavigator />
+  // <GroupDeatils />;
+  // <NotificationsScreen />;
+
+  // return <DetailScreen />
   // <HomeScreen/>
   //  <AppNavigator />;
   // <HomeScreen />
