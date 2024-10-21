@@ -1,15 +1,15 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import { moderateScale } from 'react-native-size-matters';
+import {moderateScale} from 'react-native-size-matters';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 import Color from './Assets/Utilities/Color';
 import Drawer from './Drawer/Drawer';
 import navigationService from './navigationService';
@@ -17,11 +17,11 @@ import HomeScreen from './Screens/HomeScreen';
 import LoginScreen from './Screens/LoginScreen';
 import Signup from './Screens/Signup';
 
-import { Icon } from 'native-base';
-import { View } from 'react-native';
+import {Icon} from 'native-base';
+import {View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Settings from './Screens/Settings';
-import { windowHeight, windowWidth } from './Utillity/utils';
+import {windowHeight, windowWidth} from './Utillity/utils';
 import NotificationsScreen from './Screens/NotificationsScreen';
 import Profile from './Screens/Profile';
 import GroupCard from './Components/GroupCard';
@@ -34,7 +34,8 @@ import CreateGroup from './Screens/CreateGroup';
 import EnterEmail from './Screens/EnterEmail';
 import Numberverfication from './Screens/Numberverfication';
 import ResetPassword from './Screens/ResetPassword';
-
+import EditProfile from './Screens/EditProfile';
+import CreatePost from './Screens/CreatePost';
 
 const AppNavigator = () => {
   // const isLogin = false;
@@ -58,10 +59,7 @@ const AppNavigator = () => {
     //   : token != null
     //   ? ''
     //   : 'LoginScreen';
-    const firstScreen =
-   token == null
-    ? 'LoginScreen'
-    : 'TabNavigation';
+    const firstScreen = token == null ? 'LoginScreen' : 'TabNavigation';
     // const firstScreen =
     // walkThrough == false
     // ? 'WalkThroughScreen'
@@ -73,7 +71,7 @@ const AppNavigator = () => {
       <NavigationContainer ref={navigationService.navigationRef}>
         <RootNav.Navigator
           initialRouteName={firstScreen}
-          screenOptions={{ headerShown: false }}>
+          screenOptions={{headerShown: false}}>
           <RootNav.Screen name="TabNavigation" component={TabNavigation} />
           <RootNav.Screen name="LoginScreen" component={LoginScreen} />
           {/* <RootNav.Screen name="Walkthrough" component={Walkthrough} /> */}
@@ -85,7 +83,8 @@ const AppNavigator = () => {
           <RootNav.Screen name="EnterEmail" component={EnterEmail} />
           <RootNav.Screen name="VerifyNumber" component={Numberverfication} />
           <RootNav.Screen name="ResetPassword" component={ResetPassword} />
-
+          <RootNav.Screen name="EditProfile" component={EditProfile} />
+          <RootNav.Screen name="CreatePost" component={CreatePost} />
 
 
           {/* <RootNav.Screen name="MyDrawer" component={MyDrawer} /> */}
@@ -101,10 +100,10 @@ export const TabNavigation = () => {
   const Tabs = createBottomTabNavigator();
   return (
     <Tabs.Navigator
-      initialRouteName='HomeScreen'
-      screenOptions={({ route }) => ({
+      initialRouteName="HomeScreen"
+      screenOptions={({route}) => ({
         headerShown: false,
-        tabBarIcon: ({ focused }) => {
+        tabBarIcon: ({focused}) => {
           let iconName;
           let color = Color.white;
           let size = moderateScale(20, 0.3);
@@ -114,20 +113,17 @@ export const TabNavigation = () => {
             type = MaterialIcons;
             color = focused ? Color.themeColor : Color.white;
             size = focused ? moderateScale(25, 0.3) : moderateScale(20, 0.3);
-          }
-          else if (route.name === 'Groups') {
+          } else if (route.name === 'Groups') {
             iconName = focused ? 'search' : 'search';
             type = FontAwesome;
             color = focused ? Color.themeColor : Color.white;
             size = focused ? moderateScale(30, 0.3) : moderateScale(20, 0.3);
-          }
-          else if (route.name === 'HomeScreen') {
+          } else if (route.name === 'HomeScreen') {
             iconName = focused ? 'home-outline' : 'home';
             type = Ionicons;
             color = focused ? Color.themeColor : Color.white;
             size = focused ? moderateScale(30, 0.3) : moderateScale(20, 0.3);
-          }
-          else if (route?.name == 'NotificationsScreen') {
+          } else if (route?.name == 'NotificationsScreen') {
             // size = focused ? moderateScale(30, 0.3) : moderateScale(20, 0.3);
             // iconName = focused ? 'user-circle-o' : 'user-circle';
             // color = focused ? Color.themeColor : Color.white;
@@ -139,7 +135,7 @@ export const TabNavigation = () => {
             size = focused ? moderateScale(30, 0.3) : moderateScale(20, 0.3);
             iconName = focused ? 'user-circle-o' : 'user-circle';
             color = focused ? Color.themeColor : Color.white;
-            type = FontAwesome
+            type = FontAwesome;
           }
           return focused ? (
             <View
@@ -153,7 +149,7 @@ export const TabNavigation = () => {
                 position: 'absolute',
                 bottom: moderateScale(6, 0.6),
                 borderTopLeftRadius: moderateScale(40, 0.6),
-                borderTopRightRadius: moderateScale(40, 0.6)
+                borderTopRightRadius: moderateScale(40, 0.6),
               }}>
               <View
                 style={{
@@ -163,18 +159,17 @@ export const TabNavigation = () => {
                   borderRadius: moderateScale(windowHeight * 0.08) / 2,
                   alignItems: 'center',
                   justifyContent: 'center',
-
                 }}>
                 <Icon name={iconName} as={type} color={color} size={size} />
               </View>
             </View>
+          ) : (
             // <ReanimatedCurvedTabBar height={230} reactNaviagtionBar={true}   {...props} iconsArray={[...Array(ARRAY_LENGTH)].map((item, index) => (
             //   <View style={styles.icon}>
             //     <Text>{index + 1}</Text>
             //   </View>
             // ))}
             //   allowDropAnime={true} />
-          ) : (
             <Icon name={iconName} as={type} color={color} size={size} />
           );
 
@@ -214,9 +209,12 @@ export const TabNavigation = () => {
         tabBarShowLabel: false,
       })}>
       <Tabs.Screen name={'MessageList'} component={MessageList} />
-      <Tabs.Screen name='Groups' component={Groups} />
+      <Tabs.Screen name="Groups" component={Groups} />
       <Tabs.Screen name={'HomeScreen'} component={HomeScreen} />
-      <Tabs.Screen name={'NotificationsScreen'} component={NotificationsScreen} />
+      <Tabs.Screen
+        name={'NotificationsScreen'}
+        component={NotificationsScreen}
+      />
       <Tabs.Screen name={'Profile'} component={Profile} />
     </Tabs.Navigator>
   );

@@ -1,24 +1,24 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React, { useState } from 'react';
-import { moderateScale } from 'react-native-size-matters';
+import {StyleSheet, Text, View} from 'react-native';
+import React, {useState} from 'react';
+import {moderateScale} from 'react-native-size-matters';
 import CustomText from './CustomText';
-import { TouchableOpacity } from 'react-native';
-import { apiHeader, windowHeight, windowWidth } from '../Utillity/utils';
+import {TouchableOpacity} from 'react-native';
+import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
 import CustomImage from './CustomImage';
 import Modal from 'react-native-modal';
 import CustomButton from './CustomButton';
-import { Post } from '../Axios/AxiosInterceptorFunction';
-import { useSelector } from 'react-redux';
+import {Post} from '../Axios/AxiosInterceptorFunction';
+import {useSelector} from 'react-redux';
 import Color from '../Assets/Utilities/Color';
-import { color } from 'native-base/lib/typescript/theme/styled-system';
-import { FONTS } from '../Config/theme';
-import { Icon } from 'native-base';
+import {color} from 'native-base/lib/typescript/theme/styled-system';
+import {FONTS} from '../Config/theme';
+import {Icon} from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import ImageSlider from 'react-native-image-slider';
 import navigationService from '../navigationService';
 
-const Card = ({ item, fromProfile, setSelected, selected }) => {
+const Card = ({item, fromProfile, setSelected, selected}) => {
   const imageArray = [
     require('../Assets/Images/scoter_image.png'),
     require('../Assets/Images/scoter_image.png'),
@@ -26,8 +26,10 @@ const Card = ({ item, fromProfile, setSelected, selected }) => {
     require('../Assets/Images/scoter_image.png'),
   ];
   return (
-    <TouchableOpacity style={styles.cardstyle} onPress={() => navigationService.navigate('DetailScreen')}>
-      <View style={{ flexDirection: 'row' }}>
+    <TouchableOpacity
+      style={styles.cardstyle}
+      onPress={() => navigationService.navigate('DetailScreen')}>
+      <View style={{flexDirection: 'row'}}>
         <View style={styles.text_view}>
           <View
             style={{
@@ -54,7 +56,7 @@ const Card = ({ item, fromProfile, setSelected, selected }) => {
               }}
             />
           </View>
-          <View style={{ paddingHorizontal: moderateScale(10, 0.6) }}>
+          <View style={{paddingHorizontal: moderateScale(10, 0.6)}}>
             <CustomText
               style={{
                 fontSize: moderateScale(13, 0.6),
@@ -64,7 +66,7 @@ const Card = ({ item, fromProfile, setSelected, selected }) => {
               {item?.name}
             </CustomText>
             <CustomText
-              style={{ color: Color.lightGrey, width: 100, ...FONTS.Regular10 }}>
+              style={{color: Color.lightGrey, width: 100, ...FONTS.Regular10}}>
               {item?.time}
             </CustomText>
           </View>
@@ -80,7 +82,7 @@ const Card = ({ item, fromProfile, setSelected, selected }) => {
                 {
                   backgroundColor:
                     selected == 'stolen' ? Color.themeColor : Color.mediumGray,
-                  padding: moderateScale(5, 0.6),
+                  // padding: moderateScale(5, 0.6),
                 },
               ]}>
               <CustomText
@@ -102,8 +104,8 @@ const Card = ({ item, fromProfile, setSelected, selected }) => {
                 {
                   backgroundColor:
                     selected == 'founded' ? Color.themeColor : Color.mediumGray,
-                  padding: moderateScale(5, 0.6),
-                  width: '60%',
+                  // padding: moderateScale(5, 0.6),
+                  width: '55%',
                 },
               ]}>
               <CustomText
@@ -118,12 +120,14 @@ const Card = ({ item, fromProfile, setSelected, selected }) => {
             </TouchableOpacity>
           </View>
         ) : (
-          <TouchableOpacity onPress={() => navigationService.navigate('MessageList')} style={styles.message_btn}>
+          <TouchableOpacity
+            onPress={() => navigationService.navigate('MessageList')}
+            style={styles.message_btn}>
             <CustomText style={styles.msg_btn_text}>Message</CustomText>
           </TouchableOpacity>
         )}
       </View>
-      <View style={{ marginTop: moderateScale(12, 0.6) }}>
+      <View style={{marginTop: moderateScale(12, 0.6)}}>
         <CustomText
           style={{
             width: windowWidth * 0.8,
@@ -132,51 +136,52 @@ const Card = ({ item, fromProfile, setSelected, selected }) => {
           }}>
           {item?.description}
         </CustomText>
-        <CustomText style={{ color: '#0201FF', ...FONTS.Regular12 }}>
+        <CustomText style={{color: '#0201FF', ...FONTS.Regular12}}>
           Read More....
         </CustomText>
       </View>
-      <View style={{
-        width: windowWidth * 0.8,
-        height: windowHeight * 0.3,
-        alignSelf: 'center',
-        borderRadius: moderateScale(20, 0.6),
-      }}>
+      <View
+        style={{
+          width: windowWidth * 0.8,
+          height: windowHeight * 0.3,
+          alignSelf: 'center',
+          borderRadius: moderateScale(20, 0.6),
+        }}>
         <ImageSlider
           loopBothSides
           // autoPlayWithInterval={3000}
           images={imageArray}
-          style={{ backgroundColor: 'white' }}
-          customSlide={({ index, item, style, width }) => (
+          style={{backgroundColor: 'white'}}
+          customSlide={({index, item, style, width}) => (
             <View key={index} style={[style, styles.Slide]}>
               <CustomImage
                 source={item}
                 style={{
                   width: '100%',
                   height: '100%',
-                  borderRadius: moderateScale(20, 0.6)
+                  borderRadius: moderateScale(20, 0.6),
                 }}
               />
             </View>
           )}
 
-        // customButtons={(position, move) => (
-        //   <View style={styles.buttons}>
-        //     {imageArray.map((image, index) => {
-        //       return (
-        //         <TouchableOpacity
-        //           key={index}
-        //           underlayColor="#ccc"
-        //           onPress={() => move(index)}
-        //           style={styles.button}>
-        //           <Text style={position === index && styles.buttonSelected}>
-        //             {index + 1}
-        //           </Text>
-        //         </TouchableOpacity>
-        //       );
-        //     })}
-        //   </View>
-        // )}
+          // customButtons={(position, move) => (
+          //   <View style={styles.buttons}>
+          //     {imageArray.map((image, index) => {
+          //       return (
+          //         <TouchableOpacity
+          //           key={index}
+          //           underlayColor="#ccc"
+          //           onPress={() => move(index)}
+          //           style={styles.button}>
+          //           <Text style={position === index && styles.buttonSelected}>
+          //             {index + 1}
+          //           </Text>
+          //         </TouchableOpacity>
+          //       );
+          //     })}
+          //   </View>
+          // )}
         />
       </View>
       {/* <View
@@ -204,7 +209,7 @@ const Card = ({ item, fromProfile, setSelected, selected }) => {
           alignItems: 'center',
           marginTop: moderateScale(10, 0.6),
         }}>
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{flexDirection: 'row'}}>
           <Icon
             name="message-processing-outline"
             as={MaterialCommunityIcons}
@@ -220,7 +225,7 @@ const Card = ({ item, fromProfile, setSelected, selected }) => {
             {item?.coments}
           </CustomText>
         </View>
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{flexDirection: 'row'}}>
           <Icon
             name="heart-outline"
             as={MaterialCommunityIcons}
@@ -236,7 +241,7 @@ const Card = ({ item, fromProfile, setSelected, selected }) => {
             {item?.likes}
           </CustomText>
         </View>
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{flexDirection: 'row'}}>
           <Icon
             name="share-outline"
             as={MaterialCommunityIcons}
@@ -299,18 +304,18 @@ const styles = StyleSheet.create({
   btn_row: {
     flexDirection: 'row',
     backgroundColor: Color.lightGrey,
-    width: windowWidth * 0.35,
     borderRadius: moderateScale(3, 0.6),
     alignItems: 'center',
     position: 'absolute',
     right: 0,
     top: 15,
   },
-
+  
   founded_text: {
     color: 'white',
     ...FONTS.Medium11,
-    paddingHorizontal: moderateScale(10, 0.6),
+    paddingHorizontal: moderateScale(12, 0.6),
+    padding:moderateScale(3.5,.6),
   },
   Slide: {
     width: windowWidth * 0.8,

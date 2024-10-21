@@ -6,9 +6,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useState } from 'react';
-import { moderateScale } from 'react-native-size-matters';
-import { windowHeight, windowWidth } from '../Utillity/utils';
+import React, {useState} from 'react';
+import {moderateScale} from 'react-native-size-matters';
+import {windowHeight, windowWidth} from '../Utillity/utils';
 import Color from '../Assets/Utilities/Color';
 import CustomImage from '../Components/CustomImage';
 import CustomText from '../Components/CustomText';
@@ -16,20 +16,19 @@ import CustomButton from '../Components/CustomButton';
 import StolenAssetsCard from '../Components/StolenAssetsCard';
 import SearchContainer from '../Components/SearchContainer';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Icon } from 'native-base';
-import { color } from 'native-base/lib/typescript/theme/styled-system';
+import {Icon} from 'native-base';
+import {color} from 'native-base/lib/typescript/theme/styled-system';
 import Card from '../Components/Card';
-import { homeListData } from '../Config/dummyData';
+import {homeListData} from '../Config/dummyData';
 import CustomHeader from '../Components/CustomHeader';
-import { FONTS } from '../Config/theme';
-import { useNavigation } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
-import { baseUrl } from '../Config';
+import {FONTS} from '../Config/theme';
+import {useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
+import {baseUrl} from '../Config';
 
 const Profile = () => {
-  // const navigation =useNavigation()
-  const profileData = useSelector(state => state.commonReducer.userData)
-  console.log("🚀 ~ Profile ~ profileData:", profileData)
+  const navigation = useNavigation();
+  const profileData = useSelector(state => state.commonReducer.userData);
   const stolenAssetsArray = [
     {
       id: 1,
@@ -72,12 +71,7 @@ const Profile = () => {
         alignItems: 'center',
         paddingBottom: moderateScale(20, 0.6),
       }}>
-      <CustomHeader
-        text={'profile'}
-        leftIcon
-        logout
-
-      />
+      <CustomHeader text={'profile'} leftIcon logout />
       <View style={styles.border}>
         <View style={styles.imageContainer}>
           <CustomImage
@@ -85,7 +79,7 @@ const Profile = () => {
               height: '100%',
               width: '100%',
             }}
-            source={{uri:`${baseUrl}${profileData?.photo}`}}
+            source={{uri: `${baseUrl}${profileData?.photo}`}}
             // source={require('../Assets/Images/dummyman1.png')}
           />
         </View>
@@ -95,7 +89,12 @@ const Profile = () => {
         {profileData?.name}
       </CustomText>
       <TouchableOpacity>
-        <CustomText style={styles.btn}>edit profile</CustomText>
+        <CustomText onPress={() => {
+          console.log('hellllllllllllllo000000000000000')
+          navigation.navigate('EditProfile')
+        }} style={styles.btn}>
+          edit profile
+        </CustomText>
       </TouchableOpacity>
       <View style={styles.btn_row}>
         <CustomButton
@@ -104,7 +103,7 @@ const Profile = () => {
           textColor={Color.white}
           width={windowWidth * 0.43}
           height={windowHeight * 0.045}
-          onPress={() => { }}
+          onPress={() => {}}
           bgColor={Color.themeColor}
           borderRadius={moderateScale(5, 0.3)}
           elevation
@@ -115,7 +114,7 @@ const Profile = () => {
           textColor={Color.white}
           width={windowWidth * 0.43}
           height={windowHeight * 0.045}
-          onPress={() => { }}
+          onPress={() => {}}
           bgColor={Color.themeColor}
           borderRadius={moderateScale(5, 0.3)}
           elevation
@@ -163,7 +162,7 @@ const Profile = () => {
               },
             ]}>
             {/* Example@g`mail.com */}
-{profileData?.email}
+            {profileData?.email}
           </CustomText>
         </View>
         <View style={styles.text_row}>
@@ -246,27 +245,29 @@ const Profile = () => {
         }}>
         View all
       </CustomText>
-      <View style={styles.post_card}>
+      <TouchableOpacity onPress={() =>{
+        navigation.navigate('CreatePost')
+      }} style={styles.post_card}>
         <CustomText isBold style={styles.post_text}>
           posts
         </CustomText>
         <View style={styles.post_row}>
           <View style={styles.post_image}>
             <CustomImage
-              style={{ height: '100%', width: '100%' }}
+              style={{height: '100%', width: '100%'}}
               source={require('../Assets/Images/dummyman1.png')}
             />
           </View>
           <SearchContainer width={windowWidth * 0.6} />
           <Icon
-            style={{ marginTop: moderateScale(13, 0.6) }}
+            style={{marginTop: moderateScale(13, 0.6)}}
             name={'images-outline'}
             as={Ionicons}
             size={moderateScale(25, 0.6)}
             color={Color.textColor}
           />
         </View>
-      </View>
+      </TouchableOpacity>
       <FlatList
         showsVerticalScrollIndicator={false}
         style={{
@@ -275,7 +276,7 @@ const Profile = () => {
         }}
         // ListFooterComponent={<View style={{ height: moderateScale(50, 0.6) }} />}
         data={homeListData}
-        renderItem={({ item, index }) => {
+        renderItem={({item, index}) => {
           return (
             <Card
               setSelected={setSelected}

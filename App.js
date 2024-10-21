@@ -30,6 +30,7 @@ import GroupDeatils from './SRC/Screens/GroupDeatils';
 import ResetPassword from './SRC/Screens/ResetPassword';
 import EnterEmail from './SRC/Screens/EnterEmail';
 import { requestCameraPermission, requestLocationPermission, requestReadPermission, requestWritePermission } from './SRC/Utillity/utils';
+
 // import AddCard from './SRC/Screens/AddCard';
 
 const App = () => {
@@ -175,6 +176,7 @@ const MainContainer = () => {
 
     }
     GetPermission();
+    requestCameraPermission()
   }, []);
 
 

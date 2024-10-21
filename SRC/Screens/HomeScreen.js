@@ -1,48 +1,92 @@
-import React from 'react';
-import { StyleSheet, TouchableOpacity, View, FlatList } from 'react-native';
+import React, {useState} from 'react';
+import {StyleSheet, TouchableOpacity, View, FlatList} from 'react-native';
 import CustomText from '../Components/CustomText';
 import CustomHeader from '../Components/CustomHeader';
 import CustomStatusBar from '../Components/CustomStatusBar';
 import Color from '../Assets/Utilities/Color';
-import { windowHeight, windowWidth } from '../Utillity/utils';
-import { moderateScale } from 'react-native-size-matters';
-import { homeListData } from '../Config/dummyData';
+import {windowHeight, windowWidth} from '../Utillity/utils';
+import {moderateScale} from 'react-native-size-matters';
+import {homeListData} from '../Config/dummyData';
 import Card from '../Components/Card';
-import { SIZES } from '../Config/theme';
-import { useSelector } from 'react-redux';
+import {SIZES} from '../Config/theme';
+import {useSelector} from 'react-redux';
 
 const HomeScreen = () => {
-  const profileData = useSelector(state => state.commonReducer.userData)
-  console.log("🚀 ~ Profile ~ profileData:", profileData)
-
+  const profileData = useSelector(state => state.commonReducer.userData);
+  const [selectedData, setSelectedData] = useState('Stolen');
   return (
     <>
-      <CustomStatusBar backgroundColor={Color.background_color} barStyle={'dark-content'} />
+      <CustomStatusBar
+        backgroundColor={Color.background_color}
+        barStyle={'dark-content'}
+      />
       <View style={styles.container}>
-        <CustomHeader text={'TimeLine'} leftIcon isCamer={true} RightIcon={true} />
+        <CustomHeader
+          text={'TimeLine'}
+          leftIcon
+          isCamer={true}
+          RightIcon={true}
+        />
         <View style={styles.main_view}>
           <View style={styles.btn_view}>
-            <TouchableOpacity style={[styles.btn, { backgroundColor: Color.blue }]}>
-              <CustomText style={styles.btn_text}>Stolen</CustomText>
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedData('Stolen');
+              }}
+              style={[
+                styles.btn,
+                {
+                  backgroundColor:
+                    selectedData == 'Stolen' ? Color.blue : Color.white,
+                },
+              ]}>
+              <CustomText
+                onPress={() => {
+                  setSelectedData('Stolen');
+                }}
+                style={[styles.btn_text ,{color:   selectedData == 'Stolen' ? Color.white :Color.black}]}>
+                Stolen
+              </CustomText>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.btn}>
-              <CustomText style={[styles.btn_text, { color: Color.black }]}>Founded</CustomText>
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedData('Founded');
+              }}
+              style={[
+                styles.btn,
+                {
+                  backgroundColor:
+                    selectedData == 'Founded' ? Color.blue : Color.white,
+                },
+              ]}>
+              <CustomText
+                onPress={() => {
+                  setSelectedData('Founded');
+                }}
+                style={[styles.btn_text, {color:   selectedData == 'Founded' ? Color.white :Color.black}]}>
+                Founded
+              </CustomText>
             </TouchableOpacity>
           </View>
           <FlatList
             showsVerticalScrollIndicator={false}
-            style={{ marginVertical: moderateScale(20, 0.6), marginBottom: moderateScale(70, 0.6) }}
-            ListFooterComponent={<View style={{ paddingBottom: moderateScale(80, 0.6) }} />}
+            style={{
+              marginVertical: moderateScale(20, 0.6),
+              marginBottom: moderateScale(70, 0.6),
+            }}
+            ListFooterComponent={
+              <View style={{paddingBottom: moderateScale(80, 0.6)}} />
+            }
             data={homeListData}
-            renderItem={({ item, index }) => {
-              return <Card item={item} />
-            }} />
+            renderItem={({item, index}) => {
+              return <Card item={item} />;
+            }}
+          />
         </View>
       </View>
     </>
   );
 };
-
 
 export default HomeScreen;
 
@@ -50,16 +94,16 @@ const styles = StyleSheet.create({
   container: {
     width: windowWidth,
     height: windowHeight,
-    backgroundColor: Color.background_color
+    backgroundColor: Color.background_color,
   },
   main_view: {
     paddingHorizontal: SIZES.padding,
-    paddingVertical: SIZES.padding
+    paddingVertical: SIZES.padding,
   },
   btn_view: {
     width: '100%',
     flexDirection: 'row',
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
     alignItems: 'center',
     height: moderateScale(50, 0.5),
   },
@@ -69,10 +113,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: Color.white,
-    borderRadius: moderateScale(10, 0.6)
+    borderRadius: moderateScale(10, 0.6),
   },
   btn_text: {
     fontSize: moderateScale(14, 0.6),
-    color: Color.white
-  }
-})
+    color: Color.white,
+  },
+});

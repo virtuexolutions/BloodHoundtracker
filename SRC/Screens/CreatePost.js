@@ -1,9 +1,12 @@
 import {Icon} from 'native-base';
-import React from 'react';
+import React, {useState} from 'react';
 import {
+  PermissionsAndroid,
+  Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -15,14 +18,92 @@ import CustomHeader from '../Components/CustomHeader';
 import CustomImage from '../Components/CustomImage';
 import CustomText from '../Components/CustomText';
 import {FONTS} from '../Config/theme';
-import {windowHeight, windowWidth} from '../Utillity/utils';
+import {
+  requestCameraPermission,
+  windowHeight,
+  windowWidth,
+} from '../Utillity/utils';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {color} from 'native-base/lib/typescript/theme/styled-system';
+import TagPeopleModal from '../Components/TagPeopleModal';
+import {launchCamera} from 'react-native-image-picker';
+import CheckinModal from '../Components/CheckinModal';
 
 const CreatePost = () => {
+  const [tagModal, setTagModal] = useState(false);
+  console.log('🚀 ~ CreatePost ~ tagModal:', tagModal);
+  const [selectedPeople, setSelectedPeople] = useState([]);
+  const [show, setShow] = useState(false);
+  const [fileObject, setFileObject] = useState({});
+  const [checkinModal ,setCheckinModal] =useState(false)
+  console.log('🚀 ~ CreatePost ~ selectedPeople:', selectedPeople);
+
+  const openCamera = async () => {
+    let options = {
+      mediaType: 'photo',
+      maxWidth: 500,
+      maxHeight: 500,
+      quailty: 0.9,
+      saveToPhotos: true,
+    };
+    if (Platform.OS === 'android') {
+      //   if (PermissionsAndroid.PERMISSIONS.CAMERA == null) {
+      //     console.log('herer camera permissio null===============');
+      //   }
+      //  else
+      if (PermissionsAndroid.PERMISSIONS.CAMERA == true) {
+        console.log('herer');
+      } else {
+        const permissionResponse = await requestCameraPermission();
+
+        if (permissionResponse == true) {
+          console.log('camera permission granted');
+        } else {
+          // requestCameraPermission();
+          // ToastAndroid.show('Camera permission rejected', ToastAndroid.SHORT);
+          // return setShow(false);
+        }
+      }
+    }
+
+    launchCamera(options, response => {
+      console.log('Response from Camera Launch', response);
+
+      try {
+        if (Platform.OS == 'ios') {
+          setShow(false);
+        }
+        if (response.didCancel) {
+        } else if (response.error) {
+        } else if (response.customButton) {
+        } else {
+          setFileObject &&
+            setFileObject({
+              uri: response?.assets[0]?.uri,
+              type: response?.assets[0]?.type,
+              name: response?.assets[0]?.fileName,
+            });
+
+          setMultiImages &&
+            setMultiImages(x => [
+              ...x,
+              {
+                uri: response?.assets[0]?.uri,
+                type: response?.assets[0]?.type,
+                name: response?.assets[0]?.fileName,
+              },
+            ]);
+          // }
+        }
+      } catch (error) {
+        console.log('response is undefined=================>', error);
+      }
+    });
+  };
+
   return (
     <SafeAreaView>
       <ScrollView
@@ -147,8 +228,13 @@ const CreatePost = () => {
             </View>
           </View>
         </View>
-        <TouchableOpacity style={styles.row}>
-          <View
+        <TouchableOpacity
+          onPress={() => {
+            console.log('hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+            setTagModal(true);
+          }}
+          style={styles.row}>
+          <TouchableOpacity
             style={{
               height: windowHeight * 0.03,
               width: windowWidth * 0.06,
@@ -161,7 +247,7 @@ const CreatePost = () => {
               }}
               source={require('../Assets/Images/icon.png')}
             />
-          </View>
+          </TouchableOpacity>
           <CustomText
             style={{
               ...FONTS.Regular13,
@@ -170,7 +256,14 @@ const CreatePost = () => {
             tag people
           </CustomText>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.row, {marginTop: 0}]}>
+        <TouchableOpacity
+          onPress={() => {
+            if (Platform.OS === 'android') {
+              setShow(false);
+            }
+            openCamera();
+          }}
+          style={[styles.row, {marginTop: 0}]}>
           <Icon
             style={{
               marginHorizontal: moderateScale(6, 0.6),
@@ -189,6 +282,9 @@ const CreatePost = () => {
           </CustomText>
         </TouchableOpacity>
         <TouchableOpacity
+        onPress={() =>{
+          setCheckinModal(true)
+        }}
           style={[
             styles.row,
             {
@@ -223,6 +319,13 @@ const CreatePost = () => {
           borderRadius={moderateScale(5, 0.3)}
           elevation
         />
+        <TagPeopleModal
+          tagModal={tagModal}
+          setTagModal={setTagModal}
+          selectedPeople={selectedPeople}
+          setSelectedPeople={setSelectedPeople}
+        />
+        <CheckinModal checkinModal={checkinModal} setCheckinModal={setCheckinModal}/> 
       </ScrollView>
     </SafeAreaView>
   );
