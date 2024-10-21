@@ -66,21 +66,21 @@ const Signup = () => {
 
     if (Object.keys(image).length > 0) {
       formData.append('photo', image);
-    } 
-    for (let key in body) {
-    //   if (body[key] === '') {
-    //     return Platform.OS == 'android'
-    //       ? ToastAndroid.show(` ${key} field is empty`, ToastAndroid.SHORT)
-    //       : Alert.alert(` ${key} field is empty`);
-    //   }
-    // }
-    if (body[key] == '') {
-      return Platform.OS == 'android'
-        ? ToastAndroid.show(`${key} field is empty`, ToastAndroid.SHORT)
-        : Alert.alert(`${key} field is empty`);
     }
-    formData.append(key, body[key]);
-  }
+    for (let key in body) {
+      //   if (body[key] === '') {
+      //     return Platform.OS == 'android'
+      //       ? ToastAndroid.show(` ${key} field is empty`, ToastAndroid.SHORT)
+      //       : Alert.alert(` ${key} field is empty`);
+      //   }
+      // }
+      if (body[key] == '') {
+        return Platform.OS == 'android'
+          ? ToastAndroid.show(`${key} field is empty`, ToastAndroid.SHORT)
+          : Alert.alert(`${key} field is empty`);
+      }
+      formData.append(key, body[key]);
+    }
     if (!validateEmail(email)) {
       return Platform.OS == 'android'
         ? ToastAndroid.show('email is not validate', ToastAndroid.SHORT)
@@ -102,7 +102,7 @@ const Signup = () => {
 
     const url = 'register';
     // return console.log("🚀 ~ SignUp ~ body:", JSON.stringify(formData, null, 2))
-  
+
     setIsLoading(true);
     const response = await Post(url, formData, apiHeader());
     setIsLoading(false);
@@ -111,9 +111,8 @@ const Signup = () => {
         ? ToastAndroid.show('User Registered Succesfully', ToastAndroid.SHORT)
         : Alert.alert('User Registered Succesfully');
       dispatch(setUserData(response?.data?.user_info));
-      dispatch(setUserToken({token: response?.data?.token}));      
+      dispatch(setUserToken({token: response?.data?.token}));
       // navigation.navigate('TabNavigation');
-
     }
   };
   return (
@@ -180,41 +179,36 @@ const Signup = () => {
           Let’s Signup for explore continues
         </CustomText>
         <View>
-        <View
-              style={[
-                styles.profileSection,
-              ]}>
-              <CustomImage
-                source={
-                  Object.keys(image).length > 0 
-                    ?  
-                   {uri:image?.uri}
-                    : require('../Assets/Images/dummyUser.png')
-                }
-                style={{
-                  height: '100%',
-                  width: '100%',
-                }}
-                resizeMode={'cover'}
-              />
-            </View>
-            <TouchableOpacity
-              onPress={() => {
-                // setImagePickerModal(true);
-                // openGallery()
+          <View style={[styles.profileSection]}>
+            <CustomImage
+              source={
+                Object.keys(image).length > 0
+                  ? {uri: image?.uri}
+                  : require('../Assets/Images/dummyUser.png')
+              }
+              style={{
+                height: '100%',
+                width: '100%',
               }}
-              style={styles.editButton}>
-              <Icon
-                name={'pencil'}
-                as={FontAwesome}
-                color={'white'}
-                size={moderateScale(15,0.2)}
-                onPress={() => {
-                  setShowModal(true);
-                }}
-              />
-            </TouchableOpacity>
-
+              resizeMode={'cover'}
+            />
+          </View>
+          <TouchableOpacity
+            onPress={() => {
+              // setImagePickerModal(true);
+              // openGallery()
+            }}
+            style={styles.editButton}>
+            <Icon
+              name={'pencil'}
+              as={FontAwesome}
+              color={'white'}
+              size={moderateScale(15, 0.2)}
+              onPress={() => {
+                setShowModal(true);
+              }}
+            />
+          </TouchableOpacity>
         </View>
         <TextInputWithTitle
           titleText={'full Name'}
@@ -264,7 +258,7 @@ const Signup = () => {
           keyboardType={'numeric'}
         />
 
-<TextInputWithTitle
+        <TextInputWithTitle
           titleText={'Works at'}
           secureText={false}
           placeholder={'Where do you work? (Company Name)'}
@@ -279,7 +273,7 @@ const Signup = () => {
           color={Color.themeColor}
           placeholderColor={Color.themeLightGray}
         />
-        
+
         <TextInputWithTitle
           titleText={'Email'}
           secureText={false}
@@ -295,11 +289,11 @@ const Signup = () => {
           color={Color.themeColor}
           placeholderColor={Color.themeLightGray}
         />
-        
+
         <TextInputWithTitle
           titleText={'Email'}
           secureText={false}
-          placeholder={'Where are you from? (Hometown)' }
+          placeholder={'Where are you from? (Hometown)'}
           setText={setHomeTown}
           value={homeTown}
           viewHeight={0.06}
@@ -310,7 +304,7 @@ const Signup = () => {
           marginTop={moderateScale(15, 0.3)}
           color={Color.themeColor}
           placeholderColor={Color.themeLightGray}
-        /> 
+        />
         <TextInputWithTitle
           titleText={'Password'}
           secureText={true}
@@ -354,7 +348,7 @@ const Signup = () => {
           marginTop={moderateScale(10, 0.3)}
           onPress={() => {
             // Register();
-            SignUp()
+            SignUp();
           }}
           bgColor={Color.themeColor}
           borderRadius={moderateScale(30, 0.3)}
@@ -396,8 +390,8 @@ const styles = ScaledSheet.create({
   bottomImage: {
     width: windowWidth * 0.4,
   },
-  editButton:{
-    backgroundColor:'blue',
+  editButton: {
+    backgroundColor: 'blue',
     borderRadius: (windowWidth * 0.08) / 2,
     width: windowWidth * 0.08,
     height: windowWidth * 0.08,
@@ -405,8 +399,7 @@ const styles = ScaledSheet.create({
     alignItems: 'center',
     position: 'absolute',
     right: 5,
-    bottom:20
-  
+    bottom: 20,
   },
   textContainer: {
     marginTop: moderateScale(20, 0.3),
