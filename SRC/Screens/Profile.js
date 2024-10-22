@@ -89,10 +89,12 @@ const Profile = () => {
         {profileData?.name}
       </CustomText>
       <TouchableOpacity>
-        <CustomText onPress={() => {
-          console.log('hellllllllllllllo000000000000000')
-          navigation.navigate('EditProfile')
-        }} style={styles.btn}>
+        <CustomText
+          onPress={() => {
+            console.log('hellllllllllllllo000000000000000');
+            navigation.navigate('EditProfile');
+          }}
+          style={styles.btn}>
           edit profile
         </CustomText>
       </TouchableOpacity>
@@ -245,21 +247,37 @@ const Profile = () => {
         }}>
         View all
       </CustomText>
-      <TouchableOpacity onPress={() =>{
-        navigation.navigate('CreatePost')
-      }} style={styles.post_card}>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('CreatePost');
+        }}
+        style={styles.post_card}>
         <CustomText isBold style={styles.post_text}>
           posts
         </CustomText>
         <View style={styles.post_row}>
           <View style={styles.post_image}>
             <CustomImage
+              onPress={() => {
+                navigation.navigate('CreatePost');
+              }}
               style={{height: '100%', width: '100%'}}
               source={require('../Assets/Images/dummyman1.png')}
             />
           </View>
-          <SearchContainer width={windowWidth * 0.6} />
+          <SearchContainer
+            onPress={() => {
+              navigation.navigate('CreatePost');
+            }}
+            width={windowWidth * 0.6}
+            style={{
+              height: windowHeight * 0.04,
+            }}
+          />
           <Icon
+            onPress={() => {
+              navigation.navigate('CreatePost');
+            }}kfc
             style={{marginTop: moderateScale(13, 0.6)}}
             name={'images-outline'}
             as={Ionicons}

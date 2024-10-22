@@ -29,17 +29,20 @@ import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {color} from 'native-base/lib/typescript/theme/styled-system';
 import TagPeopleModal from '../Components/TagPeopleModal';
-import {launchCamera} from 'react-native-image-picker';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import CheckinModal from '../Components/CheckinModal';
+import TextInputWithTitle from '../Components/TextInputWithTitle';
+import Modal from '../Components/Modal';
+import CreatePostimges from '../Components/CreatePostimges';
 
 const CreatePost = () => {
   const [tagModal, setTagModal] = useState(false);
-  console.log('🚀 ~ CreatePost ~ tagModal:', tagModal);
   const [selectedPeople, setSelectedPeople] = useState([]);
   const [show, setShow] = useState(false);
   const [fileObject, setFileObject] = useState({});
-  const [checkinModal ,setCheckinModal] =useState(false)
-  console.log('🚀 ~ CreatePost ~ selectedPeople:', selectedPeople);
+  const [checkinModal, setCheckinModal] = useState(false);
+  const [multiImages, setMultiImages] = useState([]);
+  const [description, setDescription] = useState('');
 
   const openCamera = async () => {
     let options = {
@@ -104,6 +107,56 @@ const CreatePost = () => {
     });
   };
 
+  const openGallery = () => {
+    let options = {
+      mediaType: 'photo',
+      maxWidth: 500,
+      maxHeight: 500,
+      quailty: 0.9,
+      saveToPhotos: true,
+    };
+    // {
+    //   crop
+    //     ? ImagePicker.openPicker({
+    //         width: 300,
+    //         height: 400,
+    //         cropping: true,
+    //       }).then(image => {
+    //         console.log( 'dasdas ========>',image);
+    //       })
+    //     :
+    launchImageLibrary(options, response => {
+      if (Platform.OS === 'ios') {
+        setShow(false);
+      }
+      if (response.didCancel) {
+      } else if (response.error) {
+      } else if (response.customButton) {
+        alert(response.customButton);
+      } else {
+        setFileObject &&
+          setFileObject({
+            uri: response?.assets[0]?.uri,
+            type: response?.assets[0]?.type,
+            name: response?.assets[0]?.fileName,
+          });
+
+        setMultiImages &&
+          setMultiImages(x => [
+            ...x,
+            {
+              uri: response?.assets[0]?.uri,
+              type: response?.assets[0]?.type,
+              name: response?.assets[0]?.fileName,
+            },
+          ]);
+      }
+    });
+    // }
+  };
+
+
+  
   return (
     <SafeAreaView>
       <ScrollView
@@ -164,6 +217,9 @@ const CreatePost = () => {
           </View>
 
           <Icon
+            onPress={() => {
+              openGallery();
+            }}
             style={{
               marginTop: moderateScale(9, 0.6),
               marginHorizontal: moderateScale(6, 0.6),
@@ -174,7 +230,8 @@ const CreatePost = () => {
             color={Color.themeColor}
           />
         </View>
-        <CustomText
+        {/* <Modal/> */}
+        {/* <CustomText
           style={{
             paddingTop: windowHeight * 0.03,
             ...FONTS.Medium11,
@@ -187,37 +244,11 @@ const CreatePost = () => {
           gone missing, leaving only a scratched fuel tank as a clue to its
           whereabouts. I'm fervently searching, longing to reunite with my
           prized ride and resume exploring the city's scenic trails.
-        </CustomText>
-        <View style={styles.image}>
-          <View style={styles.sec_image}>
-            <CustomImage
-              style={{
-                height: '100%',
-                width: '100%',
-              }}
-              source={require('../Assets/Images/Bike.png')}
-            />
-          </View>
-          <View>
-            <View
-              style={{
-                width: windowWidth * 0.38,
-                height: windowHeight * 0.12,
-                marginBottom: moderateScale(7, 0.6),
-              }}>
-              <CustomImage
-                style={{
-                  height: '100%',
-                  width: '100%',
-                }}
-                source={require('../Assets/Images/Bike.png')}
-              />
-            </View>
-            <View
-              style={{
-                width: windowWidth * 0.38,
-                height: windowHeight * 0.12,
-              }}>
+        </CustomText> */}
+        <CreatePostimges multiImages={multiImages} setMultiImages={setMultiImages}/>
+        {/* {multiImages.length == 1 ? (
+          <View style={styles.image}>
+            <View style={styles.sec_image}>
               <CustomImage
                 style={{
                   height: '100%',
@@ -227,7 +258,146 @@ const CreatePost = () => {
               />
             </View>
           </View>
-        </View>
+        ) : multiImages.length == 2 ? (
+          <View style={styles.image}>
+            <View style={styles.sec_image}>
+              <CustomImage
+                style={{
+                  height: '100%',
+                  width: '100%',
+                }}
+                source={require('../Assets/Images/Bike.png')}
+              />
+            </View>
+            <View>
+              <View
+                style={{
+                  width: windowWidth * 0.38,
+                  height: windowHeight * 0.25,
+                  marginBottom: moderateScale(7, 0.6),
+                }}>
+                <CustomImage
+                  style={{
+                    height: '100%',
+                    width: '100%',
+                  }}
+                  source={require('../Assets/Images/Bike.png')}
+                />
+              </View>
+            </View>
+          </View>
+        ) : multiImages.length == 3 ? (
+          <View style={styles.image}>
+            <View style={styles.sec_image}>
+              <CustomImage
+                style={{
+                  height: '100%',
+                  width: '100%',
+                }}
+                source={require('../Assets/Images/Bike.png')}
+              />
+            </View>
+            <View>
+              <View
+                style={{
+                  width: windowWidth * 0.38,
+                  height: windowHeight * 0.12,
+                  marginBottom: moderateScale(7, 0.6),
+                }}>
+                <CustomImage
+                  style={{
+                    height: '100%',
+                    width: '100%',
+                  }}
+                  source={require('../Assets/Images/Bike.png')}
+                />
+              </View>
+              <View
+                style={{
+                  width: windowWidth * 0.38,
+                  height: windowHeight * 0.12,
+                }}>
+                <CustomImage
+                  style={{
+                    height: '100%',
+                    width: '100%',
+                  }}
+                  source={require('../Assets/Images/Bike.png')}
+                />
+              </View>
+            </View>
+          </View>
+        ) : multiImages.length > 3 ? (
+          <View style={styles.image}>
+            <View style={styles.sec_image}>
+              <CustomImage
+                style={{
+                  height: '100%',
+                  width: '100%',
+                }}
+                source={require('../Assets/Images/Bike.png')}
+              />
+            </View>
+            <View>
+              <View
+                style={{
+                  width: windowWidth * 0.38,
+                  height: windowHeight * 0.12,
+                  marginBottom: moderateScale(7, 0.6),
+                }}>
+                <CustomImage
+                  style={{
+                    height: '100%',
+                    width: '100%',
+                  }}
+                  source={require('../Assets/Images/Bike.png')}
+                />
+              </View>
+              <TouchableOpacity
+                activeOpacity={0.9}
+                style={{
+                  width: windowWidth * 0.38,
+                  height: windowHeight * 0.12,
+                }}>
+                  <View style={{ tintColor:'rgba(0,0,0,0.1)' ,zIndex:1 ,height:'100%',width:'100%'}}>
+
+                  
+                <CustomImage
+                  style={{
+                    height: '100%',
+                    width: '100%',
+                    // tintColor: 'rgba(0,0,0,0.1)',
+                  }}
+                  source={require('../Assets/Images/Bike.png')}
+                />
+                </View>
+              </TouchableOpacity>
+              <CustomText isBold style={styles.multitext}>{`+${
+                multiImages.length - 3
+              } `}</CustomText>
+            </View>
+          </View>
+        ) : (
+          <View style={styles.image}></View>
+        )} */}
+
+        <TextInputWithTitle
+          titleText={'Email'}
+          secureText={false}
+          placeholder={'Add Description Here'}
+          setText={setDescription}
+          value={description}
+          viewHeight={0.13}
+          viewWidth={0.85}
+          inputWidth={0.8}
+          borderColor={'#ffffff'}
+          backgroundColor={'#FFFFFF'}
+          marginTop={moderateScale(15, 0.3)}
+          color={Color.themeColor}
+          placeholderColor={Color.themeLightGray}
+          multiline
+        />
+      
         <TouchableOpacity
           onPress={() => {
             console.log('hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
@@ -282,9 +452,9 @@ const CreatePost = () => {
           </CustomText>
         </TouchableOpacity>
         <TouchableOpacity
-        onPress={() =>{
-          setCheckinModal(true)
-        }}
+          onPress={() => {
+            setCheckinModal(true);
+          }}
           style={[
             styles.row,
             {
@@ -325,7 +495,11 @@ const CreatePost = () => {
           selectedPeople={selectedPeople}
           setSelectedPeople={setSelectedPeople}
         />
-        <CheckinModal checkinModal={checkinModal} setCheckinModal={setCheckinModal}/> 
+        <CheckinModal
+          checkinModal={checkinModal}
+          setCheckinModal={setCheckinModal}
+        />
+       
       </ScrollView>
     </SafeAreaView>
   );
@@ -340,7 +514,6 @@ const styles = StyleSheet.create({
   },
   row_container: {
     flexDirection: 'row',
-    width: windowWidth * 0.9,
     paddingHorizontal: moderateScale(10, 0.6),
   },
   imageContainer: {
@@ -364,7 +537,6 @@ const styles = StyleSheet.create({
   image: {
     flexDirection: 'row',
     marginTop: windowHeight * 0.03,
-    width: windowWidth * 0.85,
     height: windowHeight * 0.25,
   },
   sec_image: {
@@ -382,4 +554,12 @@ const styles = StyleSheet.create({
     paddingVertical: moderateScale(5, 0.6),
     paddingHorizontal: moderateScale(10, 0.6),
   },
+  multitext: {
+    fontSize: moderateScale(19, 0.6),
+    position: 'absolute',
+    bottom: 37,
+    right: 55,
+    color:Color.white
+  },
+ 
 });

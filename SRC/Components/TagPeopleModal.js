@@ -11,6 +11,7 @@ import CustomImage from './CustomImage';
 import {FlatList} from 'react-native';
 import {Icon} from 'native-base';
 import Entypo from 'react-native-vector-icons/Entypo';
+import CustomButton from './CustomButton';
 
 const TagPeopleModal = ({
   tagModal,
@@ -120,6 +121,29 @@ const TagPeopleModal = ({
             );
           }}
         />
+         <View
+            style={{
+              alignSelf: 'center',
+              position: 'absolute',
+              bottom: 20,
+            }}>
+            <CustomButton
+              text={'done'}
+              textColor={Color.white}
+              width={windowWidth * 0.8}
+              height={windowHeight * 0.06}
+              marginTop={moderateScale(20, 0.3)}
+              onPress={() => {
+                setTagModal(false);
+                // dispatch(setCustomLocation(searchData));
+                // navigation.goBack();
+              }}
+              bgColor={Color.blue}
+              borderColor={Color.blue}
+              borderWidth={1}
+              borderRadius={moderateScale(30, 0.3)}
+            />
+          </View>
       </View>
     </Modal>
   );

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Image, TouchableOpacity } from "react-native";
+import Color from "../Assets/Utilities/Color";
 
 const CustomImage = (props) => {
   const {
@@ -8,13 +9,14 @@ const CustomImage = (props) => {
     errorImageSource = require(`../Assets/Images/man1.jpg`),
     style,
     onPress,
+    tintColor
   } = props;
   const [errorLoadingProfileImage, setErrorLoadingProfileImage] =
     useState(false);
   return (
     <TouchableOpacity onPress={onPress && onPress} activeOpacity={0.9}>
       <Image
-      
+      tintColor={tintColor}
         resizeMode={resizeMode}
         style={style}
         source={errorLoadingProfileImage ? errorImageSource : source}

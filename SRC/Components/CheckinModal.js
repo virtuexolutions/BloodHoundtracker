@@ -1,29 +1,34 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import Modal from 'react-native-modal';
 import {windowHeight, windowWidth} from '../Utillity/utils';
 import {moderateScale} from 'react-native-size-matters';
 import {useState} from 'react';
 import Color from '../Assets/Utilities/Color';
-// import CustomImage from './CustomImage';
-// import CustomText from './CustomText';
 import {Icon, ScrollView} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
-// import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import CustomButton from '../Components/CustomButton';
 import {setCustomLocation} from '../Store/slices/common';
 import {useDispatch} from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
+import CustomText from './CustomText';
 
 const CheckinModal = ({setCheckinModal, checkinModal}) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [searchData, setSearchData] = useState('');
-  console.log(
-    '🚀 ~ file: SearchScreen.js:21 ~ SearchScreen ~ searchData:',
-    searchData,
-  );
+  const [Location, setLocation] = useState('');
+  // const kfc = {
+  //   description: 'Home',
+  //   geometry: {location: {lat: 48.8152937, lng: 2.4597668}},
+  // };
+  // const resturant = {
+  //   description: 'Work',
+  //   geometry: {location: {lat: 48.8496818, lng: 2.2940881}},
+  // };
+  // console.log('hello -        =========================== >');
+  const onclick = async () => {};
   return (
     <Modal
       hasBackdrop={true}
@@ -36,14 +41,18 @@ const CheckinModal = ({setCheckinModal, checkinModal}) => {
         setCheckinModal(false);
       }}>
       <View style={styles.mainContainer}>
+        <CustomText isBold style={styles.heading}>
+          check in
+        </CustomText>
+
         <View
           style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            // alignItems: 'center',
-            padding: moderateScale(7, 0.6),
+            // flexDirection: 'row',
+            // justifyContent: 'space-between',
+            // // alignItems: 'center',
+            // padding: moderateScale(7, 0.6),
           }}>
-          <TouchableOpacity activeOpacity={0.8} style={styles.Rounded}>
+          {/* <TouchableOpacity activeOpacity={0.8} style={styles.Rounded}>
             <Icon
               onPress={() => {
                 navigation.goBack();
@@ -53,53 +62,48 @@ const CheckinModal = ({setCheckinModal, checkinModal}) => {
               size={moderateScale(30)}
               color={Color.black}
             />
-          </TouchableOpacity>
-          {/* <GooglePlacesAutocomplete
-            onFail={error => console.error(error, 'errrrrrorrrr')}
+          </TouchableOpacity> */}
+
+          <GooglePlacesAutocomplete
             placeholder="Search"
             textInputProps={{
               placeholderTextColor: '#5d5d5d',
+              // returnKeyType: "search"
+            }}
+            onFail={error => {
+              console.log('API Error:', error);
             }}
             onPress={(data, details = null) => {
-              if (details) {
-                // const cityName =
-                //   details.address_components &&
-                //   Array.isArray(details.address_components)
-                //     ? details.address_components.find(component =>
-                //         component.types.includes('locality'),
-                //       )?.long_name
-                //     : 'City name not found';
-
-                // console.log(cityName);
-                // locationType === 'pickup'
-                //   ? setPickUpCityName(cityName)
-                //   : setDropOffCityName(cityName);
-                // console.log('Location ========>>>>', {
-                //   name: data?.description,
-                //   lat: details?.geometry?.location?.lat,
-                //   lng: details?.geometry?.location?.lng,
-                // });
-                // console.log(data?.description, 'data?.description');
-                // locationType === 'pickup'
-                //   ? setPickupLocation({
-                //       name: data?.description,
-                //       lat: details?.geometry?.location?.lat,
-                //       lng: details?.geometry?.location?.lng,
-                //     })
-                //   : setdropOffLocation({
-                //       name: data?.description,
-                //       lat: details?.geometry?.location?.lat,
-                //       lng: details?.geometry?.location?.lng,
-                //     });
-                console.log(
-                  details,
-                  data,
-                  '===================================>',
-                );
-                // setIsModalVisible(false);
-              } else {
-                console.error('Location details not available');
+              try {
+                if (details) {
+                  // Your logic here
+                  Alert.alert('onPress fired!');
+                  console.log('🚀 ~ CheckinModal ===============>', data);
+                  console.log('hello hereeeee ========  >>>>>>>>>', {
+                    name: data?.description,
+                    location: details?.geometry?.location,
+                  });
+                  //   setSearchData({
+                  //     name: data?.description,
+                  //     location: details?.geometry?.location,
+                  //   });
+                } else {
+                  throw new Error('Location details not available');
+                }
+              } catch (error) {
+                console.error('Error in onPress:', error);
               }
+          
+              // Alert.alert('onPress fired!');
+              // console.log('🚀 ~ CheckinModal ===============>', data);
+              // console.log('hello hereeeee ========  >>>>>>>>>', {
+              //   name: data?.description,
+              //   location: details?.geometry?.location,
+              // });
+              // setSearchData({
+              //   name: data?.description,
+              //   location: details?.geometry?.location,
+              // });
             }}
             query={{
               key: 'AIzaSyAa9BJa70uf_20IoTJfAiK_3wz5Vr_I7wM',
@@ -107,6 +111,7 @@ const CheckinModal = ({setCheckinModal, checkinModal}) => {
             }}
             isRowScrollable={true}
             fetchDetails={true}
+            // enablePoweredByContainer={false}
             styles={{
               textInputContainer: {
                 width: windowWidth * 0.8,
@@ -122,59 +127,18 @@ const CheckinModal = ({setCheckinModal, checkinModal}) => {
               },
               listView: {
                 width: windowWidth * 0.8,
-                marginLeft: moderateScale(5, 0.6),
-                borderColor: Color.veryLightGray,
+                // marginLeft: moderateScale(5, 0.6),
+                // borderColor: Color.veryLightGray,
+                // color : 'red',
+                // backgroundColor : 'red'
               },
+
               description: {
-                color: 'black',
+                color: '#5d5d5d',
               },
             }}
-          /> */}
-        <GooglePlacesAutocomplete
-          onFail={error => console.error(error, 'errrrrrorrrr')}
-          placeholder="Search"
-          textInputProps={{
-            placeholderTextColor: '#5d5d5d',
-          }}
-          onPress={(data, details = null) => {
-            if (details) {
-              setLocation(details)
-              setIsModalVisible(false);
-            } else {
-              console.error('Location details not available');
-            }
-          }}
-          query={{
-            key: 'AIzaSyAa9BJa70uf_20IoTJfAiK_3wz5Vr_I7wM',
-            language: 'en',
-          }}
-          isRowScrollable={true}
-          fetchDetails={true}
-          styles={{
-            textInputContainer: {
-              width: windowWidth * 0.7,
-              marginLeft: moderateScale(5, 0.6),
-            },
-            textInput: {
-              height: windowHeight * 0.06,
-              color: '#5d5d5d',
-              fontSize: 16,
-              borderWidth: 2,
-              borderColor: Color.lightGrey,
-              borderRadius: moderateScale(20, 0.6),
-            },
-            listView: {
-              width: windowWidth * 0.8,
-              marginLeft: moderateScale(5, 0.6),
-              borderColor: Color.veryLightGray,
-            },
-            description: {
-              color: 'black',
-            },
-          }}
-        />
-
-
+            // predefinedPlaces={[kfc, resturant]}
+          />
         </View>
 
         {Object.keys(searchData).length > 0 && (
@@ -209,14 +173,14 @@ const CheckinModal = ({setCheckinModal, checkinModal}) => {
 export default CheckinModal;
 
 const styles = StyleSheet.create({
-  mainContainer: {
-    height: windowHeight * 0.9,
-    width: windowWidth * 0.9,
-    backgroundColor: 'white',
-    alignItems: 'center',
-    borderRadius: moderateScale(5, 0.6),
-    paddingVertical: moderateScale(10, 0.6),
-  },
+  // mainContainer: {
+  //   height: windowHeight * 0.5,
+  //   width: windowWidth * 0.9,
+  //   backgroundColor: 'white',
+  //   alignItems: 'center',
+  //   borderRadius: moderateScale(5, 0.6),
+  //   paddingVertical: moderateScale(10, 0.6),
+  // },
   main: {
     width: windowWidth,
     height: windowHeight,
@@ -243,8 +207,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#FBB824',
     alignItems: 'center',
     justifyContent: 'center',
-    // position : 'absolute',
-    // left : 5,
+  },
+  heading: {
+    fontSize: moderateScale(17, 0.6),
+    color: Color.blue,
+    paddingVertical: moderateScale(10, 0.6),
   },
 
   txt1: {
