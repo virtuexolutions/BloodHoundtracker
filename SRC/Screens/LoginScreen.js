@@ -212,7 +212,7 @@ const styles = ScaledSheet.create({
     paddingTop: windowHeight * 0.02,
   },
   title: {
-    color: Color.dar,
+    color: Color.darkGray,
     fontSize: moderateScale(12, 0.6),
     paddingHorizontal: moderateScale(10, 0.6),
   },

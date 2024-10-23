@@ -21,8 +21,6 @@ const TagPeopleModal = ({
   setSelectedPeople,
   selectedPeople,
 }) => {
-  console.log("🚀 ~ tagModal:", tagModal)
-  console.log('🚀 ~ selectedPeople:', selectedPeople);
   const dummyArray = [
     {id: 1, name: 'alex', image: require('../Assets/Images/dummyman1.png')},
     {id: 2, name: 'david', image: require('../Assets/Images/dummyman2.png')},
@@ -41,8 +39,6 @@ const TagPeopleModal = ({
       image: require('../Assets/Images/dummyman5.png'),
     },
   ];
-  //   const [selectedPeople, setSelectedPeople] = useState([]);
-  //   console.log('🚀 ~ selectedPeople:', selectedPeople);
 
   return (
     <Modal

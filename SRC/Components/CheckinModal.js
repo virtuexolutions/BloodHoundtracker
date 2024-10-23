@@ -1,24 +1,27 @@
-import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
-import Modal from 'react-native-modal';
-import {windowHeight, windowWidth} from '../Utillity/utils';
-import {moderateScale} from 'react-native-size-matters';
-import {useState} from 'react';
-import Color from '../Assets/Utilities/Color';
-import {Icon, ScrollView} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
+import React, {useRef, useState} from 'react';
+import {Alert, StyleSheet, View} from 'react-native';
+import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
+import Modal from 'react-native-modal';
+import {moderateScale} from 'react-native-size-matters';
+import {useDispatch} from 'react-redux';
+import Color from '../Assets/Utilities/Color';
 import CustomButton from '../Components/CustomButton';
 import {setCustomLocation} from '../Store/slices/common';
-import {useDispatch} from 'react-redux';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
+import {windowHeight, windowWidth} from '../Utillity/utils';
 import CustomText from './CustomText';
 
-const CheckinModal = ({setCheckinModal, checkinModal}) => {
+const CheckinModal = ({
+  setCheckinModal,
+  checkinModal,
+  setSearchData,
+  searchData,
+}) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const [searchData, setSearchData] = useState('');
   const [Location, setLocation] = useState('');
+  
+  const googlePlacesRef = useRef();
   // const kfc = {
   //   description: 'Home',
   //   geometry: {location: {lat: 48.8152937, lng: 2.4597668}},
@@ -40,108 +43,66 @@ const CheckinModal = ({setCheckinModal, checkinModal}) => {
       onBackdropPress={() => {
         setCheckinModal(false);
       }}>
-      <View style={styles.mainContainer}>
+      {/* <View style={styles.mainContainer}> */}
         <CustomText isBold style={styles.heading}>
-          check in
+          Check In
         </CustomText>
 
-        <View
-          style={{
-            // flexDirection: 'row',
-            // justifyContent: 'space-between',
-            // // alignItems: 'center',
-            // padding: moderateScale(7, 0.6),
-          }}>
-          {/* <TouchableOpacity activeOpacity={0.8} style={styles.Rounded}>
-            <Icon
-              onPress={() => {
-                navigation.goBack();
-              }}
-              name="chevron-back-sharp"
-              as={Ionicons}
-              size={moderateScale(30)}
-              color={Color.black}
-            />
-          </TouchableOpacity> */}
-
-          <GooglePlacesAutocomplete
-            placeholder="Search"
-            textInputProps={{
-              placeholderTextColor: '#5d5d5d',
-              // returnKeyType: "search"
-            }}
-            onFail={error => {
-              console.log('API Error:', error);
-            }}
-            onPress={(data, details = null) => {
-              try {
-                if (details) {
-                  // Your logic here
-                  Alert.alert('onPress fired!');
-                  console.log('🚀 ~ CheckinModal ===============>', data);
-                  console.log('hello hereeeee ========  >>>>>>>>>', {
-                    name: data?.description,
-                    location: details?.geometry?.location,
-                  });
-                  //   setSearchData({
-                  //     name: data?.description,
-                  //     location: details?.geometry?.location,
-                  //   });
-                } else {
-                  throw new Error('Location details not available');
-                }
-              } catch (error) {
-                console.error('Error in onPress:', error);
-              }
+        <GooglePlacesAutocomplete
+          placeholder="Search"
+          textInputProps={{
+            placeholderTextColor: '#5d5d5d',
+          }}
+          onFail={(error) => {
+            console.log('API Error:', error);
+          }}
+          onPress={(data, details = null) => {
           
-              // Alert.alert('onPress fired!');
-              // console.log('🚀 ~ CheckinModal ===============>', data);
-              // console.log('hello hereeeee ========  >>>>>>>>>', {
-              //   name: data?.description,
-              //   location: details?.geometry?.location,
-              // });
-              // setSearchData({
-              //   name: data?.description,
-              //   location: details?.geometry?.location,
-              // });
-            }}
-            query={{
-              key: 'AIzaSyAa9BJa70uf_20IoTJfAiK_3wz5Vr_I7wM',
-              language: 'en',
-            }}
-            isRowScrollable={true}
-            fetchDetails={true}
-            // enablePoweredByContainer={false}
-            styles={{
-              textInputContainer: {
-                width: windowWidth * 0.8,
-                marginLeft: moderateScale(5, 0.6),
-              },
-              textInput: {
-                height: windowHeight * 0.06,
-                color: '#5d5d5d',
-                fontSize: 16,
-                borderWidth: 2,
-                borderColor: Color.lightGrey,
-                borderRadius: moderateScale(20, 0.6),
-              },
-              listView: {
-                width: windowWidth * 0.8,
-                // marginLeft: moderateScale(5, 0.6),
-                // borderColor: Color.veryLightGray,
-                // color : 'red',
-                // backgroundColor : 'red'
-              },
+          return   console.log('hey from auto places =============================?')
+            // Ensure details is not null before proceeding
+            if (details) {
+              console.log('Selected Place:', {
+                name: data?.description,
+                location: details?.geometry?.location,
+              });
 
-              description: {
-                color: '#5d5d5d',
-              },
-            }}
-            // predefinedPlaces={[kfc, resturant]}
-          />
-        </View>
+              // If needed, update the searchData state
+              setSearchData({
+                name: data?.description,
+                location: details?.geometry?.location,
+              });
+            } else {
+              console.log('No details available for this location');
+            }
+          }}
+          query={{
+            key: 'AIzaSyAa9BJa70uf_20IoTJfAiK_3wz5Vr_I7wM',
+            language: 'en',
+          }}
+          fetchDetails={true} // Important to get 'details' object in onPress
+          styles={{
+            textInputContainer: {
+              width: windowWidth * 0.8,
+              marginLeft: moderateScale(5, 0.6),
+            },
+            textInput: {
+              height: windowHeight * 0.06,
+              color: '#5d5d5d',
+              fontSize: 16,
+              borderWidth: 2,
+              borderColor: '#EAEAEA',
+              borderRadius: moderateScale(20, 0.6),
+            },
+            listView: {
+              width: windowWidth * 0.8,
+            },
+            description: {
+              color: '#5d5d5d',
+            },
+          }}
+        />
 
-        {Object.keys(searchData).length > 0 && (
+        {/* {Object.keys(searchData).length > 0 && ( */}
           <View
             style={{
               alignSelf: 'center',
@@ -150,23 +111,159 @@ const CheckinModal = ({setCheckinModal, checkinModal}) => {
             }}>
             <CustomButton
               text={'Proceed'}
-              textColor={Color.white}
+              textColor={'#fff'}
               width={windowWidth * 0.8}
               height={windowHeight * 0.06}
               marginTop={moderateScale(20, 0.3)}
               onPress={() => {
-                dispatch(setCustomLocation(searchData));
-                navigation.goBack();
+                console.log('------------------')
+                googlePlacesRef.current?.clear()
+                // dispatch(setCustomLocation(searchData));
+                // navigation.goBack();
               }}
               bgColor={'#FFB000'}
-              borderColor={Color.white}
+              borderColor={'#fff'}
               borderWidth={1}
               borderRadius={moderateScale(30, 0.3)}
             />
           </View>
-        )}
-      </View>
+        {/* )} */}
+      {/* </View> */}
     </Modal>
+
+    // <Modal
+    //   hasBackdrop={true}
+    //   style={{
+    //     justifyContent: 'center',
+    //     alignItems: 'center',
+    //   }}
+    //   isVisible={checkinModal}
+    //   onBackdropPress={() => {
+    //     setCheckinModal(false);
+    //   }}>
+    //   <View style={styles.mainContainer}>
+    //     <CustomText isBold style={styles.heading}>
+    //       check in
+    //     </CustomText>
+
+    //     <View
+    //       style={
+    //         {
+    //           // flexDirection: 'row',
+    //           // justifyContent: 'space-between',
+    //           // // alignItems: 'center',
+    //           // padding: moderateScale(7, 0.6),
+    //         }
+    //       }>
+    //       {/* <TouchableOpacity activeOpacity={0.8} style={styles.Rounded}>
+    //         <Icon
+    //           onPress={() => {
+    //             navigation.goBack();
+    //           }}
+    //           name="chevron-back-sharp"
+    //           as={Ionicons}
+    //           size={moderateScale(30)}
+    //           color={Color.black}
+    //         />
+    //       </TouchableOpacity> */}
+
+    //       <GooglePlacesAutocomplete
+    //         placeholder="Search"
+    //         textInputProps={{
+    //           placeholderTextColor: '#5d5d5d',
+    //           // returnKeyType: "search"
+    //         }}
+    //         onFail={error => {
+    //           console.log('API Error:', error);
+    //         }}
+    //         onPress={(data, details = null) =>{
+    //             console.log('🚀 ~ CheckinModal ===============>', data);
+
+    //         }}
+    //         // onPress={(data, details = null) => {
+    //         //   Alert.alert('onPress fired!');
+    //         //   // console.log('hello hereeeee ========  >>>>>>>>>', {
+    //         //   //   name: data?.description,
+    //         //   //   location: details?.geometry?.location,
+    //         //   // });
+    //         //   //   setSearchData({
+    //         //   //     name: data?.description,
+    //         //   //     location: details?.geometry?.location,
+    //         //   //   });
+
+    //         //   // Alert.alert('onPress fired!');
+    //         //   // console.log('🚀 ~ CheckinModal ===============>', data);
+    //         //   // console.log('hello hereeeee ========  >>>>>>>>>', {
+    //         //   //   name: data?.description,
+    //         //   //   location: details?.geometry?.location,
+    //         //   // });
+    //         //   // setSearchData({
+    //         //   //   name: data?.description,
+    //         //   //   location: details?.geometry?.location,
+    //         //   // });
+    //         // }}
+    //         query={{
+
+    //           language: 'en',
+    //         }}
+    //         // isRowScrollable={true}
+    //         fetchDetails={true}
+    //         // enablePoweredByContainer={false}
+    //         styles={{
+    //           textInputContainer: {
+    //             width: windowWidth * 0.8,
+    //             marginLeft: moderateScale(5, 0.6),
+    //           },
+    //           textInput: {
+    //             height: windowHeight * 0.06,
+    //             color: '#5d5d5d',
+    //             fontSize: 16,
+    //             borderWidth: 2,
+    //             borderColor: Color.lightGrey,
+    //             borderRadius: moderateScale(20, 0.6),
+    //           },
+    //           listView: {
+    //             width: windowWidth * 0.8,
+    //             // marginLeft: moderateScale(5, 0.6),
+    //             // borderColor: Color.veryLightGray,
+    //             // color : 'red',
+    //             // backgroundColor : 'red'
+    //           },
+
+    //           description: {
+    //             color: '#5d5d5d',
+    //           },
+    //         }}
+    //         // predefinedPlaces={[kfc, resturant]}
+    //       />
+    //     </View>
+
+    //     {Object.keys(searchData).length > 0 && (
+    //       <View
+    //         style={{
+    //           alignSelf: 'center',
+    //           position: 'absolute',
+    //           bottom: 50,
+    //         }}>
+    //         <CustomButton
+    //           text={'Proceed'}
+    //           textColor={Color.white}
+    //           width={windowWidth * 0.8}
+    //           height={windowHeight * 0.06}
+    //           marginTop={moderateScale(20, 0.3)}
+    //           onPress={() => {
+    //             dispatch(setCustomLocation(searchData));
+    //             navigation.goBack();
+    //           }}
+    //           bgColor={'#FFB000'}
+    //           borderColor={Color.white}
+    //           borderWidth={1}
+    //           borderRadius={moderateScale(30, 0.3)}
+    //         />
+    //       </View>
+    //     )}
+    //   </View>
+    // </Modal>
   );
 };
 

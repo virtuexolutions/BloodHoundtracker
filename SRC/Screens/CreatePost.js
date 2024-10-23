@@ -6,34 +6,32 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {moderateScale} from 'react-native-size-matters';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Color from '../Assets/Utilities/Color';
+import CheckinModal from '../Components/CheckinModal';
 import CustomButton from '../Components/CustomButton';
 import CustomHeader from '../Components/CustomHeader';
 import CustomImage from '../Components/CustomImage';
 import CustomText from '../Components/CustomText';
+import TagPeopleModal from '../Components/TagPeopleModal';
+import TextInputWithTitle from '../Components/TextInputWithTitle';
 import {FONTS} from '../Config/theme';
 import {
   requestCameraPermission,
   windowHeight,
   windowWidth,
 } from '../Utillity/utils';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Feather from 'react-native-vector-icons/Feather';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {color} from 'native-base/lib/typescript/theme/styled-system';
-import TagPeopleModal from '../Components/TagPeopleModal';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import CheckinModal from '../Components/CheckinModal';
-import TextInputWithTitle from '../Components/TextInputWithTitle';
-import Modal from '../Components/Modal';
 import CreatePostimges from '../Components/CreatePostimges';
+import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 
 const CreatePost = () => {
   const [tagModal, setTagModal] = useState(false);
@@ -43,6 +41,9 @@ const CreatePost = () => {
   const [checkinModal, setCheckinModal] = useState(false);
   const [multiImages, setMultiImages] = useState([]);
   const [description, setDescription] = useState('');
+  const [privacy, setPrivacy] = useState('only me');
+  const [privacyModal, setPrivacyModal] = useState(false);
+  const [searchData, setSearchData] = useState('');
 
   const openCamera = async () => {
     let options = {
@@ -155,13 +156,11 @@ const CreatePost = () => {
     // }
   };
 
-
-  
   return (
     <SafeAreaView>
       <ScrollView
         contentContainerStyle={{
-          paddingBottom: moderateScale(20, 0.6),
+          paddingBottom: moderateScale(50, 0.6),
           alignItems: 'center',
         }}
         style={styles.mainContainer}>
@@ -180,40 +179,87 @@ const CreatePost = () => {
             <CustomText
               isBold
               style={{
-                ...FONTS.Medium15,
+                ...FONTS.Medium13,
                 color: Color.textColor,
                 paddingHorizontal: moderateScale(10, 0.6),
                 paddingTop: moderateScale(5, 0.6),
               }}>
               Emmanuel Robertsen
+              {selectedPeople?.length > 0 && (
+                <CustomText
+                  numberOfLines={1}
+                  isBold
+                  style={{
+                    ...FONTS.Medium11,
+                    color: Color.textColor,
+                    paddingHorizontal: moderateScale(10, 0.6),
+                    paddingTop: moderateScale(5, 0.6),
+                  }}>
+                  {` - with  ${selectedPeople[0]?.name} and ${selectedPeople?.length} others. `}{' '}
+                </CustomText>
+              )}
             </CustomText>
-            <View style={styles.container}>
+            <TouchableOpacity
+              onPress={() => {
+                setPrivacyModal(!privacyModal);
+              }}
+              style={[
+                styles.container,
+                {
+                  width: windowWidth * 0.27,
+                  height: privacyModal
+                    ? windowHeight * 0.05
+                    : windowHeight * 0.03,
+                },
+              ]}>
               <Icon
                 style={{
                   marginTop: moderateScale(2, 0.6),
                 }}
-                name={'lock'}
-                as={AntDesign}
+                name={privacy == 'public' ? 'public' : 'lock'}
+                as={privacy == 'public' ? MaterialIcons : AntDesign}
                 size={moderateScale(15, 0.6)}
                 color={Color.themeColor}
               />
-              <CustomText
-                isBold
-                style={{
-                  ...FONTS.Medium10,
-                  color: Color.textColor,
-                  paddingHorizontal: moderateScale(5, 0.6),
-                  paddingTop: moderateScale(2, 0.6),
-                }}>
-                only me
-              </CustomText>
+              <View>
+                <CustomText
+                  onPress={() => {
+                    setPrivacy('only me');
+                  }}
+                  isBold
+                  style={{
+                    ...FONTS.Medium10,
+                    color: Color.textColor,
+                    paddingHorizontal: moderateScale(5, 0.6),
+                    paddingTop: moderateScale(2, 0.6),
+                  }}>
+                  {privacy}
+                </CustomText>
+                {privacyModal == true && (
+                  <CustomText
+                    onPress={() => {
+                      setPrivacy(privacy == 'public' ? 'only me' : 'public');
+                      setPrivacyModal(false);
+                    }}
+                    isBold
+                    style={{
+                      ...FONTS.Medium10,
+                      color: Color.textColor,
+                      paddingHorizontal: moderateScale(5, 0.6),
+                      paddingTop: moderateScale(2, 0.6),
+                      width: windowWidth * 0.18,
+                    }}>
+                    {privacy == 'public' ? 'only me' : 'public'}
+                  </CustomText>
+                )}
+              </View>
               <Icon
                 name={'arrow-drop-down'}
                 as={MaterialIcons}
                 size={moderateScale(18, 0.6)}
                 color={Color.themeColor}
               />
-            </View>
+            </TouchableOpacity>
           </View>
 
           <Icon
@@ -230,156 +276,11 @@ const CreatePost = () => {
             color={Color.themeColor}
           />
         </View>
-        {/* <Modal/> */}
-        {/* <CustomText
-          style={{
-            paddingTop: windowHeight * 0.03,
-            ...FONTS.Medium11,
-            color: Color.lightGrey,
-            paddingHorizontal: moderateScale(5, 0.6),
-            // paddingTop: moderateScale(2, 0.6),
-            width: windowWidth * 0.8,
-          }}>
-          In Miami, my electric trail motorbike, painted in striking blue, has
-          gone missing, leaving only a scratched fuel tank as a clue to its
-          whereabouts. I'm fervently searching, longing to reunite with my
-          prized ride and resume exploring the city's scenic trails.
-        </CustomText> */}
-        <CreatePostimges multiImages={multiImages} setMultiImages={setMultiImages}/>
-        {/* {multiImages.length == 1 ? (
-          <View style={styles.image}>
-            <View style={styles.sec_image}>
-              <CustomImage
-                style={{
-                  height: '100%',
-                  width: '100%',
-                }}
-                source={require('../Assets/Images/Bike.png')}
-              />
-            </View>
-          </View>
-        ) : multiImages.length == 2 ? (
-          <View style={styles.image}>
-            <View style={styles.sec_image}>
-              <CustomImage
-                style={{
-                  height: '100%',
-                  width: '100%',
-                }}
-                source={require('../Assets/Images/Bike.png')}
-              />
-            </View>
-            <View>
-              <View
-                style={{
-                  width: windowWidth * 0.38,
-                  height: windowHeight * 0.25,
-                  marginBottom: moderateScale(7, 0.6),
-                }}>
-                <CustomImage
-                  style={{
-                    height: '100%',
-                    width: '100%',
-                  }}
-                  source={require('../Assets/Images/Bike.png')}
-                />
-              </View>
-            </View>
-          </View>
-        ) : multiImages.length == 3 ? (
-          <View style={styles.image}>
-            <View style={styles.sec_image}>
-              <CustomImage
-                style={{
-                  height: '100%',
-                  width: '100%',
-                }}
-                source={require('../Assets/Images/Bike.png')}
-              />
-            </View>
-            <View>
-              <View
-                style={{
-                  width: windowWidth * 0.38,
-                  height: windowHeight * 0.12,
-                  marginBottom: moderateScale(7, 0.6),
-                }}>
-                <CustomImage
-                  style={{
-                    height: '100%',
-                    width: '100%',
-                  }}
-                  source={require('../Assets/Images/Bike.png')}
-                />
-              </View>
-              <View
-                style={{
-                  width: windowWidth * 0.38,
-                  height: windowHeight * 0.12,
-                }}>
-                <CustomImage
-                  style={{
-                    height: '100%',
-                    width: '100%',
-                  }}
-                  source={require('../Assets/Images/Bike.png')}
-                />
-              </View>
-            </View>
-          </View>
-        ) : multiImages.length > 3 ? (
-          <View style={styles.image}>
-            <View style={styles.sec_image}>
-              <CustomImage
-                style={{
-                  height: '100%',
-                  width: '100%',
-                }}
-                source={require('../Assets/Images/Bike.png')}
-              />
-            </View>
-            <View>
-              <View
-                style={{
-                  width: windowWidth * 0.38,
-                  height: windowHeight * 0.12,
-                  marginBottom: moderateScale(7, 0.6),
-                }}>
-                <CustomImage
-                  style={{
-                    height: '100%',
-                    width: '100%',
-                  }}
-                  source={require('../Assets/Images/Bike.png')}
-                />
-              </View>
-              <TouchableOpacity
-                activeOpacity={0.9}
-                style={{
-                  width: windowWidth * 0.38,
-                  height: windowHeight * 0.12,
-                }}>
-                  <View style={{ tintColor:'rgba(0,0,0,0.1)' ,zIndex:1 ,height:'100%',width:'100%'}}>
 
-                  
-                <CustomImage
-                  style={{
-                    height: '100%',
-                    width: '100%',
-                    // tintColor: 'rgba(0,0,0,0.1)',
-                  }}
-                  source={require('../Assets/Images/Bike.png')}
-                />
-                </View>
-              </TouchableOpacity>
-              <CustomText isBold style={styles.multitext}>{`+${
-                multiImages.length - 3
-              } `}</CustomText>
-            </View>
-          </View>
-        ) : (
-          <View style={styles.image}></View>
-        )} */}
+        <CreatePostimges
+          multiImages={multiImages}
+          setMultiImages={setMultiImages}
+        />
 
         <TextInputWithTitle
           titleText={'Email'}
@@ -397,7 +298,7 @@ const CreatePost = () => {
           placeholderColor={Color.themeLightGray}
           multiline
         />
-      
+
         <TouchableOpacity
           onPress={() => {
             console.log('hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
@@ -498,8 +399,9 @@ const CreatePost = () => {
         <CheckinModal
           checkinModal={checkinModal}
           setCheckinModal={setCheckinModal}
+          searchData={searchData}
+          setSearchData={setSearchData}
         />
-       
       </ScrollView>
     </SafeAreaView>
   );
@@ -529,10 +431,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginHorizontal: moderateScale(10, 0.6),
     backgroundColor: '#0000FE12',
-    width: windowWidth * 0.25,
     justifyContent: 'center',
     borderRadius: moderateScale(5, 0.6),
-    height: windowHeight * 0.03,
   },
   image: {
     flexDirection: 'row',
@@ -559,7 +459,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 37,
     right: 55,
-    color:Color.white
+    color: Color.white,
   },
- 
+  privacy_mOdal: {
+    height: windowHeight * 0.04,
+    width: windowWidth * 0.04,
+    backgroundColor: 'red',
+  },
 });

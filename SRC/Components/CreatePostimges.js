@@ -1,44 +1,28 @@
 import {StyleSheet, Text, View, TouchableOpacity, FlatList} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import CustomImage from './CustomImage';
 import {moderateScale} from 'react-native-size-matters';
 import {windowHeight, windowWidth} from '../Utillity/utils';
 import Color from '../Assets/Utilities/Color';
 import CustomText from './CustomText';
 import FlatGrid from 'react-native-super-grid';
+import ImageView from 'react-native-image-viewing';
+import ImageViewingModal from './ImageViewingModal';
+import Entypo from 'react-native-vector-icons/Entypo';
+import {Icon} from 'native-base';
 
 const CreatePostimges = ({multiImages, setMultiImages}) => {
-  console.log("🚀 ~ CreatePostimges ~ multiImages:", multiImages)
-  const [images, setImages] = useState([]);
-  // const postimages = multiImages.map((item ,index ) => {
-  //     return( setImages(item?.uri))
-  // })
+  const [isVisible, setIsVisible] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   return (
     <View>
-      <FlatGrid
-        // horizontal={true}
-          itemDimension={130}
-        data={multiImages}
-        style={styles.gridView}
-        // staticDimension={300}
-        // fixed
-        spacing={10}
-        renderItem={({item}) => (
-          <View style={[styles.itemContainer, {backgroundColor: item.code}]}>
-            <CustomImage
-              style={{
-                height: '100%',
-                width: '100%',
-              }}
-              source={{uri: multiImages[0]?.uri}}
-            />
-          </View>
-        )}
-      />
-      {/* {multiImages.length == 1 ? (
+      {multiImages.length == 1 ? (
         <View style={styles.image}>
-          <View
+          <TouchableOpacity
+            onPress={() => {
+              setIsVisible(true);
+            }}
             style={[
               styles.sec_image,
               {
@@ -46,23 +30,29 @@ const CreatePostimges = ({multiImages, setMultiImages}) => {
               },
             ]}>
             <CustomImage
+              onPress={() => {
+                setIsVisible(true);
+              }}
               style={{
                 height: '100%',
                 width: '100%',
               }}
-              source={{uri:multiImages[0]?.uri}}
+              source={{uri: multiImages[0]?.uri}}
             />
-          </View>
+          </TouchableOpacity>
         </View>
       ) : multiImages.length == 2 ? (
         <View style={styles.image}>
           <View style={styles.sec_image}>
             <CustomImage
+              onPress={() => {
+                setIsVisible(true);
+              }}
               style={{
                 height: '100%',
                 width: '100%',
               }}
-              source={require('../Assets/Images/Bike.png')}
+              source={{uri: multiImages[0]?.uri}}
             />
           </View>
           <View>
@@ -73,11 +63,14 @@ const CreatePostimges = ({multiImages, setMultiImages}) => {
                 marginBottom: moderateScale(7, 0.6),
               }}>
               <CustomImage
+                onPress={() => {
+                  setIsVisible(true);
+                }}
                 style={{
                   height: '100%',
                   width: '100%',
                 }}
-                source={require('../Assets/Images/Bike.png')}
+                source={{uri: multiImages[1]?.uri}}
               />
             </View>
           </View>
@@ -86,11 +79,14 @@ const CreatePostimges = ({multiImages, setMultiImages}) => {
         <View style={styles.image}>
           <View style={styles.sec_image}>
             <CustomImage
+              onPress={() => {
+                setIsVisible(true);
+              }}
               style={{
                 height: '100%',
                 width: '100%',
               }}
-              source={require('../Assets/Images/Bike.png')}
+              source={{uri: multiImages[0]?.uri}}
             />
           </View>
           <View>
@@ -101,11 +97,14 @@ const CreatePostimges = ({multiImages, setMultiImages}) => {
                 marginBottom: moderateScale(7, 0.6),
               }}>
               <CustomImage
+                onPress={() => {
+                  setIsVisible(true);
+                }}
                 style={{
                   height: '100%',
                   width: '100%',
                 }}
-                source={require('../Assets/Images/Bike.png')}
+                source={{uri: multiImages[1]?.uri}}
               />
             </View>
             <View
@@ -114,42 +113,54 @@ const CreatePostimges = ({multiImages, setMultiImages}) => {
                 height: windowHeight * 0.12,
               }}>
               <CustomImage
+                onPress={() => {
+                  setIsVisible(true);
+                }}
                 style={{
                   height: '100%',
                   width: '100%',
                 }}
-                source={require('../Assets/Images/Bike.png')}
+                source={{uri: multiImages[2]?.uri}}
               />
             </View>
           </View>
         </View>
       ) : multiImages.length > 3 ? (
         <View style={styles.image}>
-          <View style={styles.sec_image}>
+          <TouchableOpacity style={styles.sec_image}>
             <CustomImage
+              onPress={() => {
+                setIsVisible(true);
+              }}
               style={{
                 height: '100%',
                 width: '100%',
               }}
-              source={require('../Assets/Images/Bike.png')}
+              source={{uri: multiImages[0]?.uri}}
             />
-          </View>
+          </TouchableOpacity>
           <View>
-            <View
+            <TouchableOpacity
               style={{
                 width: windowWidth * 0.38,
                 height: windowHeight * 0.12,
                 marginBottom: moderateScale(7, 0.6),
               }}>
               <CustomImage
+                onPress={() => {
+                  setIsVisible(true);
+                }}
                 style={{
                   height: '100%',
                   width: '100%',
                 }}
-                source={require('../Assets/Images/Bike.png')}
+                source={{uri: multiImages[1]?.uri}}
               />
-            </View>
+            </TouchableOpacity>
             <TouchableOpacity
+              onPress={() => {
+                setIsVisible(true);
+              }}
               activeOpacity={0.9}
               style={{
                 width: windowWidth * 0.38,
@@ -163,12 +174,15 @@ const CreatePostimges = ({multiImages, setMultiImages}) => {
                   width: '100%',
                 }}>
                 <CustomImage
+                  onPress={() => {
+                    setIsVisible(true);
+                  }}
                   style={{
                     height: '100%',
                     width: '100%',
                     // tintColor: 'rgba(0,0,0,0.1)',
                   }}
-                  source={require('../Assets/Images/Bike.png')}
+                  source={{uri: multiImages[2]?.uri}}
                 />
               </View>
             </TouchableOpacity>
@@ -179,7 +193,15 @@ const CreatePostimges = ({multiImages, setMultiImages}) => {
         </View>
       ) : (
         <View style={styles.image}></View>
-      )} */}
+      )}
+      <ImageViewingModal
+        visible={isVisible}
+        setIsVisible={setIsVisible}
+        setSelectedImageIndex={setSelectedImageIndex}
+        selectedImageIndex={selectedImageIndex}
+        multiImages={multiImages}
+        setMultiImages={setMultiImages}
+      />
     </View>
   );
 };
@@ -203,11 +225,13 @@ const styles = StyleSheet.create({
   },
   sec_image: {
     width: windowWidth * 0.45,
+    zIndex: 1,
     marginRight: moderateScale(5, 0.6),
     height: windowHeight * 0.25,
   },
   row: {
     marginTop: windowHeight * 0.04,
+    backgroundColor: 'red',
     flexDirection: 'row',
     width: windowWidth * 0.85,
     borderWidth: 1,
@@ -225,7 +249,8 @@ const styles = StyleSheet.create({
   },
   gridView: {
     marginTop: 10,
-    flex: 1,
+    // flex: 1,
+    width: windowWidth * 0.95,
   },
   itemContainer: {
     justifyContent: 'flex-end',
