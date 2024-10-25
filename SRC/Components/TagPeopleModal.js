@@ -51,7 +51,7 @@ const TagPeopleModal = ({
       onBackdropPress={() => {
         setTagModal(false);
       }}>
-      <View style={styles.mainContainer}>
+      <View style={styles.maincontainer}>
         <CustomText isBold style={styles.heading}>
           tag people
         </CustomText>
@@ -60,7 +60,7 @@ const TagPeopleModal = ({
           style={{
             height: windowHeight * 0.05,
             borderRadius: 20,
-            marginTop: moderateScale(30, 0.6),
+            marginTop: moderateScale(15, 0.6),
           }}
           data={serachData}
           setData={setSearchData}
@@ -69,8 +69,10 @@ const TagPeopleModal = ({
         />
         <FlatList
           data={dummyArray}
+          contentContainerStyle={{
+            paddingBottom: moderateScale(20, 0.6),
+          }}
           renderItem={({item, index}) => {
-            console.log('🚀 ~ item:', item?.id);
             return (
               <View style={styles.row}>
                 <View style={styles.image}>
@@ -93,8 +95,7 @@ const TagPeopleModal = ({
                 </CustomText>
                 <TouchableOpacity
                   onPress={() => {
-                    if ( selectedPeople?.some(data => data?.id == item?.id)
-                    ) {
+                    if (selectedPeople?.some(data => data?.id == item?.id)) {
                       const temp = [...selectedPeople];
                       setSelectedPeople(
                         temp?.filter((item1, index) => item1?.id != item?.id),
@@ -117,29 +118,27 @@ const TagPeopleModal = ({
             );
           }}
         />
-         <View
-            style={{
-              alignSelf: 'center',
-              position: 'absolute',
-              bottom: 20,
-            }}>
-            <CustomButton
-              text={'done'}
-              textColor={Color.white}
-              width={windowWidth * 0.8}
-              height={windowHeight * 0.06}
-              marginTop={moderateScale(20, 0.3)}
-              onPress={() => {
-                setTagModal(false);
-                // dispatch(setCustomLocation(searchData));
-                // navigation.goBack();
-              }}
-              bgColor={Color.blue}
-              borderColor={Color.blue}
-              borderWidth={1}
-              borderRadius={moderateScale(30, 0.3)}
-            />
-          </View>
+        {selectedPeople?.length > 0 &&<View
+          style={{
+            alignSelf: 'center',
+            position: 'absolute',
+            bottom: 10,
+          }}>
+          <CustomButton
+            text={'done'}
+            textColor={Color.white}
+            width={windowWidth * 0.8}
+            height={windowHeight * 0.06}
+            marginTop={moderateScale(20, 0.3)}
+            onPress={() => {
+              setTagModal(false);
+            }}
+            bgColor={Color.blue}
+            borderColor={Color.blue}
+            borderWidth={1}
+            borderRadius={moderateScale(30, 0.3)}
+          />
+        </View>}
       </View>
     </Modal>
   );
@@ -148,13 +147,23 @@ const TagPeopleModal = ({
 export default TagPeopleModal;
 
 const styles = StyleSheet.create({
-  mainContainer: {
-    height: windowHeight * 0.9,
+  // mainContainer: {
+  //   height: windowHeight * 0.9,
+  //   width: windowWidth * 0.9,
+  //   backgroundColor: 'white',
+  //   alignItems: 'center',
+  //   borderRadius: moderateScale(5, 0.6),
+  //   paddingVertical: moderateScale(10, 0.6),
+  // },
+  maincontainer: {
+    backgroundColor: Color.white,
     width: windowWidth * 0.9,
-    backgroundColor: 'white',
+    height: windowHeight * 0.85,
     alignItems: 'center',
-    borderRadius: moderateScale(5, 0.6),
-    paddingVertical: moderateScale(10, 0.6),
+    borderRadius: moderateScale(20, 0.3),
+    paddingVertical: moderateScale(15, 0.3),
+    borderWidth: 1,
+    borderColor: Color.blue,
   },
   heading: {
     fontSize: moderateScale(18, 0.6),

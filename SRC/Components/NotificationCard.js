@@ -12,7 +12,6 @@ import { color } from 'native-base/lib/typescript/theme/styled-system';
 import Entypo from 'react-native-vector-icons/Entypo'
 
 const NotificationCard = ({ image, text, name, time, unread, onPress, item }) => {
-  console.log('🚀 ~ NotificationCard ~ item:', item);
   const userRole = useSelector(state => state.commonReducer.selectedRole);
   const userData = useSelector(state => state.commonReducer.userData);
 

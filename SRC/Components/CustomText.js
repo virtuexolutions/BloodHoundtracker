@@ -14,9 +14,9 @@ const CustomText = (props) => {
           color: Color.black,
         },
         style,
-        { fontFamily: "PlusJakartaDisplay-Regular" },
+        { fontFamily: "Rubik-Regular" },
         isBold && {
-          fontFamily: "PlusJakartaDisplay-Bold",
+          fontFamily: "Rubik-Bold",
           fontWeight: "bold",
         },
       ]}

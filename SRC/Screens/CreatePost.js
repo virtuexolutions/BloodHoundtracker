@@ -17,11 +17,12 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Color from '../Assets/Utilities/Color';
-import CheckinModal from '../Components/CheckinModal';
+import CreatePostimges from '../Components/CreatePostimges';
 import CustomButton from '../Components/CustomButton';
 import CustomHeader from '../Components/CustomHeader';
 import CustomImage from '../Components/CustomImage';
 import CustomText from '../Components/CustomText';
+import SearchLocationModal from '../Components/SearchLocationModal';
 import TagPeopleModal from '../Components/TagPeopleModal';
 import TextInputWithTitle from '../Components/TextInputWithTitle';
 import {FONTS} from '../Config/theme';
@@ -30,8 +31,6 @@ import {
   windowHeight,
   windowWidth,
 } from '../Utillity/utils';
-import CreatePostimges from '../Components/CreatePostimges';
-import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 
 const CreatePost = () => {
   const [tagModal, setTagModal] = useState(false);
@@ -44,6 +43,7 @@ const CreatePost = () => {
   const [privacy, setPrivacy] = useState('only me');
   const [privacyModal, setPrivacyModal] = useState(false);
   const [searchData, setSearchData] = useState('');
+  console.log('🚀 ~ CreatePost ~ searchData:', searchData?.name);
 
   const openCamera = async () => {
     let options = {
@@ -260,6 +260,34 @@ const CreatePost = () => {
                 color={Color.themeColor}
               />
             </TouchableOpacity>
+            {searchData != '' && (
+              <View
+                style={{
+                  flexDirection: 'row',
+
+                  paddingTop: moderateScale(5, 0.6),
+                }}>
+                <Icon
+                  style={{
+                    marginHorizontal: moderateScale(6, 0.6),
+                  }}
+                  name={'map-marker-radius-outline'}
+                  as={MaterialCommunityIcons}
+                  size={moderateScale(15, 0.6)}
+                  color={Color.themeColor}
+                />
+                <CustomText
+                  numberOfLines={1}
+                  isBold
+                  style={{
+                    ...FONTS.Medium11,
+                    color: Color.textColor,
+                    // paddingHorizontal: moderateScale(10, 0.6),
+                  }}>
+                  {searchData?.name}
+                </CustomText>
+              </View>
+            )}
           </View>
 
           <Icon
@@ -396,9 +424,10 @@ const CreatePost = () => {
           selectedPeople={selectedPeople}
           setSelectedPeople={setSelectedPeople}
         />
-        <CheckinModal
-          checkinModal={checkinModal}
-          setCheckinModal={setCheckinModal}
+
+        <SearchLocationModal
+          setIsModalVisible={setCheckinModal}
+          isModalVisible={checkinModal}
           searchData={searchData}
           setSearchData={setSearchData}
         />

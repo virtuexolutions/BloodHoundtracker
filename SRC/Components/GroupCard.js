@@ -9,7 +9,6 @@ import { FONTS } from '../Config/theme';
 import navigationService from '../navigationService';
 
 const GroupCard = ({ item }) => {
-  console.log("🚀 ~ GroupCard ~ item:", item)
   return (
     <TouchableOpacity style={styles.card} onPress={() => navigationService.navigate('GroupDeatils')}>
       <View style={styles.rowContainer}>

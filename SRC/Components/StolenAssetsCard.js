@@ -5,10 +5,9 @@ import Color from '../Assets/Utilities/Color';
 import {moderateScale} from 'react-native-size-matters';
 import CustomText from './CustomText';
 import CustomImage from './CustomImage';
-import { FONTS } from '../Config/theme';
+import {FONTS} from '../Config/theme';
 
 const StolenAssetsCard = ({item}) => {
-  console.log('🚀 ~ StolenAssetsCard ~ item:', item);
   return (
     <View style={styles.card}>
       <View
@@ -64,7 +63,6 @@ const StolenAssetsCard = ({item}) => {
           source={require('../Assets/Images/Bike.png')}
         />
       </View>
-    
     </View>
   );
 };

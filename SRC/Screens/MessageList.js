@@ -43,7 +43,6 @@ const MessageList = () => {
         numColumns={1}
         data={chatlist}
         renderItem={(item, index) => {
-          console.log("🚀 ~ MessageList ~ item:", item?.item)
           return (
             <ChatCard item={item?.item} />
           )

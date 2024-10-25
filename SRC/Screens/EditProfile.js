@@ -40,7 +40,6 @@ const EditProfile = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const userData = useSelector(state => state.commonReducer.userData);
-  console.log('🚀 ~ Profile ~ userData=========>:', userData);
   const token = useSelector(state => state.authReducer.token);
   const [isLoading, setIsLoading] = useState(false);
   const [firstName, setFirstName] = useState(userData?.name?  userData?.name :'');

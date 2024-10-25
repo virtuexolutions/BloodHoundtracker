@@ -5,8 +5,6 @@ import {moderateScale} from 'react-native-size-matters';
 import {windowHeight, windowWidth} from '../Utillity/utils';
 import Color from '../Assets/Utilities/Color';
 import CustomText from './CustomText';
-import FlatGrid from 'react-native-super-grid';
-import ImageView from 'react-native-image-viewing';
 import ImageViewingModal from './ImageViewingModal';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {Icon} from 'native-base';

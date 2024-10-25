@@ -26,7 +26,6 @@ const ChatCard = ({
   target_id,
   conversationId,
 }) => {
-  console.log('🚀 ~ item:', item);
   const token = useSelector(state => state.authReducer.token);
 
   const userRole = useSelector(state => state.commonReducer.selectedRole);
