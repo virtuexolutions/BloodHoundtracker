@@ -15,6 +15,7 @@ import { store, persistor } from './SRC/Store/index';
 //   requestWritePermission,
 // } from './SRC/Utillity/utils';
 import SplashScreen from './SRC/Screens/SplashScreen';
+import Settings from './SRC/Screens/Settings';
 import AppNavigator from './SRC/appNavigation';
 import Numberverfication from './SRC/Screens/Numberverfication';
 import Groups from './SRC/Screens/Groups';
@@ -30,6 +31,9 @@ import GroupDeatils from './SRC/Screens/GroupDeatils';
 import ResetPassword from './SRC/Screens/ResetPassword';
 import EnterEmail from './SRC/Screens/EnterEmail';
 import { requestCameraPermission, requestLocationPermission, requestReadPermission, requestWritePermission } from './SRC/Utillity/utils';
+import TermsAndConditions from './SRC/Screens/TermsAndConditions';
+import PrivacyPolicy from './SRC/Screens/PrivacyPolicy';
+import ChangePassword from './SRC/Screens/ChangePassword';
 
 // import AddCard from './SRC/Screens/AddCard';
 
@@ -185,6 +189,8 @@ const MainContainer = () => {
     return <SplashScreen />;
   }
   return <AppNavigator />
+  // return <Settings/>
+  // return <ChangePassword/>
   // return <ResetPassword/>
   // return <EnterEmail/>
   // return <VerifyNumber/>
