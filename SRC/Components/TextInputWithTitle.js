@@ -46,14 +46,15 @@ const TextInputWithTitle = props => {
             backgroundColor: props.backgroundColor,
           },
           props.elevation && {
-            shadowColor: Color.themeColor,
+            shadowColor: props.shadowColor
+              ? props.shadowColor
+              : Color.themeColor,
             shadowOffset: {
               width: 0,
               height: 4,
             },
             shadowOpacity: 0.32,
             shadowRadius: 5.46,
-
             elevation: 9,
           },
           props.marginBottom && {
@@ -81,7 +82,7 @@ const TextInputWithTitle = props => {
           },
           props.iconName &&
             !props.rightIcon && {
-              paddingLeft: moderateScale(40, 0.3),
+              paddingLeft: moderateScale(10, 0.3),
             },
         ]}>
         {props.iconName && (

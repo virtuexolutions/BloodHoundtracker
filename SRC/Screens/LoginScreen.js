@@ -1,7 +1,14 @@
 import {useNavigation} from '@react-navigation/native';
 import {ScrollView} from 'native-base';
 import React, {useState} from 'react';
-import {ActivityIndicator, Alert, Platform, ToastAndroid, TouchableOpacity, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  Platform,
+  ToastAndroid,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {moderateScale, ScaledSheet} from 'react-native-size-matters';
 import {useDispatch, useSelector} from 'react-redux';
 import Color from '../Assets/Utilities/Color';
@@ -14,9 +21,9 @@ import navigationService from '../navigationService';
 import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import { Post } from '../Axios/AxiosInterceptorFunction';
-import { setUserToken } from '../Store/slices/auth';
-import { setUserData } from '../Store/slices/common';
+import {Post} from '../Axios/AxiosInterceptorFunction';
+import {setUserToken} from '../Store/slices/auth';
+import {setUserData} from '../Store/slices/common';
 
 const LoginScreen = () => {
   const dispatch = useDispatch();
@@ -44,7 +51,6 @@ const LoginScreen = () => {
 
       dispatch(setUserToken({token: response?.data?.token}));
       dispatch(setUserData(response?.data?.user_info));
-    
     }
   };
 
@@ -54,7 +60,6 @@ const LoginScreen = () => {
         backgroundColor={Color.white}
         barStyle={'dark-content'}
       />
-
       <ScrollView
         showsVerticalScrollIndicator={false}
         removeClippedSubviews={true}

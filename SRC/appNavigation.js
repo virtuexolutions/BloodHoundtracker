@@ -7,7 +7,6 @@ import {moderateScale} from 'react-native-size-matters';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useSelector} from 'react-redux';
 import Color from './Assets/Utilities/Color';
@@ -16,7 +15,6 @@ import navigationService from './navigationService';
 import HomeScreen from './Screens/HomeScreen';
 import LoginScreen from './Screens/LoginScreen';
 import Signup from './Screens/Signup';
-
 import {Icon} from 'native-base';
 import {View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -37,6 +35,9 @@ import ResetPassword from './Screens/ResetPassword';
 import EditProfile from './Screens/EditProfile';
 import CreatePost from './Screens/CreatePost';
 import MediaPlayerScreen from './Screens/MediaPlayerScreen';
+import TermsAndConditions from './Screens/TermsAndConditions';
+import PrivacyPolicy from './Screens/PrivacyPolicy';
+import ChangePassword from './Screens/ChangePassword';
 
 const AppNavigator = () => {
   // const isLogin = false;
@@ -85,6 +86,15 @@ const AppNavigator = () => {
           <RootNav.Screen name="VerifyNumber" component={Numberverfication} />
           <RootNav.Screen name="ResetPassword" component={ResetPassword} />
           <RootNav.Screen name="EditProfile" component={EditProfile} />
+          <RootNav.Screen
+            name="ChangePasswordScreen"
+            component={ChangePassword}
+          />
+          <RootNav.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
+          <RootNav.Screen
+            name="TermsAndConditions"
+            component={TermsAndConditions}
+          />
           <RootNav.Screen name="CreatePost" component={CreatePost} />
           <RootNav.Screen
             name="MediaPlayerScreen"
@@ -111,7 +121,7 @@ export const TabNavigation = () => {
           let color = Color.white;
           let size = moderateScale(20, 0.3);
           let type = Ionicons;
-          if (route.name === 'MessageList') {
+          if (route.name === 'Settings') {
             iconName = focused ? 'tune' : 'tune';
             type = MaterialIcons;
             color = focused ? Color.themeColor : Color.white;
@@ -211,7 +221,8 @@ export const TabNavigation = () => {
         ),
         tabBarShowLabel: false,
       })}>
-      <Tabs.Screen name={'MessageList'} component={MessageList} />
+      {/* <Tabs.Screen name={'MessageList'} component={MessageList} /> */}
+      <Tabs.Screen name={'Settings'} component={Settings} />
       <Tabs.Screen name="Groups" component={Groups} />
       <Tabs.Screen name={'HomeScreen'} component={HomeScreen} />
       <Tabs.Screen
