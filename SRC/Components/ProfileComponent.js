@@ -121,7 +121,7 @@ const ProfileComponent = ({stolenAssetsArray, selected, setSelected}) => {
         numColumns={1}
         data={stolenAssetsArray}
         style={{
-          height:windowHeight*0.24,
+          height:windowHeight*0.3,
         }}
         contentContainerStyle={{
 

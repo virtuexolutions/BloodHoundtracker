@@ -20,6 +20,10 @@ const PrivacyModal = ({
   selectedType,
   selectedCategoryType,
   setSelectedCategoryType,
+  visibility,
+  setvisiblity,
+  setPrivacy,
+  privacy,
 }) => {
   console.log('🚀 ~ selectedCategoryType:', selectedCategoryType);
   const token = useSelector(state => state.authReducer.token);
@@ -65,21 +69,18 @@ const PrivacyModal = ({
             </CustomText>
             <TouchableOpacity
               onPress={() => {
-                (selectedType == 'privacy' &&
-                  setSelectedCategoryType('public')) ||
-                  (selectedType == 'visibility' &&
-                    setSelectedCategoryType('visible'));
+                (selectedType == 'privacy' && setPrivacy('public')) ||
+                  (selectedType == 'visibility' && setvisiblity('visible'));
               }}
               style={[
                 styles.Circle,
                 {
                   backgroundColor:
                     selectedType == 'privacy'
-                      ? selectedCategoryType == 'public'
+                      ? privacy == 'public'
                         ? Color.themeColor
                         : 'white'
-                      : selectedType == 'visibility' &&
-                        selectedCategoryType == 'visible'
+                      : selectedType == 'visibility' && visibility == 'visible'
                       ? Color.themeColor
                       : 'white',
                 },
@@ -112,19 +113,19 @@ const PrivacyModal = ({
             <TouchableOpacity
               onPress={() => {
                 (selectedType == 'privacy' &&
-                  setSelectedCategoryType('private')) ||
+                  setPrivacy('private')) ||
                   (selectedType == 'visibility' &&
-                    setSelectedCategoryType('hidden'));
+                    setvisiblity('hidden'));
               }}
               style={[
                 styles.Circle,
                 {
                   backgroundColor:
                     selectedType == 'privacy'
-                      ? selectedCategoryType == 'private'
+                      ? privacy == 'private'
                         ? Color.themeColor
                         : 'white'
-                      : selectedCategoryType == 'hidden'
+                      : visibility == 'hidden'
                       ? Color.themeColor
                       : 'white',
                 },

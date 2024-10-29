@@ -16,6 +16,7 @@ import CustomButton from './CustomButton';
 import CustomImage from './CustomImage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Icon} from 'native-base';
+import CustomText from './CustomText';
 
 const ImageViewingModal = ({
   visible,
@@ -23,8 +24,12 @@ const ImageViewingModal = ({
   selectedImageIndex,
   setSelectedImageIndex,
   multiImages,
+  imageIndex,
   setMultiImages,
+  imageArray,
+  fromgallery,
 }) => {
+  console.log("🚀 ~ multiImages:", multiImages)
   const flatListRef = useRef(null);
   const navigation = useNavigation();
 
@@ -73,61 +78,35 @@ const ImageViewingModal = ({
           </View>
 
           <FlatList
-            ref={flatListRef}
-            data={multiImages}
-            keyExtractor={item => item?.id}
             horizontal
+            data={multiImages}
             pagingEnabled
+            keyExtractor={(item, index) =>
+              item?.id?.toString() || index.toString()
+            }
             renderItem={({item, index}) => {
+              console.log("🚀 ~ item:", item)
               return (
-                <>
-                  <TouchableOpacity
-                    onLongPress={() => {
-                      setModalVisible(true);
-                      console.log('on long press===========>');
-                    }}
+                <View
+                  style={{
+                    height: windowHeight * 0.3,
+                    width: windowWidth,
+                  }}>
+                  <CustomImage
                     style={{
                       width: windowWidth,
                       height: windowHeight * 0.4,
                       marginTop: windowHeight * 0.15,
-                      // justifyContent: 'center',
-                      //   alignItems: 'center',
+                      justifyContent: 'center',
+                      alignItems: 'center',
                       // overflow: 'hidden',
-                    }}>
-                    <CustomImage
-                      style={{
-                        height: '100%',
-                        width: '100%',
-                      }}
-                      source={{uri: item?.uri}}
-                    />
-                  </TouchableOpacity>
-                  <Icon
-                    onPress={() => {
-                      if (multiImages?.length == 1) {
-                        let newArray = [...multiImages];
-                        newArray.splice(index, 1);
-                        setMultiImages(newArray);
-                        setIsVisible(false);
-                      } else {
-                        let newArray = [...multiImages];
-                        newArray.splice(index, 1);
-                        setMultiImages(newArray);
-                      }
                     }}
-                    style={{
-                      position: 'absolute',
-                      bottom: 120,
-                      width: windowWidth,
-                      textAlign: 'center',
-                      //   marginHorizontal:moderateScale(50,.6)
-                    }}
-                    as={Ionicons}
-                    name={'trash-outline'}
-                    size={moderateScale(25, 0.6)}
-                    color={Color.black}
+                    // source={require('../Assets/Images/dummyman5.png')}
+                    source={item?.uri}
+                      
+                    
                   />
-                </>
+                </View>
               );
             }}
             getItemLayout={(data, index) => ({
@@ -136,6 +115,75 @@ const ImageViewingModal = ({
               index,
             })}
           />
+          {/* <FlatList
+            ref={flatListRef}
+            data={fromgallery ? imageArray : multiImages}
+            keyExtractor={item => item?.id}
+            horizontal
+            pagingEnabled
+            renderItem={({item, index}) => {
+              return (
+                <CustomText>{item?.id}</CustomText>
+                // <>
+                //   <TouchableOpacity
+                //     onLongPress={() => {
+                //       // setModalVisible(true);
+                //       console.log('on long press===========>');
+                //     }}
+                //     style={{
+                //       width: windowWidth,
+                //       height: windowHeight * 0.4,
+                //       // marginTop: windowHeight * 0.15,
+                //       backgroundColor:'red'
+                //       // justifyContent: 'center',
+                //       //   alignItems: 'center',
+                //       // overflow: 'hidden',
+                //     }}>
+                //     <CustomImage
+                //       style={{
+                //         height: '100%',
+                //         width: '100%',
+                //       }}
+                //       source={require('../Assets/Images/dummyman5.png')}
+                //       // source={{uri: item?.uri}}
+                //     />
+                //   </TouchableOpacity>
+                //   {!fromgallery && (
+                //     <Icon
+                //       onPress={() => {
+                //         if (multiImages?.length == 1) {
+                //           let newArray = [...multiImages];
+                //           newArray.splice(index, 1);
+                //           setMultiImages(newArray);
+                //           setIsVisible(false);
+                //         } else {
+                //           let newArray = [...multiImages];
+                //           newArray.splice(index, 1);
+                //           setMultiImages(newArray);
+                //         }
+                //       }}
+                //       style={{
+                //         position: 'absolute',
+                //         bottom: 120,
+                //         width: windowWidth,
+                //         textAlign: 'center',
+                //         //   marginHorizontal:moderateScale(50,.6)
+                //       }}
+                //       as={Ionicons}
+                //       name={'trash-outline'}
+                //       size={moderateScale(25, 0.6)}
+                //       color={Color.black}
+                //     />
+                //   )}
+                // </>
+              );
+            }}
+            getItemLayout={(data, index) => ({
+              length: windowWidth,
+              offset: windowWidth * index,
+              index,
+            })}
+          /> */}
         </View>
       </SafeAreaView>
     </Modal>
@@ -145,14 +193,6 @@ const ImageViewingModal = ({
 export default ImageViewingModal;
 
 const styles = StyleSheet.create({
-  mainContainer: {
-    // height: windowHeight * 0.9,
-    // width: windowWidth * 0.9,
-    backgroundColor: 'red',
-    alignItems: 'center',
-    borderRadius: moderateScale(5, 0.6),
-    paddingVertical: moderateScale(10, 0.6),
-  },
   row: {
     paddingHorizontal: moderateScale(10, 0.6),
     paddingVertical: moderateScale(15, 0.6),
@@ -163,11 +203,8 @@ const styles = StyleSheet.create({
   imageView: {
     widtth: windowWidth,
     height: windowHeight,
-
     justifyContent: 'center',
     backgroundColor: 'rgba(0,0,0,0.16)',
-
-    // paddingHorizontal:moderateScale(12,0.2)
   },
   customBtn: {
     width: windowWidth * 0.13,
@@ -175,6 +212,5 @@ const styles = StyleSheet.create({
     borderRadius: (windowWidth * 0.13) / 2,
     justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor : Color.themeColor,
   },
 });

@@ -41,59 +41,75 @@ const EditProfile = () => {
   const navigation = useNavigation();
   const userData = useSelector(state => state.commonReducer.userData);
   const token = useSelector(state => state.authReducer.token);
+  console.log('🚀 ~ EditProfile ~ token:', token);
   const [isLoading, setIsLoading] = useState(false);
-  const [firstName, setFirstName] = useState(userData?.name?  userData?.name :'');
-  const [email, setEmail] = useState(userData?.email ?userData?.email :'');
-  const [homeTown, setHomeTown] = useState(userData?.from ?userData?.from :'');
-  const [contact, setContact] = useState(userData?.phone ?userData?.phone :'');
-  const [workPlace, setWorkPlace] = useState(userData?.work  ?userData?.work :'');
-    const [country ,setCountry ] = useState(userData?.live_in ?userData?.live_in :'')
+  const [firstName, setFirstName] = useState(
+    userData?.name ? userData?.name : '',
+  );
+  const [email, setEmail] = useState(userData?.email ? userData?.email : '');
+  const [homeTown, setHomeTown] = useState(
+    userData?.from ? userData?.from : '',
+  );
+  const [contact, setContact] = useState(
+    userData?.phone ? userData?.phone : '',
+  );
+  const [workPlace, setWorkPlace] = useState(
+    userData?.work ? userData?.work : '',
+  );
+  const [country, setCountry] = useState(
+    userData?.live_in ? userData?.live_in : '',
+  );
   const [countryCode, setCountryCode] = useState('US');
   const [imagePicker, setImagePicker] = useState(false);
   const [image, setImage] = useState({});
   console.log('🚀 ~ Profile ~ image:', image);
 
-//   const [country, setCountry] = useState({
-//     callingCode: ['1'],
-//     cca2: 'US',
-//     currency: ['USD'],
-//     flag: 'flag-us',
-//     name: 'United States',
-//     region: 'Americas',
-//     subregion: 'North America',
-//   });
-//   const [withCallingCode, setWithCallingCode] = useState(true);
-//   const [withFilter, setFilter] = useState(true);
-//   const [phone, setPhone] = useState('');
+  //   const [country, setCountry] = useState({
+  //     callingCode: ['1'],
+  //     cca2: 'US',
+  //     currency: ['USD'],
+  //     flag: 'flag-us',
+  //     name: 'United States',
+  //     region: 'Americas',
+  //     subregion: 'North America',
+  //   });
+  //   const [withCallingCode, setWithCallingCode] = useState(true);
+  //   const [withFilter, setFilter] = useState(true);
+  //   const [phone, setPhone] = useState('');
 
-//   const onSelect = country => {
-//     setCountryCode(country.cca2);
-//     setCountry(country);
-//   };
-
-  //   const profileUpdate = async () => {
-  //     const formData = new FormData();
-  //     const body = {
-  //       first_name: username,
-  //       email: email,
-  //     };
-  //     for (let key in body) {
-  //       formData?.append(key, body[key]);
-  //     }
-  //     if (Object.keys(image).length > 0) formData.append('photo', image);
-  //     const url = 'auth/profile';
-  //     setIsLoading(true);
-  //     const response = await Post(url, formData, apiHeader(token));
-  //     setIsLoading(false);
-  //     if (response != undefined) {
-  //       Platform.OS == 'android'
-  //         ? ToastAndroid.show('profile updated Successfully', ToastAndroid.SHORT)
-  //         : alert('profile updated Successfully');
-  //       console.log('🚀 ~ profileUpdate ~ response:', response?.data?.user_info);
-  //       navigation.navigate('HomeScreen');
-  //     }
-  //     dispatch(setUserData(response?.data?.user_info));
+  //   const onSelect = country => {
+  //     setCountryCode(country.cca2);
+  //     setCountry(country);
   //   };
+
+  const profileUpdate = async () => {
+    const formData = new FormData();
+    const body = {
+      name: firstName,
+      phone: contact,
+      live_in: country,
+      from: homeTown,
+      work: workPlace,
+    };
+
+    for (let key in body) {
+      formData?.append(key, body[key]);
+    }
+    if (Object.keys(image).length > 0) formData.append('photo', image);
+    const url = 'auth/profile';
+    setIsLoading(true);
+    const response = await Post(url, formData, apiHeader(token));
+    setIsLoading(false);
+    console.log('🚀 ~ ==================== >>>>>>>>>>>>:', response?.data);
+    if (response != undefined) {
+      Platform.OS == 'android'
+        ? ToastAndroid.show('profile updated Successfully', ToastAndroid.SHORT)
+        : alert('profile updated Successfully');
+      console.log('🚀 ~ profileUpdate ~ response:', response?.data?.user_info);
+      navigation.navigate('HomeScreen');
+    }
+    dispatch(setUserData(response?.data?.user_info));
+  };
   return (
     <SafeAreaView style={{width: windowWidth, height: windowHeight}}>
       <ScrollView
@@ -124,8 +140,7 @@ const EditProfile = () => {
           </View>
           <TouchableOpacity
             onPress={() => {
-                setImagePicker(true)
-
+              setImagePicker(true);
             }}
             style={styles.editButton}>
             <Icon
@@ -134,7 +149,7 @@ const EditProfile = () => {
               color={'white'}
               size={moderateScale(13, 0.2)}
               onPress={() => {
-                setImagePicker(true)
+                setImagePicker(true);
               }}
             />
           </TouchableOpacity>
@@ -210,6 +225,7 @@ const EditProfile = () => {
             marginTop={moderateScale(15, 0.3)}
             color={Color.themeColor}
             placeholderColor={Color.themeLightGray}
+            disable={true}
           />
           <TextInputWithTitle
             titleText={'Contact'}
@@ -245,7 +261,7 @@ const EditProfile = () => {
           />
 
           <TextInputWithTitle
-            titleText={'Email'}
+            titleText={'country'}
             secureText={false}
             placeholder={'Where do you live? (State, city, or country)'}
             setText={setCountry}
@@ -261,7 +277,7 @@ const EditProfile = () => {
           />
 
           <TextInputWithTitle
-            titleText={'Email'}
+            titleText={'Hometown'}
             secureText={false}
             placeholder={'Where are you from? (Hometown)'}
             setText={setHomeTown}
@@ -287,7 +303,9 @@ const EditProfile = () => {
             width={windowWidth * 0.8}
             height={windowHeight * 0.06}
             marginTop={moderateScale(40, 0.3)}
-            onPress={() => {}}
+            onPress={() => {
+              profileUpdate();
+            }}
             bgColor={Color.blue}
             borderRadius={moderateScale(30, 0.3)}
             disabled={isLoading}
@@ -332,7 +350,7 @@ const styles = ScaledSheet.create({
     marginTop: moderateScale(40, 0.3),
     overflow: 'hidden',
     borderWidth: 2,
-    borderColor:Color.blue
+    borderColor: Color.blue,
   },
   birthday: {
     width: windowWidth * 0.75,

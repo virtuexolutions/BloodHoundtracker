@@ -7,19 +7,23 @@ import {windowHeight, windowWidth} from '../Utillity/utils';
 import CustomImage from './CustomImage';
 import Video from 'react-native-video';
 import ProfileComponent from './ProfileComponent';
+import ImageViewingModal from './ImageViewingModal';
+import {useNavigation} from '@react-navigation/native';
 
-const Myposts = ({setSelected, selected}) => {
+const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
   console.log('🚀 ~ Myposts ~ selected:', selected);
+  const navigation = useNavigation();
+  const [imageIndex, setimageIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const imageArray = [
-    require('../Assets/Images/dummyman5.png'),
-    require('../Assets/Images/scoter_image.png'),
-    require('../Assets/Images/dummyman5.png'),
-    require('../Assets/Images/scoter_image.png'),
-    require('../Assets/Images/dummyman5.png'),
-    require('../Assets/Images/dummyman5.png'),
-    require('../Assets/Images/dummyman5.png'),
-    require('../Assets/Images/scoter_image.png'),
+    {id: 1, uri: require('../Assets/Images/dummyman5.png')},
+    {id: 2, uri: require('../Assets/Images/scoter_image.png')},
+    {id: 3, uri: require('../Assets/Images/dummyman5.png')},
+    {id: 4, uri: require('../Assets/Images/scoter_image.png')},
+    {id: 5, uri: require('../Assets/Images/dummyman5.png')},
+    {id: 6, uri: require('../Assets/Images/dummyman5.png')},
+    {id: 7, uri: require('../Assets/Images/dummyman5.png')},
+    {id: 8, uri: require('../Assets/Images/scoter_image.png')},
   ];
 
   const videodata = [
@@ -67,11 +71,12 @@ const Myposts = ({setSelected, selected}) => {
     <View>
       {selected == 'photo' ? (
         <FlatList
+          key={'photo'}
           showsVerticalScrollIndicator={true}
           nestedScrollEnabled={true}
           numColumns={3}
           data={imageArray}
-          keyExtractor={item => item}
+          keyExtractor={(item ,index) => index.toString()}
           contentContainerStyle={{
             paddingTop: moderateScale(10, 0.6),
             paddingBottom: moderateScale(50, 0.6),
@@ -84,18 +89,24 @@ const Myposts = ({setSelected, selected}) => {
             return (
               <TouchableOpacity
                 style={styles.imageContainer}
-                onPress={() => {
-                  console.log('hetttttttttttttttttttttttttttttttttttttttttt');
-                  //   setIsVisible(true);
-                }}
+                onPress={() => {}}
                 onLongPress={() => {}}>
-                <CustomImage style={styles.image} source={item} />
+                <CustomImage
+                  onPress={() => {
+                    console.log('hetttttttttttttttttttttttttttttttttttttttttt');
+                    setIsVisible(true);
+                    setimageIndex(index);
+                  }}
+                  style={{height: '100%', width: '100%'}}
+                  source={item?.uri}
+                />
               </TouchableOpacity>
             );
           }}
         />
       ) : selected == 'videos' || selected == 'saved' ? (
         <FlatList
+          key={'videos'}
           numColumns={3}
           data={videodata}
           showsVerticalScrollIndicator={false}
@@ -104,7 +115,12 @@ const Myposts = ({setSelected, selected}) => {
           }}
           renderItem={({item, index}) => {
             return (
-              <TouchableOpacity style={styles.activityImage} onPress={() => {}}>
+              <TouchableOpacity
+                style={styles.activityImage}
+                onPress={() => {
+                  console.log('hello here i from video component ');
+                  navigation.navigate('VideoComponent');
+                }}>
                 <Video
                   repeat={true}
                   resizeMode={'stretch'}
@@ -124,7 +140,9 @@ const Myposts = ({setSelected, selected}) => {
         />
       ) : selected == 'posts' ? (
         <FlatList
+          key={'posts'}
           showsVerticalScrollIndicator={false}
+          numColumns={1}
           style={{
             marginVertical: moderateScale(20, 0.6),
             marginBottom: moderateScale(10, 0.6),
@@ -133,8 +151,8 @@ const Myposts = ({setSelected, selected}) => {
           renderItem={({item, index}) => {
             return (
               <Card
-                setSelected={setSelected}
-                selected={selected}
+                setSelected={seSelectedAssets}
+                selected={selectedAssets}
                 fromProfile={true}
                 item={item}
               />
@@ -148,6 +166,13 @@ const Myposts = ({setSelected, selected}) => {
           stolenAssetsArray={stolenAssetsArray}
         />
       )}
+      <ImageViewingModal
+        setIsVisible={setIsVisible}
+        visible={isVisible}
+        selectedImageIndex={imageIndex}
+        multiImages={imageArray}
+        fromgallery={true}
+      />
     </View>
   );
 };
@@ -161,6 +186,7 @@ const styles = StyleSheet.create({
     margin: moderateScale(2, 0.6),
     borderRadius: 10,
     overflow: 'hidden',
+    zIndex: 1,
   },
   activityImage: {
     height: windowHeight * 0.15,

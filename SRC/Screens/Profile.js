@@ -64,13 +64,23 @@ const Profile = () => {
   const [stolenAssets, setStolenAssets] = useState('');
   const [foundedAssets, setFoundedAssets] = useState('');
   const [selected, setSelected] = useState('stolen');
+  const [numColumns, setNumColumns] = useState(1);
   const [selectedTab, setSelectedTab] = useState('ProfileComponent');
-  console.log('🚀 ~ Profile ~ selectedTab:', selectedTab);
   const tabs = ['profile', 'posts', 'photo', 'videos', 'saved'];
   useEffect(() => {
     if (selectedTab != isFocused) {
       setSelectedTab('ProfileComponent');
     }
+  }, [isFocused]);
+
+  useEffect(() => {
+    setNumColumns(
+      selectedTab == 'photo' ||
+        selectedTab == 'videos' ||
+        selectedTab == 'saved'
+        ? 3
+        : 1,
+    );
   }, [isFocused]);
 
   return (
@@ -134,7 +144,7 @@ const Profile = () => {
           horizontal
           showsHorizontalScrollIndicator={false}
           style={{
-            paddingHorizontal: moderateScale(10, 0.6),
+            paddingHorizontal: moderateScale(3, 0.6),
             paddingVertical: moderateScale(5, 0.6),
           }}
           data={tabs}
@@ -167,7 +177,14 @@ const Profile = () => {
         />
       </View>
 
-      <Myposts selected={selectedTab} setSelected={setSelectedTab} />
+      <Myposts
+        numColumns={numColumns}
+        setNumColumns={setNumColumns}
+        selected={selectedTab}
+        setSelected={setSelectedTab}
+        selectedAssets={selected}
+        seSelectedAssets={setSelected}
+      />
     </ScrollView>
   );
 };

@@ -23,10 +23,10 @@ import PrivacyModal from '../Components/PrivacyModal';
 
 const CreateGroup = () => {
   const [groupName, setGroupName] = useState('');
-  const [privacy, setPrivacy] = useState('');
-  const [visibility, setvisiblity] = useState('');
+  const [privacy, setPrivacy] = useState('public');
+  const [visibility, setvisiblity] = useState('visible');
   const [selectedType, setSelectedType] = useState('');
-  const [selectedCategoryType, setSelectedCategoryType] = useState('')
+  const [selectedCategoryType, setSelectedCategoryType] = useState('');
   const privacyArray = ['ffaadf', 'fafaf ', 'fdadsfadsf'];
   const [rbRef, setRef] = useState(null);
 
@@ -66,7 +66,7 @@ const CreateGroup = () => {
           <TouchableOpacity
             onPress={() => {
               rbRef.open();
-              setSelectedType('privacy')
+              setSelectedType('privacy');
             }}
             style={styles.dropdown}>
             <View style={{paddingHorizontal: moderateScale(15, 0.6)}}>
@@ -75,19 +75,19 @@ const CreateGroup = () => {
                   color: Color.lightGrey,
                   ...FONTS.Regular14,
 
-                  paddingTop: moderateScale(5, 0.6),
+                  paddingTop: moderateScale(10, 0.6),
                 }}>
-                privacy
+                {privacy}
               </CustomText>
-              <CustomText
+              {/* <CustomText
                 style={{
                   color: Color.lightGrey,
                   ...FONTS.Regular10,
 
                   // paddingTop: moderateScale(5, 0.6),
                 }}>
-                privacy
-              </CustomText>
+               {selectedCategoryType}
+              </CustomText> */}
             </View>
             <Icon
               style={styles.icon}
@@ -124,22 +124,22 @@ const CreateGroup = () => {
             Visibility
           </CustomText>
           <TouchableOpacity
-          onPress={() => {
-            rbRef.open();
-            setSelectedType('visibility')
-          }}
-          style={styles.dropdown}>
+            onPress={() => {
+              rbRef.open();
+              setSelectedType('visibility');
+            }}
+            style={styles.dropdown}>
             <View style={{paddingHorizontal: moderateScale(15, 0.6)}}>
               <CustomText
                 style={{
                   color: Color.lightGrey,
                   ...FONTS.Regular14,
 
-                  paddingTop: moderateScale(5, 0.6),
+                  paddingTop: moderateScale(10, 0.6),
                 }}>
-                visibility
+                {visibility}
               </CustomText>
-              <CustomText
+              {/* <CustomText
                 style={{
                   color: Color.lightGrey,
                   ...FONTS.Regular10,
@@ -147,7 +147,7 @@ const CreateGroup = () => {
                   // paddingTop: moderateScale(5, 0.6),
                 }}>
                 visibility
-              </CustomText>
+              </CustomText> */}
             </View>
             <Icon
               style={styles.icon}
@@ -170,7 +170,15 @@ const CreateGroup = () => {
           elevation
         />
         {/* <PrivacyModal  rbRef={rbRef} setRef={setRef}/> */}
-        <PrivacyModal rbRef={rbRef} setRef={setRef}  selectedType={selectedType} setSelectedCategoryType={setSelectedCategoryType}  selectedCategoryType={selectedCategoryType}/>
+        <PrivacyModal
+          rbRef={rbRef}
+          setRef={setRef}
+          selectedType={selectedType}
+          privacy={privacy}
+          setPrivacy={setPrivacy}
+          setvisiblity={setvisiblity}
+          visibility={visibility}
+        />
       </ScrollView>
     </SafeAreaView>
   );

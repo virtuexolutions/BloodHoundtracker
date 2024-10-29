@@ -82,7 +82,6 @@ const Card = ({item, fromProfile, setSelected, selected}) => {
                 {
                   backgroundColor:
                     selected == 'stolen' ? Color.themeColor : Color.mediumGray,
-                  // padding: moderateScale(5, 0.6),
                 },
               ]}>
               <CustomText
@@ -310,12 +309,12 @@ const styles = StyleSheet.create({
     right: 0,
     top: 15,
   },
-  
+
   founded_text: {
     color: 'white',
     ...FONTS.Medium11,
     paddingHorizontal: moderateScale(12, 0.6),
-    padding:moderateScale(3.5,.6),
+    padding: moderateScale(3.5, 0.6),
   },
   Slide: {
     width: windowWidth * 0.8,
