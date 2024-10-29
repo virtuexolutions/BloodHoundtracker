@@ -32,7 +32,9 @@ const Settings = ({navigation, route}) => {
           icon: true,
           iconType: MaterialIcons,
           iconName: 'arrow-forward-ios',
-          onPress: () => {},
+          onPress: () => {
+            navigation.navigate('EditProfile')
+          },
         },
         {
           title: 'Change Pssword',

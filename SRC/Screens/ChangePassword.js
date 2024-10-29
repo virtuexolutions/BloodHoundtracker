@@ -98,9 +98,9 @@ const ChangePassword = () => {
             // marginTop: moderateScale(20, 0.3),
           }}>
           <TextInputWithTitle
-            iconName={'lock1'}
-            iconType={AntDesign}
-            LeftIcon={true}
+            // iconName={'lock1'}
+            // iconType={AntDesign}
+            // LeftIcon={true}
             titleText={'Current Password'}
             placeholder={'Current Password'}
             setText={setCurrPassword}
@@ -109,20 +109,24 @@ const ChangePassword = () => {
             viewHeight={0.06}
             viewWidth={0.85}
             inputWidth={0.7}
-            border={1}
-            borderRadius={moderateScale(30, 0.3)}
-            borderColor={Color.lightGrey}
-            backgroundColor={Color.white}
-            marginTop={moderateScale(10, 0.3)}
-            color={Color.black}
-            placeholderColor={Color.lightGrey}
+            borderColor={'#ffffff'}
+            backgroundColor={'#FFFFFF'}
+            marginTop={moderateScale(15, 0.3)}
+            color={Color.themeColor}
+            placeholderColor={Color.themeLightGray}
+            // borderRadius={moderateScale(30, 0.3)}
+            // borderColor={Color.lightGrey}
+            // backgroundColor={Color.white}
+            // marginTop={moderateScale(10, 0.3)}
+            // color={Color.black}
+            // placeholderColor={Color.lightGrey}
             shadowColor={Color.lightGrey}
             elevation
           />
           <TextInputWithTitle
-            iconName={'lock1'}
-            iconType={AntDesign}
-            LeftIcon={true}
+            // iconName={'lock1'}
+            // iconType={AntDesign}
+            // LeftIcon={true}
             titleText={'New Password'}
             placeholder={'New Password'}
             setText={setNewPassword}
@@ -131,21 +135,22 @@ const ChangePassword = () => {
             viewHeight={0.06}
             viewWidth={0.85}
             inputWidth={0.7}
-            border={1}
-            borderRadius={moderateScale(30, 0.3)}
-            borderColor={Color.lightGrey}
-            backgroundColor={Color.white}
-            marginTop={moderateScale(10, 0.3)}
-            color={Color.black}
-            placeholderColor={Color.lightGrey}
+            borderColor={'#ffffff'}
+            backgroundColor={'#FFFFFF'}
+            marginTop={moderateScale(15, 0.3)}
+            color={Color.themeColor}
+            placeholderColor={Color.themeLightGray}
+            
+            // color={Color.black}
+            // placeholderColor={Color.lightGrey}
             shadowColor={Color.lightGrey}
             elevation
           />
 
           <TextInputWithTitle
-            iconName={'unlock'}
-            iconType={FontAwesome}
-            LeftIcon={true}
+            // iconName={'unlock'}
+            // iconType={FontAwesome}
+            // LeftIcon={true}
             titleText={'Confirm your new password'}
             placeholder={'Confirm your new password'}
             setText={setConfirmNewPassword}
@@ -154,13 +159,12 @@ const ChangePassword = () => {
             viewHeight={0.06}
             viewWidth={0.85}
             inputWidth={0.7}
-            border={1}
-            borderRadius={moderateScale(30, 0.3)}
-            borderColor={Color.lightGrey}
-            backgroundColor={Color.white}
-            marginTop={moderateScale(10, 0.3)}
-            color={Color.black}
-            placeholderColor={Color.lightGrey}
+            borderColor={'#ffffff'}
+            backgroundColor={'#FFFFFF'}
+            marginTop={moderateScale(15, 0.3)}
+            color={Color.themeColor}
+            placeholderColor={Color.themeLightGray}
+            // placeholderColor={Color.lightGrey}
             shadowColor={Color.lightGrey}
             elevation
           />
