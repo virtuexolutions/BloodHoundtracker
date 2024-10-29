@@ -14,7 +14,13 @@ const SearchLocationModal = ({
   searchData,
   setSearchData,
 }) => {
+  const newSearchData = updatedStops => {
+    setSearchData(updatedStops);
+    // onUpdateStops(updatedStops);
+  };
   const ref = useRef();
+  const googlePlacesRef = useRef(null);
+
   return (
     <Modal
       hasBackdrop={true}
@@ -49,15 +55,19 @@ const SearchLocationModal = ({
               placeholderTextColor: '#5d5d5d',
             }}
             onPress={(data, details = null) => {
-              console.log('hello hereeeee ========  >>>>>>>>>', {
-                name: data?.description,
-                location: details?.geometry?.location,
-              });
-              setSearchData({
-                name: data?.description,
-                location: details?.geometry?.location,
-              });
+              // console.log("🚀 ~ data:", )
+              if (details) {
+                const newData = {
+                  name: data.description,
+                  lat: details.geometry.location.lat,
+                  lng: details.geometry.location.lng,
+                };
+                const updatedData= [...searchData, newData];
+                 newSearchData(updatedData);
+                googlePlacesRef.current?.clear();
+              }
             }}
+           
             query={{
               key: 'AIzaSyAa9BJa70uf_20IoTJfAiK_3wz5Vr_I7wM',
 

@@ -121,7 +121,7 @@ const ProfileComponent = ({stolenAssetsArray, selected, setSelected}) => {
         numColumns={1}
         data={stolenAssetsArray}
         style={{
-          height:windowHeight*0.3,
+          height:windowHeight*0.27 ,
         }}
         contentContainerStyle={{
 
@@ -134,7 +134,7 @@ const ProfileComponent = ({stolenAssetsArray, selected, setSelected}) => {
       <CustomText
         style={{
           fontSize: moderateScale(13, 0.6),
-          paddingVertical: moderateScale(10, 0.6),
+          paddingVertical: moderateScale(5, 0.6),
           color: Color.textColor,
           textAlign:'center'
          

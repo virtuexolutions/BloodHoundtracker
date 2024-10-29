@@ -119,7 +119,7 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
                 style={styles.activityImage}
                 onPress={() => {
                   console.log('hello here i from video component ');
-                  navigation.navigate('VideoComponent');
+                  navigation.navigate('MediaPlayerScreen');
                 }}>
                 <Video
                   repeat={true}

@@ -20,13 +20,17 @@ import LinearGradient from 'react-native-linear-gradient';
 import ShowMoreAndShowLessText from '../Components/ShowMoreAndShowLessText';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
-const VideoComponent = ({props}) => {
+const MediaPlayerScreen = ({props}) => {
   console.log('🚀 ~heeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
   const video = props?.route?.params?.array;
   const videoRef = useRef();
   const navigation = useNavigation();
   const refRBSheet = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [paused, setPaused] = useState(false);
+  const [clicked, setClicked] = useState(false);
   // const [videoRef, setvideoRef] = useState(null);
+  // const [videoRef ,setvideoRef] =useState()
   const videodata = [
     require('../Assets/Images/video1.mp4'),
     require('../Assets/Images/video2.mp4'),
@@ -37,11 +41,7 @@ const VideoComponent = ({props}) => {
     require('../Assets/Images/video1.mp4'),
     require('../Assets/Images/video1.mp4'),
   ];
-  const [isLoading, setIsLoading] = useState(false);
-  const [paused, setPaused] = useState(false);
-  const [clicked, setClicked] = useState(false);
-  // const [videoRef ,setvideoRef] =useState()
-
+  
   return (
     <View
       style={{
@@ -253,7 +253,7 @@ const VideoComponent = ({props}) => {
   );
 };
 
-export default VideoComponent;
+export default MediaPlayerScreen;
 
 const styles = StyleSheet.create({
   linearstyle: {

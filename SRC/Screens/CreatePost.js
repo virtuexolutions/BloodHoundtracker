@@ -1,6 +1,7 @@
 import {Icon} from 'native-base';
 import React, {useState} from 'react';
 import {
+  FlatList,
   PermissionsAndroid,
   Platform,
   SafeAreaView,
@@ -26,6 +27,7 @@ import SearchLocationModal from '../Components/SearchLocationModal';
 import TagPeopleModal from '../Components/TagPeopleModal';
 import TextInputWithTitle from '../Components/TextInputWithTitle';
 import {FONTS} from '../Config/theme';
+import Entypo from 'react-native-vector-icons/Entypo';
 import {
   requestCameraPermission,
   windowHeight,
@@ -43,7 +45,6 @@ const CreatePost = () => {
   const [privacy, setPrivacy] = useState('only me');
   const [privacyModal, setPrivacyModal] = useState(false);
   const [searchData, setSearchData] = useState('');
-  console.log('🚀 ~ CreatePost ~ searchData:', searchData?.name);
 
   const openCamera = async () => {
     let options = {
@@ -260,34 +261,6 @@ const CreatePost = () => {
                 color={Color.themeColor}
               />
             </TouchableOpacity>
-            {searchData != '' && (
-              <View
-                style={{
-                  flexDirection: 'row',
-
-                  paddingTop: moderateScale(5, 0.6),
-                }}>
-                <Icon
-                  style={{
-                    marginHorizontal: moderateScale(6, 0.6),
-                  }}
-                  name={'map-marker-radius-outline'}
-                  as={MaterialCommunityIcons}
-                  size={moderateScale(15, 0.6)}
-                  color={Color.themeColor}
-                />
-                <CustomText
-                  numberOfLines={1}
-                  isBold
-                  style={{
-                    ...FONTS.Medium11,
-                    color: Color.textColor,
-                    // paddingHorizontal: moderateScale(10, 0.6),
-                  }}>
-                  {searchData?.name}
-                </CustomText>
-              </View>
-            )}
           </View>
 
           <Icon
@@ -325,6 +298,63 @@ const CreatePost = () => {
           color={Color.themeColor}
           placeholderColor={Color.themeLightGray}
           multiline
+        />
+        <CustomText
+          style={{
+            ...FONTS.Medium15,
+            marginTop: moderateScale(10, 0.6),
+            textAlign: 'left',
+            width: '84%',
+          }}
+          isBold>
+          Location
+        </CustomText>
+        <FlatList
+          horizontal
+          data={searchData}
+          renderItem={({item, index}) => {
+            console.log('🚀 ~ item:', item?.name);
+            const parts = item?.name?.split(',');
+            const locationName = parts[1]?.trim();
+            console.log(locationName);
+            return (
+              <View
+                style={{
+                  // width: windowWidth * 0.3,
+                  padding: moderateScale(8, 0.6),
+                  backgroundColor: Color.veryLightGray,
+                  borderRadius: moderateScale(17, 0.6),
+                }}>
+                <CustomText style={styles.location_text}>
+                  {`@${locationName}`}
+                </CustomText>
+                <Icon
+                  onPress={() => {
+                    if (searchData?.length == 1) {
+                      let newArray = [...searchData];
+                      newArray.splice(index, 1);
+                      setSearchData(newArray);
+                    } else {
+                      let newArray = [...searchData];
+                      newArray.splice(index, 1);
+                      setSearchData(newArray);
+                    }
+                  }}
+                  style={{
+                    position: 'absolute',
+                    right: 9,
+                    backgroundColor: Color.blue,
+                    borderRadius: 5,
+                    // padding:moderateScale(10,.6)
+                  }}
+                  name="cross"
+                  as={Entypo}
+                  size={moderateScale(10, 0.6)}
+                  color={Color.white}
+                />
+              </View>
+            );
+          }}
         />
 
         <TouchableOpacity
@@ -494,5 +524,8 @@ const styles = StyleSheet.create({
     height: windowHeight * 0.04,
     width: windowWidth * 0.04,
     backgroundColor: 'red',
+  },
+  location_text: {
+    ...FONTS.Medium11,
   },
 });

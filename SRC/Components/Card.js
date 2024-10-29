@@ -1,5 +1,5 @@
 import {StyleSheet, Text, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {moderateScale} from 'react-native-size-matters';
 import CustomText from './CustomText';
 import {TouchableOpacity} from 'react-native';
@@ -17,8 +17,17 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import ImageSlider from 'react-native-image-slider';
 import navigationService from '../navigationService';
+import { useNavigation } from '@react-navigation/native';
+import Video from 'react-native-video';
 
 const Card = ({item, fromProfile, setSelected, selected}) => {
+  const videoRef = useRef();
+  const navigation = useNavigation();
+  const refRBSheet = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [paused, setPaused] = useState(false);
+  const [clicked, setClicked] = useState(false);
+
   const imageArray = [
     require('../Assets/Images/scoter_image.png'),
     require('../Assets/Images/scoter_image.png'),
@@ -139,68 +148,95 @@ const Card = ({item, fromProfile, setSelected, selected}) => {
           Read More....
         </CustomText>
       </View>
-      <View
-        style={{
-          width: windowWidth * 0.8,
-          height: windowHeight * 0.3,
-          alignSelf: 'center',
-          borderRadius: moderateScale(20, 0.6),
-        }}>
-        <ImageSlider
-          loopBothSides
-          // autoPlayWithInterval={3000}
-          images={imageArray}
-          style={{backgroundColor: 'white'}}
-          customSlide={({index, item, style, width}) => (
-            <View key={index} style={[style, styles.Slide]}>
-              <CustomImage
-                source={item}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  borderRadius: moderateScale(20, 0.6),
-                }}
-              />
-            </View>
-          )}
-
-          // customButtons={(position, move) => (
-          //   <View style={styles.buttons}>
-          //     {imageArray.map((image, index) => {
-          //       return (
-          //         <TouchableOpacity
-          //           key={index}
-          //           underlayColor="#ccc"
-          //           onPress={() => move(index)}
-          //           style={styles.button}>
-          //           <Text style={position === index && styles.buttonSelected}>
-          //             {index + 1}
-          //           </Text>
-          //         </TouchableOpacity>
-          //       );
-          //     })}
-          //   </View>
-          // )}
-        />
-      </View>
-      {/* <View
-        style={{
-          width: windowWidth * 0.8,
-          height: windowHeight * 0.4,
-          borderRadius: moderateScale(20, 0.6),
-          alignSelf: 'center',
-          marginTop: moderateScale(10, 0.6),
-        }}>
-        <CustomImage
-          source={item?.images}
+      {item?.images.length > 1 ? (
+        <View
           style={{
-            width: '100%',
-            height: '100%',
-            resizeMode: 'cover',
+            width: windowWidth * 0.8,
+            height: windowHeight * 0.3,
+            alignSelf: 'center',
             borderRadius: moderateScale(20, 0.6),
+          }}>
+          <ImageSlider
+            loopBothSides
+            // autoPlayWithInterval={3000}
+            images={item?.images}
+            style={{backgroundColor: 'white'}}
+            customSlide={({index, item, style, width}) => (
+              <View key={index} style={[style, styles.Slide]}>
+                <CustomImage
+                  source={item}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: moderateScale(20, 0.6),
+                  }}
+                />
+              </View>
+            )}
+          />
+        </View>
+      ) : item?.mediatype == 'image' ? (
+        <View
+          style={{
+            width: windowWidth * 0.8,
+            height: windowHeight * 0.3,
+            borderRadius: moderateScale(20, 0.6),
+            alignSelf: 'center',
+            marginTop: moderateScale(10, 0.6),
+          }}>
+          <CustomImage
+            source={item?.images}
+            style={{
+              width: '100%',
+              height: '100%',
+              resizeMode: 'cover',
+              borderRadius: moderateScale(20, 0.6),
+            }}
+          />
+        </View>
+      ) : (
+        <TouchableOpacity
+          onPress={() => {
+            setClicked(prev => !prev);
+            setPaused(prev => !prev);
+            console.log('Logging video');
           }}
+          activeOpacity={1}
+          style={{
+            width: windowWidth * 0.8,
+            height: windowHeight * 0.3,
+            borderRadius: moderateScale(20, 0.6),
+            alignSelf: 'center',
+            overflow:'hidden',
+            marginTop: moderateScale(10, 0.6),
+          }}>
+          <Video
+          ref={videoRef}
+          // ref={ref => setvideoRef(ref)}
+          resizeMode={'stretch'}
+          repeat={true}
+          paused={paused}
+            source={require('../Assets/Images/video1.mp4')}
+            style={{
+              width: '100%',
+              height:'100%',
+          }}
+          onProgress={data => {
+            }}
+          onLoadStart={data => {
+            // setIsLoading(true);
+          }}
+          onLoad={x => {
+            // setIsLoading(false);
+            // setPaused(false);
+          }}
+          onBuffer={x => console.log('buffering video', x)}
+          onError={error =>
+            console.log('error ================> ', error)
+          }
         />
-      </View> */}
+        </TouchableOpacity>
+      )}
       <View
         style={{
           flexDirection: 'row',
@@ -274,6 +310,7 @@ const styles = StyleSheet.create({
     backgroundColor: Color.white,
     marginVertical: moderateScale(5, 0.3),
   },
+
   cardImage: {
     height: windowHeight * 0.13,
     width: windowWidth * 0.24,

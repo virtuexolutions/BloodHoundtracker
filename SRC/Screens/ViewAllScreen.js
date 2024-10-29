@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const Mediaplayer = () => {
+const ViewAllScreen = () => {
   return (
     <View>
-    <Mediaplayer/>
+      <Text>ViewAllScreen</Text>
     </View>
   )
 }
 
-export default Mediaplayer
+export default ViewAllScreen
 
 const styles = StyleSheet.create({})

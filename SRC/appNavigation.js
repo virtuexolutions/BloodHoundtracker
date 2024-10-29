@@ -36,8 +36,7 @@ import Numberverfication from './Screens/Numberverfication';
 import ResetPassword from './Screens/ResetPassword';
 import EditProfile from './Screens/EditProfile';
 import CreatePost from './Screens/CreatePost';
-import Mediaplayer from './Screens/Mediaplayer';
-import VideoComponent from './Screens/VideoComponent';
+import MediaPlayerScreen from './Screens/MediaPlayerScreen';
 
 const AppNavigator = () => {
   // const isLogin = false;
@@ -87,10 +86,10 @@ const AppNavigator = () => {
           <RootNav.Screen name="ResetPassword" component={ResetPassword} />
           <RootNav.Screen name="EditProfile" component={EditProfile} />
           <RootNav.Screen name="CreatePost" component={CreatePost} />
-          <RootNav.Screen name="VideoComponent" component={VideoComponent} />
-
-
-
+          <RootNav.Screen
+            name="MediaPlayerScreen"
+            component={MediaPlayerScreen}
+          />
           {/* <RootNav.Screen name="MyDrawer" component={MyDrawer} /> */}
         </RootNav.Navigator>
       </NavigationContainer>

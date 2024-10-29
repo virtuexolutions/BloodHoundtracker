@@ -29,7 +29,6 @@ const ImageViewingModal = ({
   imageArray,
   fromgallery,
 }) => {
-  console.log("🚀 ~ multiImages:", multiImages)
   const flatListRef = useRef(null);
   const navigation = useNavigation();
 

@@ -17,7 +17,7 @@ const SplashScreen = () => {
         <View
           style={{
             height: windowHeight * 0.25,
-            width: windowWidth * 0.49,
+            width: windowWidth * 0.53,
           }}>
           <CustomImage
             style={{width: '100%', height: '100%'}}
