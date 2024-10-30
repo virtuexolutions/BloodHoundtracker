@@ -1,46 +1,43 @@
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {createDrawerNavigator} from '@react-navigation/drawer';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Icon } from 'native-base';
 import React from 'react';
-import {moderateScale} from 'react-native-size-matters';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import { View } from 'react-native';
+import { moderateScale } from 'react-native-size-matters';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {useSelector} from 'react-redux';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { useSelector } from 'react-redux';
 import Color from './Assets/Utilities/Color';
 import Drawer from './Drawer/Drawer';
 import navigationService from './navigationService';
+import ChangePassword from './Screens/ChangePassword';
+import CreateGroup from './Screens/CreateGroup';
+import CreatePost from './Screens/CreatePost';
+import DetailScreen from './Screens/DetailsScreen';
+import EditProfile from './Screens/EditProfile';
+import EnterEmail from './Screens/EnterEmail';
+import GroupDeatils from './Screens/GroupDeatils';
+import Groups from './Screens/Groups';
 import HomeScreen from './Screens/HomeScreen';
 import LoginScreen from './Screens/LoginScreen';
-import Signup from './Screens/Signup';
-import {Icon} from 'native-base';
-import {View} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import Settings from './Screens/Settings';
-import {windowHeight, windowWidth} from './Utillity/utils';
-import NotificationsScreen from './Screens/NotificationsScreen';
-import Profile from './Screens/Profile';
-import GroupCard from './Components/GroupCard';
-import MessagesScreen from './Screens/MessagesScreen';
-import MessageList from './Screens/MessageList';
-import Groups from './Screens/Groups';
-import DetailScreen from './Screens/DetailsScreen';
-import GroupDeatils from './Screens/GroupDeatils';
-import CreateGroup from './Screens/CreateGroup';
-import EnterEmail from './Screens/EnterEmail';
-import Numberverfication from './Screens/Numberverfication';
-import ResetPassword from './Screens/ResetPassword';
-import EditProfile from './Screens/EditProfile';
-import CreatePost from './Screens/CreatePost';
 import MediaPlayerScreen from './Screens/MediaPlayerScreen';
-import TermsAndConditions from './Screens/TermsAndConditions';
+import MessageList from './Screens/MessageList';
+import MessagesScreen from './Screens/MessagesScreen';
+import NotificationsScreen from './Screens/NotificationsScreen';
+import Numberverfication from './Screens/Numberverfication';
 import PrivacyPolicy from './Screens/PrivacyPolicy';
-import ChangePassword from './Screens/ChangePassword';
+import Profile from './Screens/Profile';
+import ResetPassword from './Screens/ResetPassword';
+import Settings from './Screens/Settings';
+import Signup from './Screens/Signup';
+import TermsAndConditions from './Screens/TermsAndConditions';
+import { windowHeight, windowWidth } from './Utillity/utils';
+import ViewAllScreen from './Screens/ViewAllScreen';
 
 const AppNavigator = () => {
-  // const isLogin = false;
   const isGoalCreated = useSelector(state => state.authReducer.isGoalCreated);
   const walkThrough = useSelector(state => state.authReducer.userWalkThrough);
   const isVerified = useSelector(state => state.authReducer.isVerified);
@@ -51,23 +48,8 @@ const AppNavigator = () => {
   const RootNavLogged = createNativeStackNavigator();
 
   const AppNavigatorContainer = () => {
-    // const firstScreen = 'LoginScreen';
-    // walkThrough == false
-    //   ? 'Walkthrough'
-    //   : token != null &&
-    //     selectedRole == 'Business Qbidder' &&
-    //     isMileage == false
-    //   ? 'MileRange'
-    //   : token != null
-    //   ? ''
-    //   : 'LoginScreen';
     const firstScreen = token == null ? 'LoginScreen' : 'TabNavigation';
-    // const firstScreen =
-    // walkThrough == false
-    // ? 'WalkThroughScreen'
-    // : token == null
-    // ? 'LoginScreen'
-    // : 'TabNavigation';
+  
 
     return (
       <NavigationContainer ref={navigationService.navigationRef}>
@@ -76,7 +58,6 @@ const AppNavigator = () => {
           screenOptions={{headerShown: false}}>
           <RootNav.Screen name="TabNavigation" component={TabNavigation} />
           <RootNav.Screen name="LoginScreen" component={LoginScreen} />
-          {/* <RootNav.Screen name="Walkthrough" component={Walkthrough} /> */}
           <RootNav.Screen name="Signup" component={Signup} />
           <RootNav.Screen name="DetailScreen" component={DetailScreen} />
           <RootNav.Screen name="GroupDeatils" component={GroupDeatils} />
@@ -86,21 +67,14 @@ const AppNavigator = () => {
           <RootNav.Screen name="VerifyNumber" component={Numberverfication} />
           <RootNav.Screen name="ResetPassword" component={ResetPassword} />
           <RootNav.Screen name="EditProfile" component={EditProfile} />
-          <RootNav.Screen
-            name="ChangePasswordScreen"
-            component={ChangePassword}
-          />
+          <RootNav.Screen name="MessageList" component={MessageList} />
+          <RootNav.Screen name="ChangePasswordScreen"  component={ChangePassword}/>
           <RootNav.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
-          <RootNav.Screen
-            name="TermsAndConditions"
-            component={TermsAndConditions}
-          />
+          <RootNav.Screen name="TermsAndConditions" component={TermsAndConditions}/>
           <RootNav.Screen name="CreatePost" component={CreatePost} />
-          <RootNav.Screen
-            name="MediaPlayerScreen"
-            component={MediaPlayerScreen}
-          />
-          {/* <RootNav.Screen name="MyDrawer" component={MyDrawer} /> */}
+          <RootNav.Screen name="MediaPlayerScreen"component={MediaPlayerScreen} />
+          <RootNav.Screen name="cd"component={ViewAllScreen} />
+
         </RootNav.Navigator>
       </NavigationContainer>
     );

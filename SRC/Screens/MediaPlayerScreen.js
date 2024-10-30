@@ -19,6 +19,7 @@ import CustomText from '../Components/CustomText';
 import LinearGradient from 'react-native-linear-gradient';
 import ShowMoreAndShowLessText from '../Components/ShowMoreAndShowLessText';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import CustomHeader from '../Components/CustomHeader';
 
 const MediaPlayerScreen = ({props}) => {
   console.log('🚀 ~heeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
@@ -41,44 +42,20 @@ const MediaPlayerScreen = ({props}) => {
     require('../Assets/Images/video1.mp4'),
     require('../Assets/Images/video1.mp4'),
   ];
-  
+
   return (
     <View
       style={{
         height: windowHeight,
         width: windowWidth,
       }}>
+      <CustomHeader leftIcon />
       <FlatList
         data={videodata}
+        showsVerticalScrollIndicator={false}
         numColumns={1}
         renderItem={({item, index}) => {
           return (
-            // <TouchableOpacity
-            //   onPress={() => {
-            //     setClicked(prev => !prev);
-            //     setPaused(prev => !prev);
-            //     console.log('Logging video');
-            //   }}
-            //   activeOpacity={1}
-            //   style={[
-            //     styles.card,
-            //     {
-            //       height: windowHeight,
-            //       justifyContent: 'center',
-
-            //       paddingBottom: moderateScale(0, 0.3),
-            //     },
-            //   ]}>
-            //   <Video
-            //     style={{width: '100%', height: '100%',}}
-            //     ref={videoRef}
-            //     repeat={true}
-            //     paused={paused}
-            //     resizeMode="contain"
-            //     source={require('../Assets/Images/video2.mp4')}
-            //   />
-            //   <CustomText>hellllllllllllllo </CustomText>
-            // </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
                 setClicked(prev => !prev);
@@ -97,33 +74,27 @@ const MediaPlayerScreen = ({props}) => {
               ]}>
               <Video
                 ref={videoRef}
-                // ref={ref => setvideoRef(ref)}
                 resizeMode={'stretch'}
                 repeat={true}
+                muted={true}
                 paused={paused}
-                // source={{
-                //   uri: `${baseUrl}/${item?.videos[0]?.name}`,
-                //   type: 'mp4',
-                // }}
                 source={{uri: item}}
                 style={{
                   width: '100%',
                   height: windowHeight * 0.5,
                   backgroundColor: 'red',
                 }}
-                onProgress={data => {
-                  console.log('feed === >> >  > > >  >  ', data);
-                }}
+                onProgress={data => {}}
                 onLoadStart={data => {
                   console.log(
                     'feed video is here ============ >> >  > > >  >  ',
                     data,
                   );
-                  // setIsLoading(true);
+                  setIsLoading(true);
                 }}
                 onLoad={x => {
-                  // setIsLoading(false);
-                  // setPaused(false);
+                  setIsLoading(false);
+                  setPaused(false);
                 }}
                 onBuffer={x => console.log('buffering video', x)}
                 onError={error =>

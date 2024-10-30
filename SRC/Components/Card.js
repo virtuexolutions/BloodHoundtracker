@@ -1,24 +1,17 @@
-import {StyleSheet, Text, View} from 'react-native';
-import React, {useRef, useState} from 'react';
-import {moderateScale} from 'react-native-size-matters';
-import CustomText from './CustomText';
-import {TouchableOpacity} from 'react-native';
-import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
-import CustomImage from './CustomImage';
-import Modal from 'react-native-modal';
-import CustomButton from './CustomButton';
-import {Post} from '../Axios/AxiosInterceptorFunction';
-import {useSelector} from 'react-redux';
-import Color from '../Assets/Utilities/Color';
-import {color} from 'native-base/lib/typescript/theme/styled-system';
-import {FONTS} from '../Config/theme';
-import {Icon} from 'native-base';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import ImageSlider from 'react-native-image-slider';
-import navigationService from '../navigationService';
 import { useNavigation } from '@react-navigation/native';
+import { Icon } from 'native-base';
+import React, { useRef, useState } from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import ImageSlider from 'react-native-image-slider';
+import { moderateScale } from 'react-native-size-matters';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Video from 'react-native-video';
+import Color from '../Assets/Utilities/Color';
+import { FONTS } from '../Config/theme';
+import navigationService from '../navigationService';
+import { windowHeight, windowWidth } from '../Utillity/utils';
+import CustomImage from './CustomImage';
+import CustomText from './CustomText';
 
 const Card = ({item, fromProfile, setSelected, selected}) => {
   const videoRef = useRef();
@@ -27,6 +20,8 @@ const Card = ({item, fromProfile, setSelected, selected}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [paused, setPaused] = useState(false);
   const [clicked, setClicked] = useState(false);
+  const [like ,setLike] =useState(false)
+  console.log("🚀 ~ Card ~ like:", like)
 
   const imageArray = [
     require('../Assets/Images/scoter_image.png'),
@@ -36,8 +31,11 @@ const Card = ({item, fromProfile, setSelected, selected}) => {
   ];
   return (
     <TouchableOpacity
+    activeOpacity={0.4}
       style={styles.cardstyle}
-      onPress={() => navigationService.navigate('DetailScreen')}>
+      onPress={() => {
+      // navigationService.navigate('DetailScreen')}
+      }}>
       <View style={{flexDirection: 'row'}}>
         <View style={styles.text_view}>
           <View
@@ -144,7 +142,9 @@ const Card = ({item, fromProfile, setSelected, selected}) => {
           }}>
           {item?.description}
         </CustomText>
-        <CustomText style={{color: '#0201FF', ...FONTS.Regular12}}>
+        <CustomText onPress={() =>{
+          navigation.navigate('DetailScreen')
+        }} style={{color: '#0201FF', ...FONTS.Regular12}}>
           Read More....
         </CustomText>
       </View>
@@ -207,34 +207,32 @@ const Card = ({item, fromProfile, setSelected, selected}) => {
             height: windowHeight * 0.3,
             borderRadius: moderateScale(20, 0.6),
             alignSelf: 'center',
-            overflow:'hidden',
+            overflow: 'hidden',
             marginTop: moderateScale(10, 0.6),
           }}>
           <Video
-          ref={videoRef}
-          // ref={ref => setvideoRef(ref)}
-          resizeMode={'stretch'}
-          repeat={true}
-          paused={paused}
+            ref={videoRef}
+            // ref={ref => setvideoRef(ref)}
+            muted={true}
+            resizeMode={'stretch'}
+            repeat={true}
+            paused={paused}
             source={require('../Assets/Images/video1.mp4')}
             style={{
               width: '100%',
-              height:'100%',
-          }}
-          onProgress={data => {
+              height: '100%',
             }}
-          onLoadStart={data => {
-            // setIsLoading(true);
-          }}
-          onLoad={x => {
-            // setIsLoading(false);
-            // setPaused(false);
-          }}
-          onBuffer={x => console.log('buffering video', x)}
-          onError={error =>
-            console.log('error ================> ', error)
-          }
-        />
+            onProgress={data => {}}
+            onLoadStart={data => {
+              setIsLoading(true);
+            }}
+            onLoad={x => {
+              setIsLoading(false);
+              setPaused(false);
+            }}
+            onBuffer={x => console.log('buffering video', x)}
+            onError={error => console.log('error ================> ', error)}
+          />
         </TouchableOpacity>
       )}
       <View
@@ -261,11 +259,14 @@ const Card = ({item, fromProfile, setSelected, selected}) => {
           </CustomText>
         </View>
         <View style={{flexDirection: 'row'}}>
-          <Icon
-            name="heart-outline"
+          <Icon onPress={() =>{
+            console.log('------------------- > > >> > > ')
+            setLike(!like)
+          }}
+            name={like ? 'heart' :"heart-outline"}
             as={MaterialCommunityIcons}
             size={moderateScale(20, 0.3)}
-            color={Color.lightGrey}
+            color={like ?  Color.blue :Color.lightGrey}
           />
           <CustomText
             style={{

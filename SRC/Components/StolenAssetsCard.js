@@ -1,4 +1,4 @@
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import {windowHeight, windowWidth} from '../Utillity/utils';
 import Color from '../Assets/Utilities/Color';
@@ -6,10 +6,14 @@ import {moderateScale} from 'react-native-size-matters';
 import CustomText from './CustomText';
 import CustomImage from './CustomImage';
 import {FONTS} from '../Config/theme';
+import { useNavigation } from '@react-navigation/native';
 
 const StolenAssetsCard = ({item}) => {
+  const navigation = useNavigation()
   return (
-    <View style={styles.card}>
+    <TouchableOpacity onPress={() =>{
+      navigation.navigate('DetailScreen')
+    }} style={styles.card}>
       <View
         style={{
           paddingVertical: moderateScale(10, 0.6),
@@ -63,7 +67,7 @@ const StolenAssetsCard = ({item}) => {
           source={require('../Assets/Images/Bike.png')}
         />
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

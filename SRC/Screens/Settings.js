@@ -236,9 +236,9 @@ const styles = StyleSheet.create({
   },
   footer: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: moderateScale(20, 0.2),
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    // paddingVertical: moderateScale(20, 0.2),
   },
   logoutBtn: {
     flexDirection: 'row',

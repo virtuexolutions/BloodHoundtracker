@@ -22,7 +22,8 @@ import CustomImage from '../Components/CustomImage';
 
 const NotificationsScreen = () => {
   return (
-    <ScrollView
+    <ScrollView 
+    showsVerticalScrollIndicator={false}
       style={styles.mainContainer}
       contentContainerStyle={{
         paddingBottom: moderateScale(20, 0.6),

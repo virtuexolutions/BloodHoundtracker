@@ -10,7 +10,7 @@ import navigationService from '../navigationService';
 
 const GroupCard = ({ item }) => {
   return (
-    <TouchableOpacity style={styles.card} onPress={() => navigationService.navigate('GroupDeatils')}>
+    <TouchableOpacity style={styles.card} onPress={() => navigationService.navigate('GroupDeatils' ,{item:item?.assetsName})}>
       <View style={styles.rowContainer}>
         <View style={styles.imageContainer}>
           <CustomImage

@@ -122,7 +122,9 @@ const Profile = () => {
           textColor={Color.white}
           width={windowWidth * 0.43}
           height={windowHeight * 0.045}
-          onPress={() => {}}
+          onPress={() => {
+            navigation.navigate('MessageList')
+          }}
           bgColor={Color.themeColor}
           borderRadius={moderateScale(5, 0.3)}
           elevation

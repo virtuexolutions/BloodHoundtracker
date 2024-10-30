@@ -80,17 +80,15 @@ export default CustomHeader;
 
 const styles = StyleSheet.create({
   header: {
-    width: windowWidth * 0.9,
+    width: windowWidth * 0.95,
     height: moderateScale(50, 0.6),
     backgroundColor: 'tranparent',
     justifyContent: 'center',
-    // marginHorizontal: moderateScale(10, 0.6),
     paddingHorizontal: moderateScale(10, 0.6),
     alignSelf: 'center'
   },
   text: {
     color: Color.lightGrey,
-    // fontSize: moderateScale(18, 0.6),
     ...FONTS.Medium19,
     alignSelf: 'center',
     fontWeight: 'bold',

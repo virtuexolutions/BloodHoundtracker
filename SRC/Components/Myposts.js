@@ -109,6 +109,7 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
           key={'videos'}
           numColumns={3}
           data={videodata}
+          keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
             paddingTop: moderateScale(10, 0.6),
@@ -132,6 +133,9 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
                   style={{
                     width: '100%',
                     height: '100%',
+                  }}
+                  onBuffer={(e) =>{
+                    console.log('=---------------> ',e)
                   }}
                 />
               </TouchableOpacity>
@@ -163,6 +167,8 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
         <ProfileComponent
           selected={selected}
           setSelected={setSelected}
+          fromProfile={true}
+
           stolenAssetsArray={stolenAssetsArray}
         />
       )}

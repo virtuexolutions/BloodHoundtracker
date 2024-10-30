@@ -20,8 +20,11 @@ import {color} from 'native-base/lib/typescript/theme/styled-system';
 import {Icon} from 'native-base';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import PrivacyModal from '../Components/PrivacyModal';
+import { useNavigation } from '@react-navigation/native';
 
 const CreateGroup = () => {
+
+  const navigation = useNavigation()
   const [groupName, setGroupName] = useState('');
   const [privacy, setPrivacy] = useState('public');
   const [visibility, setvisiblity] = useState('visible');
@@ -164,7 +167,9 @@ const CreateGroup = () => {
           width={windowWidth * 0.85}
           height={windowHeight * 0.05}
           marginTop={windowHeight * 0.15}
-          onPress={() => {}}
+          onPress={() => {
+            navigation.navigate('HomeScreen')
+          }}
           bgColor={Color.themeColor}
           borderRadius={moderateScale(5, 0.3)}
           elevation

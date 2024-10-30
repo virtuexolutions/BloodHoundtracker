@@ -33,8 +33,10 @@ import {
   windowHeight,
   windowWidth,
 } from '../Utillity/utils';
+import {useNavigation} from '@react-navigation/native';
 
 const CreatePost = () => {
+  const navigation = useNavigation();
   const [tagModal, setTagModal] = useState(false);
   const [selectedPeople, setSelectedPeople] = useState([]);
   const [show, setShow] = useState(false);
@@ -443,7 +445,9 @@ const CreatePost = () => {
           width={windowWidth * 0.85}
           height={windowHeight * 0.05}
           marginTop={windowHeight * 0.15}
-          onPress={() => {}}
+          onPress={() => {
+            navigation.navigate('HomeScreen')
+          }}
           bgColor={Color.themeColor}
           borderRadius={moderateScale(5, 0.3)}
           elevation

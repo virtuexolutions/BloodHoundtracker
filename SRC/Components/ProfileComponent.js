@@ -20,7 +20,7 @@ const ProfileComponent = ({stolenAssetsArray, selected, setSelected}) => {
   const profileData = useSelector(state => state.commonReducer.userData);
 
   return (
-  <>
+    <>
       <View style={styles.container}>
         <CustomText isBold style={styles.contact}>
           contact Details
@@ -121,23 +121,26 @@ const ProfileComponent = ({stolenAssetsArray, selected, setSelected}) => {
         numColumns={1}
         data={stolenAssetsArray}
         style={{
-          height:windowHeight*0.27 ,
+          height: windowHeight * 0.24,
         }}
-        contentContainerStyle={{
-
-          // backgroundColor:'red'
-        }}
+        contentContainerStyle={
+          {
+            // backgroundColor:'red'
+          }
+        }
         renderItem={(item, index) => {
           return <StolenAssetsCard item={item?.item} />;
         }}
       />
       <CustomText
+        onPress={() => {
+          navigation.navigate('ViewAllScreen')
+        }}
         style={{
           fontSize: moderateScale(13, 0.6),
-          paddingVertical: moderateScale(5, 0.6),
+          paddingVertical: moderateScale(8, 0.6),
           color: Color.textColor,
-          textAlign:'center'
-         
+          textAlign: 'center',
         }}>
         View all
       </CustomText>
@@ -200,8 +203,7 @@ const ProfileComponent = ({stolenAssetsArray, selected, setSelected}) => {
           );
         }}
       />
-  </>
-  
+    </>
   );
 };
 
@@ -210,7 +212,7 @@ export default ProfileComponent;
 const styles = StyleSheet.create({
   mainContainer: {
     // height: windowHeight,
-    backgroundColor:'red',
+    backgroundColor: 'red',
     width: windowWidth,
   },
   imageContainer: {
