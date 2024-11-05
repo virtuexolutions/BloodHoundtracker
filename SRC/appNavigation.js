@@ -73,7 +73,7 @@ const AppNavigator = () => {
           <RootNav.Screen name="TermsAndConditions" component={TermsAndConditions}/>
           <RootNav.Screen name="CreatePost" component={CreatePost} />
           <RootNav.Screen name="MediaPlayerScreen"component={MediaPlayerScreen} />
-          <RootNav.Screen name="cd"component={ViewAllScreen} />
+          <RootNav.Screen name="ViewAllScreen"component={ViewAllScreen} />
 
         </RootNav.Navigator>
       </NavigationContainer>

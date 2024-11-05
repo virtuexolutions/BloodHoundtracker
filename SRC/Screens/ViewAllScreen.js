@@ -3,6 +3,7 @@ import React from 'react';
 import {windowHeight, windowWidth} from '../Utillity/utils';
 import CustomHeader from '../Components/CustomHeader';
 import StolenAssetsCard from '../Components/StolenAssetsCard';
+import { moderateScale } from 'react-native-size-matters';
 
 const ViewAllScreen = () => {
   const stolenAssetsArray = [
@@ -59,6 +60,7 @@ const ViewAllScreen = () => {
     <SafeAreaView style={styles.mainContainer}>
       <CustomHeader text={'Stolen Assets'} leftIcon />
       <FlatList
+
         showsVerticalScrollIndicator={false}
         numColumns={1}
         data={stolenAssetsArray}
@@ -67,6 +69,7 @@ const ViewAllScreen = () => {
         }}
         contentContainerStyle={
           {
+            paddingBottom:moderateScale(50,.6)
             // backgroundColor:'red'
           }
         }

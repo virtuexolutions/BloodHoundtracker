@@ -88,7 +88,7 @@ const MediaPlayerScreen = ({props}) => {
                 ref={videoRef}
                 resizeMode={'stretch'}
                 repeat={true}
-                muted={true}
+                // muted={true}
                 paused={index !== currentVisibleIndex}
                 source={{uri: item}}
                 style={{

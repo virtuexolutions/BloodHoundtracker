@@ -1,37 +1,43 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React, { useCallback, useEffect } from 'react';
+import {Button, StyleSheet, Text, View} from 'react-native';
+import React, {useCallback, useEffect} from 'react';
 import ScreenBoiler from '../Components/ScreenBoiler';
 import moment from 'moment';
-import { FlatList, Icon } from 'native-base';
-import { moderateScale, ScaledSheet } from 'react-native-size-matters';
+import {FlatList, Icon} from 'native-base';
+import {moderateScale, ScaledSheet} from 'react-native-size-matters';
 import NotificationCard from '../Components/NotificationCard';
-import { apiHeader, windowHeight, windowWidth } from '../Utillity/utils';
+import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
 import Color from '../Assets/Utilities/Color';
 import LinearGradient from 'react-native-linear-gradient';
 import CustomText from '../Components/CustomText';
 import SearchContainer from '../Components/SearchContainer';
-import { useState } from 'react';
+import {useState} from 'react';
 import ChatCard from '../Components/ChatCard';
-import { useDispatch, useSelector } from 'react-redux';
-import { GiftedChat } from 'react-native-gifted-chat';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  Actions,
+  Avatar,
+  Bubble,
+  GiftedChat,
+  InputToolbar,
+  Send,
+} from 'react-native-gifted-chat';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import CustomImage from '../Components/CustomImage';
-import { useNavigation } from '@react-navigation/native';
-import { Get, Post } from '../Axios/AxiosInterceptorFunction';
+import {useNavigation} from '@react-navigation/native';
+import {Get, Post} from '../Axios/AxiosInterceptorFunction';
 
-const MessagesScreen = ({ props, navigation }) => {
+const MessagesScreen = ({props, navigation}) => {
   const [messages, setMessages] = useState([]);
   useEffect(() => {
     setMessages([
-
       {
         _id: 1,
-        text: "Hi,. It is very nice to meet you.",
+        text: 'Hi,. It is very nice to meet you.',
         createdAt: new Date(),
         user: {
           _id: 1,
           name: 'React Native',
-          avatar: 'https://placeimg.com/140/140/any',
+          avatar: require('../Assets/Images/dummyman5.png'),
         },
       },
       {
@@ -41,25 +47,22 @@ const MessagesScreen = ({ props, navigation }) => {
         user: {
           _id: 2,
           name: 'React Native',
-          avatar: 'https://placeimg.com/140/140/any',
+          avatar: require('../Assets/Images/dummyman5.png'),
         },
       },
-    ])
-  }, [])
+    ]);
+  }, []);
 
   const onSend = useCallback((messages = []) => {
     setMessages(previousMessages =>
       GiftedChat.append(previousMessages, messages),
-    )
-  }, [])
+    );
+  }, []);
 
   return (
     <ScreenBoiler
-      statusBarBackgroundColor={
-        Color.lightGrey
-      }
+      statusBarBackgroundColor={Color.lightGrey}
       statusBarContentStyle={'light-content'}>
-
       <View style={styles.row}>
         <Icon
           onPress={() => {
@@ -94,8 +97,76 @@ const MessagesScreen = ({ props, navigation }) => {
         textInputStyle={{
           color: Color.black,
           marginTop: moderateScale(5, 0.3),
+          width: windowWidth * 0.76,
+          marginVertical: moderateScale(10, 0.3),
         }}
-
+        renderBubble={props => (
+          <Bubble
+            {...props}
+            containerStyle={{}}
+            textStyle={{
+              left: {
+                color: Color.white,
+              },
+              right: {
+                color: 'black',
+              },
+            }}
+            wrapperStyle={{
+              right: {
+                backgroundColor: Color.white,
+                // borderWidth: 1,
+                // borderColor: Color.blue,
+                borderRadius: moderateScale(8, 0.6),
+                marginBottom: moderateScale(10, 0.3),
+                shadowColor: '#000000',
+                shadowOffset: {
+                  width: 0,
+                  height: 1,
+                },
+                shadowOpacity: 0.16,
+                shadowRadius: 1.51,
+                elevation: 2,
+              },
+              left: {
+                borderWidth: 1,
+                backgroundColor: Color.blue,
+                borderRadius: moderateScale(8, 0.6),
+                borderColor: Color.blue,
+                marginHorizontal: moderateScale(10, 0.3),
+                marginBottom: moderateScale(5, 0.3),
+              },
+            }}
+          />
+        )}
+        renderInputToolbar={props => (
+          <InputToolbar
+            {...props}
+            containerStyle={{
+              width: windowWidth * 0.97,
+              marginHorizontal: moderateScale(6, 0.3),
+              borderRadius: moderateScale(8, 0.6),
+              alignContent: 'center',
+              marginVertical: moderateScale(7, 0.3),
+              backgroundColor:Color.veryLightGray,
+              borderColor: 'white',
+            }}></InputToolbar>
+        )}
+        renderSend={props => (
+          <Send
+            {...props}
+            containerStyle={{
+              padding: moderateScale(10, 0.6),
+            }}>
+            <Icon
+              name="send"
+              size={moderateScale(22, 0.6)}
+              as={Ionicons}
+              color={Color.blue}
+            />
+          </Send>
+        )}
+        alwaysShowSend
         placeholderTextColor={Color.lightGrey}
         messages={messages}
         isTyping={false}
@@ -126,18 +197,21 @@ const styles = ScaledSheet.create({
     borderRadius: windowWidth * 0.7,
     backgroundColor: 'white',
     overflow: 'hidden',
+    borderWidth: 1.2,
+    borderColor: Color.blue,
   },
   text: {
     fontSize: moderateScale(12, 0.6),
     paddingTop: moderateScale(5, 0.6),
   },
   row: {
+    // backgroundColor:Color.blue,
     width: windowWidth,
     height: windowHeight * 0.06,
     paddingHorizontal: moderateScale(10, 0.6),
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: windowHeight * 0.03
+    marginTop: windowHeight * 0.02,
   },
   text2: {
     fontSize: moderateScale(10, 0.6),

@@ -106,6 +106,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     height: moderateScale(50, 0.5),
+    
   },
   btn: {
     width: '48%',
@@ -114,6 +115,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: Color.white,
     borderRadius: moderateScale(10, 0.6),
+    shadowColor: "#000000",
+shadowOffset: {
+  width: 0,
+  height: 2,
+},
+shadowOpacity:  0.16,
+shadowRadius: 2.54,
+elevation: 2
   },
   btn_text: {
     fontSize: moderateScale(14, 0.6),
