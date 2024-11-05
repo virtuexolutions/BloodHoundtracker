@@ -29,6 +29,7 @@ const MediaPlayerScreen = ({props}) => {
   const refRBSheet = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const [paused, setPaused] = useState(false);
+  const [currentVisibleIndex, setCurrentVisibleIndex] = useState(0);
   const [clicked, setClicked] = useState(false);
   // const [videoRef, setvideoRef] = useState(null);
   // const [videoRef ,setvideoRef] =useState()
@@ -36,13 +37,21 @@ const MediaPlayerScreen = ({props}) => {
     require('../Assets/Images/video1.mp4'),
     require('../Assets/Images/video2.mp4'),
     require('../Assets/Images/video1.mp4'),
+    // require('../Assets/Images/video2.mp4'),
+    // require('../Assets/Images/video1.mp4'),
+    // require('../Assets/Images/video2.mp4'),
+    // require('../Assets/Images/video1.mp4'),
     require('../Assets/Images/video2.mp4'),
-    require('../Assets/Images/video1.mp4'),
-    require('../Assets/Images/video2.mp4'),
-    require('../Assets/Images/video1.mp4'),
-    require('../Assets/Images/video1.mp4'),
   ];
+  const viewabilityConfig = useRef({
+    viewAreaCoveragePercentThreshold: 50, // only 50% or more visible videos play
+  }).current;
 
+  const onViewableItemsChanged = useRef(({viewableItems}) => {
+    if (viewableItems.length > 0) {
+      setCurrentVisibleIndex(viewableItems[0].index);
+    }
+  }).current;
   return (
     <View
       style={{
@@ -54,6 +63,9 @@ const MediaPlayerScreen = ({props}) => {
         data={videodata}
         showsVerticalScrollIndicator={false}
         numColumns={1}
+        pagingEnabled // for snapping effect between videos
+        onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={viewabilityConfig}
         renderItem={({item, index}) => {
           return (
             <TouchableOpacity
@@ -77,7 +89,7 @@ const MediaPlayerScreen = ({props}) => {
                 resizeMode={'stretch'}
                 repeat={true}
                 muted={true}
-                paused={paused}
+                paused={index !== currentVisibleIndex}
                 source={{uri: item}}
                 style={{
                   width: '100%',
@@ -100,6 +112,7 @@ const MediaPlayerScreen = ({props}) => {
                 onError={error =>
                   console.log('error ================> ', error)
                 }
+              
               />
 
               <LinearGradient

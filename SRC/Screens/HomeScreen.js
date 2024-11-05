@@ -79,7 +79,7 @@ const HomeScreen = () => {
             }
             data={homeListData}
             renderItem={({item, index}) => {
-              return <Card item={item} />;
+              return <Card item={item} index={index}/>;
             }}
           />
         </View>

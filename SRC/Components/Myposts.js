@@ -22,7 +22,7 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
     {id: 4, uri: require('../Assets/Images/scoter_image.png')},
     {id: 5, uri: require('../Assets/Images/dummyman5.png')},
     {id: 6, uri: require('../Assets/Images/dummyman5.png')},
-    {id: 7, uri: require('../Assets/Images/dummyman5.png')},
+  {id: 7, uri: require('../Assets/Images/dummyman5.png')},
     {id: 8, uri: require('../Assets/Images/scoter_image.png')},
   ];
 
@@ -119,7 +119,7 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
               <TouchableOpacity
                 style={styles.activityImage}
                 onPress={() => {
-                  console.log('hello here i from video component ');
+                  console.log('hello this console  from video component ');
                   navigation.navigate('MediaPlayerScreen');
                 }}>
                 <Video

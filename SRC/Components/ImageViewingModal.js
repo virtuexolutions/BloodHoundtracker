@@ -1,6 +1,8 @@
-import {useNavigation} from '@react-navigation/native';
-import React, {useEffect, useRef, useState} from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { Icon } from 'native-base';
+import React, { useEffect, useRef, useState } from 'react';
 import {
+  Dimensions,
   FlatList,
   Modal,
   SafeAreaView,
@@ -8,26 +10,19 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {moderateScale} from 'react-native-size-matters';
-import Entypo from 'react-native-vector-icons/Entypo';
+import ImageZoom from 'react-native-image-pan-zoom';
+import { moderateScale } from 'react-native-size-matters';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import Color from '../Assets/Utilities/Color';
-import {windowHeight, windowWidth} from '../Utillity/utils';
-import CustomButton from './CustomButton';
+import { windowHeight, windowWidth } from '../Utillity/utils';
 import CustomImage from './CustomImage';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import {Icon} from 'native-base';
-import CustomText from './CustomText';
+import Entypo from 'react-native-vector-icons/Entypo'
 
 const ImageViewingModal = ({
   visible,
   setIsVisible,
   selectedImageIndex,
-  setSelectedImageIndex,
   multiImages,
-  imageIndex,
-  setMultiImages,
-  imageArray,
-  fromgallery,
 }) => {
   const flatListRef = useRef(null);
   const navigation = useNavigation();
@@ -44,36 +39,41 @@ const ImageViewingModal = ({
     flatListRef.current.scrollToOffset({offset: index * windowWidth});
   };
   return (
-    <Modal visible={visible}>
+    <Modal visible={visible}
+    onBackdropPress={() => {
+      setIsVisible(false);
+    }}
+    hasBackdrop={true}
+      style={{
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+      >
       <SafeAreaView>
         <View style={styles.imageView}>
           <View style={styles.row}>
-            <TouchableOpacity
-              onPress={() => {
-                setIsVisible(false);
-              }}></TouchableOpacity>
 
-            <CustomButton
-              iconStyle={{
-                width: windowWidth * 0.09,
-                height: windowHeight * 0.05,
-                textAlign: 'center',
-                paddingHorizontal: moderateScale(12, 0.2),
-                paddingTop: moderateScale(15, 0.6),
-                fontSize: moderateScale(24, 0.6),
-                color: Color.black,
-              }}
-              iconName="cross"
-              iconType={Entypo}
-              iconSize={18}
-              // color={Color.white}
-              marginTop={moderateScale(5, 0.3)}
+            <TouchableOpacity
+              activeOpacity={0.8}
               onPress={() => {
-                setIsVisible(false);
+                navigation.goBack();
               }}
-              width={windowHeight * 0.06}
-              height={windowHeight * 0.06}
-            />
+              style={styles.back}>
+              <Icon
+                name="arrowleft"
+                as={AntDesign}
+                style={styles.icon2}
+                color={Color.black}
+                size={moderateScale(20, 0.3)}
+                onPress={() => {
+                  setIsVisible(false);
+                }}
+              />
+            </TouchableOpacity>
+            
+            <TouchableOpacity>
+              <Icon as={Entypo} name='dots-three-vertical' size={moderateScale(15,.6)} color={Color.black}/>
+            </TouchableOpacity>
           </View>
 
           <FlatList
@@ -84,105 +84,26 @@ const ImageViewingModal = ({
               item?.id?.toString() || index.toString()
             }
             renderItem={({item, index}) => {
-              console.log("🚀 ~ item:", item)
+              console.log('🚀 ~ item:', item);
               return (
-                <View
-                  style={{
-                    height: windowHeight * 0.3,
-                    width: windowWidth,
-                  }}>
+                <ImageZoom
+                  style={{height: windowHeight, width: windowWidth}}
+                  cropWidth={Dimensions.get('screen').width}
+                  cropHeight={Dimensions.get('screen').height}
+                  imageWidth={390}
+                  pinchToZoom={true}
+                  imageHeight={500}>
                   <CustomImage
                     style={{
                       width: windowWidth,
                       height: windowHeight * 0.4,
-                      marginTop: windowHeight * 0.15,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      // overflow: 'hidden',
                     }}
-                    // source={require('../Assets/Images/dummyman5.png')}
-                    source={item?.uri}
-                      
-                    
+                    source={require('../Assets/Images/dummyman5.png')}
                   />
-                </View>
+                </ImageZoom>
               );
             }}
-            getItemLayout={(data, index) => ({
-              length: windowWidth,
-              offset: windowWidth * index,
-              index,
-            })}
           />
-          {/* <FlatList
-            ref={flatListRef}
-            data={fromgallery ? imageArray : multiImages}
-            keyExtractor={item => item?.id}
-            horizontal
-            pagingEnabled
-            renderItem={({item, index}) => {
-              return (
-                <CustomText>{item?.id}</CustomText>
-                // <>
-                //   <TouchableOpacity
-                //     onLongPress={() => {
-                //       // setModalVisible(true);
-                //       console.log('on long press===========>');
-                //     }}
-                //     style={{
-                //       width: windowWidth,
-                //       height: windowHeight * 0.4,
-                //       // marginTop: windowHeight * 0.15,
-                //       backgroundColor:'red'
-                //       // justifyContent: 'center',
-                //       //   alignItems: 'center',
-                //       // overflow: 'hidden',
-                //     }}>
-                //     <CustomImage
-                //       style={{
-                //         height: '100%',
-                //         width: '100%',
-                //       }}
-                //       source={require('../Assets/Images/dummyman5.png')}
-                //       // source={{uri: item?.uri}}
-                //     />
-                //   </TouchableOpacity>
-                //   {!fromgallery && (
-                //     <Icon
-                //       onPress={() => {
-                //         if (multiImages?.length == 1) {
-                //           let newArray = [...multiImages];
-                //           newArray.splice(index, 1);
-                //           setMultiImages(newArray);
-                //           setIsVisible(false);
-                //         } else {
-                //           let newArray = [...multiImages];
-                //           newArray.splice(index, 1);
-                //           setMultiImages(newArray);
-                //         }
-                //       }}
-                //       style={{
-                //         position: 'absolute',
-                //         bottom: 120,
-                //         width: windowWidth,
-                //         textAlign: 'center',
-                //         //   marginHorizontal:moderateScale(50,.6)
-                //       }}
-                //       as={Ionicons}
-                //       name={'trash-outline'}
-                //       size={moderateScale(25, 0.6)}
-                //       color={Color.black}
-                //     />
-                //   )}
-                // </>
-              );
-            }}
-            getItemLayout={(data, index) => ({
-              length: windowWidth,
-              offset: windowWidth * index,
-              index,
-            })}
-          /> */}
         </View>
       </SafeAreaView>
     </Modal>
@@ -193,8 +114,8 @@ export default ImageViewingModal;
 
 const styles = StyleSheet.create({
   row: {
-    paddingHorizontal: moderateScale(10, 0.6),
-    paddingVertical: moderateScale(15, 0.6),
+    paddingHorizontal: moderateScale(15, 0.6),
+    paddingVertical: moderateScale(20, 0.6),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

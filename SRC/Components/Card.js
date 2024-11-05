@@ -3,9 +3,9 @@ import { Icon } from 'native-base';
 import React, { useRef, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import ImageSlider from 'react-native-image-slider';
+import Video from 'react-native-video';
 import { moderateScale } from 'react-native-size-matters';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Video from 'react-native-video';
 import Color from '../Assets/Utilities/Color';
 import { FONTS } from '../Config/theme';
 import navigationService from '../navigationService';
@@ -13,15 +13,23 @@ import { windowHeight, windowWidth } from '../Utillity/utils';
 import CustomImage from './CustomImage';
 import CustomText from './CustomText';
 
-const Card = ({item, fromProfile, setSelected, selected}) => {
+const Card = ({item, fromProfile, setSelected, selected ,index}) => {
   const videoRef = useRef();
   const navigation = useNavigation();
   const refRBSheet = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const [paused, setPaused] = useState(false);
+  console.log("🚀 ~ Card ~ paused:", paused)
   const [clicked, setClicked] = useState(false);
   const [like ,setLike] =useState(false)
   console.log("🚀 ~ Card ~ like:", like)
+  const [playingIndex, setPlayingIndex] = useState(null);
+
+  // Function to handle video play/pause toggle
+  const handleVideoPress = (index) => {
+    // If the same video is clicked, pause it; otherwise, play the clicked video
+    setPlayingIndex(playingIndex === index ? null : index);
+  };
 
   const imageArray = [
     require('../Assets/Images/scoter_image.png'),
@@ -143,7 +151,7 @@ const Card = ({item, fromProfile, setSelected, selected}) => {
           {item?.description}
         </CustomText>
         <CustomText onPress={() =>{
-          navigation.navigate('DetailScreen')
+          navigation.navigate('DetailScreen' ,{item:item})
         }} style={{color: '#0201FF', ...FONTS.Regular12}}>
           Read More....
         </CustomText>
@@ -200,6 +208,7 @@ const Card = ({item, fromProfile, setSelected, selected}) => {
             setClicked(prev => !prev);
             setPaused(prev => !prev);
             console.log('Logging video');
+            handleVideoPress(index)
           }}
           activeOpacity={1}
           style={{
@@ -212,11 +221,10 @@ const Card = ({item, fromProfile, setSelected, selected}) => {
           }}>
           <Video
             ref={videoRef}
-            // ref={ref => setvideoRef(ref)}
-            muted={true}
             resizeMode={'stretch'}
-            repeat={true}
-            paused={paused}
+            repeat={false}
+            paused={playingIndex !== index}
+          
             source={require('../Assets/Images/video1.mp4')}
             style={{
               width: '100%',

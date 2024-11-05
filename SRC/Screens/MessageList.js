@@ -12,6 +12,7 @@ const MessageList = () => {
 
   return (
     <ScrollView
+    showsVerticalScrollIndicator={false}
       style={styles.mainContainer}
       contentContainerStyle={{
         paddingBottom: moderateScale(20, 0.6),
