@@ -168,7 +168,7 @@ const Groups = () => {
         numColumns={1}
         contentContainerStyle={{
           alignItems: 'center',
-          paddingBottom: moderateScale(30, 0.6),
+          paddingBottom: moderateScale(60, 0.6),
         }}
         data={dummyGroupArray}
         renderItem={(item, index) => {

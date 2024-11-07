@@ -1,5 +1,5 @@
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {homeListData} from '../Config/dummyData';
 import {moderateScale} from 'react-native-size-matters';
 import Card from './Card';
@@ -8,12 +8,17 @@ import CustomImage from './CustomImage';
 import Video from 'react-native-video';
 import ProfileComponent from './ProfileComponent';
 import ImageViewingModal from './ImageViewingModal';
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
+import { Get } from '../Axios/AxiosInterceptorFunction';
+import { useSelector } from 'react-redux';
 
 const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
   console.log('🚀 ~ Myposts ~ selected:', selected);
+  const token = useSelector(state => state.authReducer.token)
+  const isFocused =useIsFocused()
   const navigation = useNavigation();
   const [imageIndex, setimageIndex] = useState(0);
+  const [myPostData ,setMyPostdata ] =useState([])
   const [isVisible, setIsVisible] = useState(false);
   const imageArray = [
     {id: 1, uri: require('../Assets/Images/dummyman5.png')},
@@ -67,6 +72,32 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
       post: '10K Posts',
     },
   ];
+
+
+
+  const myPostApi = async ( ) =>{
+    const url='auth/post'
+    const response = await Get(url ,token)
+    if(response != undefined ){
+      setMyPostdata(response?.data?.post_list)
+
+    }
+
+  }
+
+useEffect(() => {
+  myPostApi()
+}, [isFocused])
+
+
+
+
+
+
+
+
+
+
   return (
     <View>
       {selected == 'photo' ? (
@@ -165,6 +196,7 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
         />
       ) : (
         <ProfileComponent
+        myPostData={myPostData}
           selected={selected}
           setSelected={setSelected}
           fromProfile={true}

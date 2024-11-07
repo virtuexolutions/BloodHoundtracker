@@ -84,7 +84,6 @@ const ImageViewingModal = ({
               item?.id?.toString() || index.toString()
             }
             renderItem={({item, index}) => {
-              console.log('🚀 ~ item:', item);
               return (
                 <ImageZoom
                   style={{height: windowHeight, width: windowWidth}}

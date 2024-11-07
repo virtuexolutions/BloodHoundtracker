@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, TouchableOpacity, View, FlatList} from 'react-native';
 import CustomText from '../Components/CustomText';
 import CustomHeader from '../Components/CustomHeader';
@@ -10,10 +10,32 @@ import {homeListData} from '../Config/dummyData';
 import Card from '../Components/Card';
 import {SIZES} from '../Config/theme';
 import {useSelector} from 'react-redux';
+import { Get } from '../Axios/AxiosInterceptorFunction';
+import { useIsFocused } from '@react-navigation/native';
 
 const HomeScreen = () => {
+  const isFocused =  useIsFocused()
+  const token =useSelector(state => state.authReducer.token)
+  console.log("🚀 ~ HomeScreen ~ token:", token)
   const profileData = useSelector(state => state.commonReducer.userData);
   const [selectedData, setSelectedData] = useState('Stolen');
+  const [postData ,setPostData] =useState([])
+
+
+  const postlist =async () =>{
+    const url = 'auth/post'
+    const response = await Get(url ,token)
+    console.log("🚀 ~ postlist ~ response:", JSON.stringify(response?.data?.post_list ,null ,2))
+    if(response != undefined){
+      setPostData(response?.data?.post_list)
+    }
+  }
+
+
+  useEffect(() =>{
+    postlist()
+  },[isFocused])
+
   return (
     <>
       <CustomStatusBar

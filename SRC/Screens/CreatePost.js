@@ -1,12 +1,14 @@
 import {Icon} from 'native-base';
 import React, {useState} from 'react';
 import {
+  Alert,
   FlatList,
   PermissionsAndroid,
   Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -29,24 +31,36 @@ import TextInputWithTitle from '../Components/TextInputWithTitle';
 import {FONTS} from '../Config/theme';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {
+  apiHeader,
   requestCameraPermission,
   windowHeight,
   windowWidth,
 } from '../Utillity/utils';
 import {useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
+import {Post} from '../Axios/AxiosInterceptorFunction';
+// import Entypo from 'react-native-vector-icons/FontAwesome'
 
 const CreatePost = () => {
   const navigation = useNavigation();
+  const token = useSelector(state => state.authReducer.token);
+  console.log('🚀 ~ CreatePost ~ token:', token);
   const [tagModal, setTagModal] = useState(false);
   const [selectedPeople, setSelectedPeople] = useState([]);
   const [show, setShow] = useState(false);
   const [fileObject, setFileObject] = useState({});
+  const [assetsCategory, setAssetsCategory] = useState('');
+  const [assetsCategoryModal, setAssetsCategoryModal] = useState(false);
+
   const [checkinModal, setCheckinModal] = useState(false);
   const [multiImages, setMultiImages] = useState([]);
   const [description, setDescription] = useState('');
   const [privacy, setPrivacy] = useState('only me');
   const [privacyModal, setPrivacyModal] = useState(false);
-  const [searchData, setSearchData] = useState('');
+  const [searchData, setSearchData] = useState([]);
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const openCamera = async () => {
     let options = {
@@ -113,7 +127,7 @@ const CreatePost = () => {
 
   const openGallery = () => {
     let options = {
-      mediaType: 'photo',
+      mediaType: 'mixed',
       maxWidth: 500,
       maxHeight: 500,
       quailty: 0.9,
@@ -159,9 +173,166 @@ const CreatePost = () => {
     // }
   };
 
+  // const postCreate = async () => {
+  //   const formData = new FormData();
+  //   const url = 'auth/post';
+  //   const body = {
+  //     description: description,
+  //     privacy: privacy,
+  //     category: assetsCategory,
+  //     end_time: endTime,
+  //     start_time: startTime,
+  //     tags: selectedPeople,
+  //     location: searchData,
+  //     images: [],
+  //   };
+  //   for (let key in body) {
+  //     formData.append(key, body[key]);
+  //   }
+  //   console.log(body, 'bodydyyyyyyyyyyyyyyyyyyyyyyyyyyyy');
+  //   const response = await Post(url, body, apiHeader(token));
+  //   console.log(response, '=================================');
+  // };
+
+  // const postCreate = async () => {
+  //   const url = 'auth/post';
+  //   // const formData = new FormData();
+
+  //   // const body = {
+  //   //   description: description,
+  //   //   privacy: privacy,
+  //   //   category: assetsCategory,
+  //   //   end_time: endTime,
+  //   //   start_time: startTime,
+  //   //   tags: selectedPeople,
+  //   //   location: searchData,
+  //   //   images: [],
+  //   // };
+
+  //   // for (let key in body) {
+  //   //   if (body[key] == '') {
+  //   //     return Platform.OS == 'android'
+  //   //       ? ToastAndroid.show(` ${key} field is empty`, ToastAndroid.SHORT)
+  //   //       : Alert.alert(` ${key} field is empty`);
+  //   //   }
+  //   //   // multiImages?.map((item, index) => {
+  //   //   //   return formData.append(`images[${index}]`, item);
+  //   //   // });
+  //   //   // formData.append(key, body[key]);
+  //   // }
+
+  //   const body = {
+  //     description: description,
+  //     privacy: privacy,
+  //     category: assetsCategory,
+  //     end_time: endTime,
+  //     start_time: startTime,
+  //     tags: selectedPeople,
+  //     location: searchData,
+  //     images: [],
+  //   };
+
+  //   for (let key in body) {
+  //     if (body[key] === '') {
+  //       return Platform.OS === 'android'
+  //         ? ToastAndroid.show(`${key} field is empty`, ToastAndroid.SHORT)
+  //         : Alert.alert(`${key} field is empty`);
+  //     }
+  //   }
+
+  //   const formData = new FormData();
+
+  //   multiImages?.forEach((item, index) => {
+  //     body.images.push({
+  //       uri: item.uri,
+  //       name: item.name || 'image.jpg',
+  //       type: item.type || 'image/jpeg',
+  //     });
+  //     formData.append(`images[${index}]`, {
+  //       uri: item.uri,
+  //       name: item.name || `image_${index}.jpg`,
+  //       type: item.type || 'image/jpeg',
+  //     });
+  //   });
+
+  //   for (let key in body) {
+  //     if (key !== 'images') {
+  //       formData.append(key, body[key]);
+  //     }
+  //   }
+  //   // formData.append('body', body);
+  //   return console.log(body, '===============================================');
+  //   setIsLoading(true);
+  //   const response = await Post(url, body, apiHeader(token));
+  //   return console.log('🚀 ~ postCreate ~ response:', response);
+  //   setIsLoading(false);
+  // };
+
+  // const postCreate = async () => {
+  //   const formData = new FormData();
+  //   const body = {
+  //     description: description,
+  //     privacy: privacy,
+  //     category: assetsCategory,
+  //     end_time: endTime,
+  //     start_time: startTime,
+  //     tags: selectedPeople,
+  //     location: searchData,
+  //   };
+  //   // console.log("🚀 ~ postCreate ~ body:", body)
+  //   multiImages?.map((item ,index) =>{
+
+  //     formData.append(`images[${index}]`, item);
+  //   })
+  //   formData.append('body',body)
+  //   const url = 'auth/post';
+  //   setIsLoading(true);
+  //   const response =  Post(url, formData, apiHeader(token));
+  //   return console.log('================== > response ' , response?.data)
+  //   setIsLoading(false);
+  //   if (response != undefined) {
+  //   }
+  // };
+
+  const postCreate = async () => {
+    const formData = new FormData();
+
+    const body = {
+      description: description,
+      privacy: privacy,
+      category: assetsCategory,
+      end_time: endTime,
+      start_time: startTime,
+    };
+    selectedPeople?.forEach((item, index) => {
+      formData.append(`tags[${index}]`, item?.id);
+    });
+
+    searchData?.forEach((item, index) => {
+      formData.append(`location[${index}]`, 'item');
+    });
+
+    multiImages?.forEach((item, index) => {
+      formData.append(`images[${index}]`, item);
+    });
+
+    for (let key in body) {
+      formData.append(key, body[key]);
+    }
+    const url = 'auth/post';
+    setIsLoading(true);
+
+    const response = await Post(url, formData, apiHeader(token));
+    console.log('==============', response?.data);
+    if (response != undefined) {
+      navigation.navigate('HomeScreen')
+    }
+  };
+
   return (
     <SafeAreaView>
       <ScrollView
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           paddingBottom: moderateScale(50, 0.6),
           alignItems: 'center',
@@ -315,10 +486,8 @@ const CreatePost = () => {
           horizontal
           data={searchData}
           renderItem={({item, index}) => {
-            console.log('🚀 ~ item:', item?.name);
             const parts = item?.name?.split(',');
             const locationName = parts[1]?.trim();
-            console.log(locationName);
             return (
               <View
                 style={{
@@ -439,6 +608,127 @@ const CreatePost = () => {
             Check In
           </CustomText>
         </TouchableOpacity>
+        <View
+          style={[
+            styles.row,
+            {
+              marginTop: 0,
+            },
+          ]}>
+          <Icon
+            onPress={() => {
+              setAssetsCategoryModal(!assetsCategoryModal);
+            }}
+            style={{
+              marginHorizontal: moderateScale(6, 0.6),
+            }}
+            name={'keyboard-arrow-down'}
+            as={MaterialIcons}
+            size={moderateScale(22, 0.6)}
+            color={Color.themeColor}
+          />
+          <View>
+            <CustomText
+              onPress={() => {
+                setAssetsCategoryModal(!assetsCategoryModal);
+              }}
+              style={{
+                ...FONTS.Regular13,
+                color: Color.textColor,
+              }}>
+              {assetsCategory == '' ? 'select asset category' : assetsCategory}
+            </CustomText>
+            {assetsCategoryModal && (
+              <>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    width: '92%',
+                  }}>
+                  <CustomText
+                    onPress={() => {
+                      setAssetsCategory('stolen');
+                    }}
+                    style={{
+                      ...FONTS.Regular13,
+                      color: Color.lightGrey,
+                    }}>
+                    stolen
+                  </CustomText>
+                  {assetsCategory == 'stolen' && (
+                    <Icon
+                      as={Feather}
+                      name="check"
+                      color={Color.blue}
+                      size={moderateScale(20, 0.6)}
+                    />
+                  )}
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    width: '92%',
+                  }}>
+                  <CustomText
+                    onPress={() => {
+                      setAssetsCategory('founded');
+                    }}
+                    style={{
+                      ...FONTS.Regular13,
+                      color: Color.lightGrey,
+                    }}>
+                    founded
+                  </CustomText>
+                  {assetsCategory == 'founded' && (
+                    <Icon
+                      as={Feather}
+                      name="check"
+                      color={Color.blue}
+                      size={moderateScale(20, 0.6)}
+                    />
+                  )}
+                </View>
+              </>
+            )}
+          </View>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+          }}>
+          <TextInputWithTitle
+            titleText={'Email'}
+            secureText={false}
+            placeholder={'Start Time'}
+            setText={setStartTime}
+            value={startTime}
+            viewHeight={0.04}
+            viewWidth={0.43}
+            inputWidth={0.4}
+            borderColor={Color.mediumGray}
+            border={1}
+            backgroundColor={'transparent'}
+            color={Color.themeColor}
+            placeholderColor={Color.themeLightGray}
+          />
+          <TextInputWithTitle
+            titleText={'Email'}
+            secureText={false}
+            placeholder={'End Time'}
+            setText={setEndTime}
+            value={endTime}
+            viewHeight={0.04}
+            viewWidth={0.42}
+            inputWidth={0.35}
+            borderColor={Color.mediumGray}
+            border={1}
+            backgroundColor={'transparent'}
+            color={Color.themeColor}
+            placeholderColor={Color.themeLightGray}
+          />
+        </View>
         <CustomButton
           text={'post'}
           textColor={Color.white}
@@ -446,7 +736,8 @@ const CreatePost = () => {
           height={windowHeight * 0.05}
           marginTop={windowHeight * 0.15}
           onPress={() => {
-            navigation.navigate('HomeScreen')
+            postCreate();
+            // navigation.navigate('HomeScreen');
           }}
           bgColor={Color.themeColor}
           borderRadius={moderateScale(5, 0.3)}

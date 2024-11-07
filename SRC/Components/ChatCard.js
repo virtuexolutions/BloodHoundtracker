@@ -33,7 +33,7 @@ const ChatCard = ({
 
   return (
     <TouchableOpacity
-      onPress={() => navigationService.navigate('MessagesScreen')}
+      onPress={() => navigationService.navigate('MessagesScreen' ,{item:item})}
       activeOpacity={0.8}
       style={{
         width: windowWidth * 0.93,
@@ -43,7 +43,7 @@ const ChatCard = ({
         flexDirection: 'row',
         paddingHorizontal: moderateScale(5, 0.6),
         marginBottom: moderateScale(8, 0.3),
-        paddingVertical: moderateScale(5, 0.4),
+        paddingVertical: moderateScale(7, 0.4),
         shadowColor: '#000000',
         shadowOffset: {
           width: 0,

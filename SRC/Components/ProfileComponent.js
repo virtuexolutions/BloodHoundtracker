@@ -15,7 +15,7 @@ import {windowHeight, windowWidth} from '../Utillity/utils';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 
-const ProfileComponent = ({stolenAssetsArray, selected, setSelected}) => {
+const ProfileComponent = ({stolenAssetsArray, selected, setSelected ,myPostData}) => {
   const navigation = useNavigation();
   const profileData = useSelector(state => state.commonReducer.userData);
 
@@ -191,7 +191,7 @@ const ProfileComponent = ({stolenAssetsArray, selected, setSelected}) => {
           marginBottom: moderateScale(10, 0.6),
         }}
         // ListFooterComponent={<View style={{ height: moderateScale(50, 0.6) }} />}
-        data={homeListData}
+        data={myPostData}
         renderItem={({item, index}) => {
           return (
             <Card

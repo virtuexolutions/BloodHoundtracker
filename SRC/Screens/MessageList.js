@@ -1,4 +1,4 @@
-import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { FlatList, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import React, { useState } from 'react';
 import { moderateScale } from 'react-native-size-matters';
 import { windowHeight, windowWidth } from '../Utillity/utils';
@@ -11,13 +11,8 @@ const MessageList = () => {
   const [serachData, setSearchData] = useState('')
 
   return (
-    <ScrollView
-    showsVerticalScrollIndicator={false}
-      style={styles.mainContainer}
-      contentContainerStyle={{
-        paddingBottom: moderateScale(20, 0.6),
-        alignItems: 'center'
-      }}>
+
+    <SafeAreaView style={styles.mainContainer}>
       <CustomHeader
         text={'message'}
         leftIcon
@@ -29,13 +24,7 @@ const MessageList = () => {
         data={serachData}
         setData={setSearchData}
         input={true}
-        inputStyle={{
-          // height:windowHeight*0.03
-
-        }}
-        //  height={windowHeight*0.02}
-        // placeholder={'search'}
-        width={windowWidth * 0.86} />
+        width={windowWidth * 0.9} />
       <FlatList
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
@@ -43,13 +32,16 @@ const MessageList = () => {
         }}
         numColumns={1}
         data={chatlist}
+        keyExtractor={(item) =>{
+          return(item?.id)
+        }}
         renderItem={(item, index) => {
           return (
             <ChatCard item={item?.item} />
           )
         }}
       />
-    </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -60,6 +52,8 @@ const styles = StyleSheet.create({
     height: windowHeight,
     width: windowWidth,
     backgroundColor: '#F9F9F9',
+    paddingBottom: moderateScale(20, 0.6),
+        alignItems: 'center'
   },
   //   chatcard
 });

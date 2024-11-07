@@ -1,33 +1,27 @@
-import {Button, StyleSheet, Text, View} from 'react-native';
-import React, {useCallback, useEffect} from 'react';
-import ScreenBoiler from '../Components/ScreenBoiler';
-import moment from 'moment';
-import {FlatList, Icon} from 'native-base';
-import {moderateScale, ScaledSheet} from 'react-native-size-matters';
-import NotificationCard from '../Components/NotificationCard';
-import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
-import Color from '../Assets/Utilities/Color';
-import LinearGradient from 'react-native-linear-gradient';
-import CustomText from '../Components/CustomText';
-import SearchContainer from '../Components/SearchContainer';
-import {useState} from 'react';
-import ChatCard from '../Components/ChatCard';
-import {useDispatch, useSelector} from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+import { Icon } from 'native-base';
+import React, { useCallback, useEffect, useState } from 'react';
+import { View } from 'react-native';
 import {
-  Actions,
-  Avatar,
   Bubble,
   GiftedChat,
   InputToolbar,
-  Send,
+  Send
 } from 'react-native-gifted-chat';
+import { moderateScale, ScaledSheet } from 'react-native-size-matters';
+import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Color from '../Assets/Utilities/Color';
 import CustomImage from '../Components/CustomImage';
-import {useNavigation} from '@react-navigation/native';
-import {Get, Post} from '../Axios/AxiosInterceptorFunction';
+import CustomText from '../Components/CustomText';
+import ScreenBoiler from '../Components/ScreenBoiler';
+import { windowHeight, windowWidth } from '../Utillity/utils';
 
-const MessagesScreen = ({props, navigation}) => {
+const MessagesScreen = (props) => {
+  const item =props?.route?.params?.item
+ const  navigation =useNavigation()
   const [messages, setMessages] = useState([]);
+
   useEffect(() => {
     setMessages([
       {
@@ -71,7 +65,7 @@ const MessagesScreen = ({props, navigation}) => {
           as={Ionicons}
           name="arrow-back"
           size={moderateScale(22, 0.6)}
-          color={Color.mediumGray}
+          color={Color.darkGray}
         />
         <View style={styles.image}>
           <CustomImage
@@ -83,17 +77,20 @@ const MessagesScreen = ({props, navigation}) => {
             resizeMode={'cover'}
           />
         </View>
-        <View
+        {/* <View
           style={{
-            width: windowWidth * 0.7,
-          }}>
+            width: windowWidth * 0.67,
+          }}> */}
           <CustomText isBold style={styles.text}>
-            john
+            {item?.name}
           </CustomText>
           {/* <CustomText style={styles.text2}>from</CustomText> */}
-        </View>
+        {/* </View> */}
+            <Icon as={Entypo} name='info-with-circle' size={moderateScale(15,.6)} color={Color.blue}/>
       </View>
       <GiftedChat
+      isKeyboardInternallyHandled
+      keyboardShouldPersistTaps={'always'}
         textInputStyle={{
           color: Color.black,
           marginTop: moderateScale(5, 0.3),
@@ -143,12 +140,12 @@ const MessagesScreen = ({props, navigation}) => {
           <InputToolbar
             {...props}
             containerStyle={{
-              width: windowWidth * 0.97,
-              marginHorizontal: moderateScale(6, 0.3),
+              width: windowWidth * 0.95,
+              marginHorizontal: moderateScale(9, 0.3),
               borderRadius: moderateScale(8, 0.6),
               alignContent: 'center',
               marginVertical: moderateScale(7, 0.3),
-              backgroundColor:Color.veryLightGray,
+              backgroundColor:'#e8e6df',
               borderColor: 'white',
             }}></InputToolbar>
         )}
@@ -171,10 +168,9 @@ const MessagesScreen = ({props, navigation}) => {
         messages={messages}
         isTyping={false}
         onSend={messages => onSend(messages)}
-        key={item => item?.id}
         user={{
-          _id: 1,
-          name: 'shdjahsd',
+          _id: item?.id,
+          name: 'john',
           avatar: 'https://placeimg.com/140/140/any',
         }}
       />
@@ -191,7 +187,7 @@ const styles = ScaledSheet.create({
     width: windowWidth * 0.9,
   },
   image: {
-    marginHorizontal: moderateScale(20, 0.3),
+    marginHorizontal: moderateScale(10, 0.3),
     width: windowWidth * 0.1,
     height: windowWidth * 0.1,
     borderRadius: windowWidth * 0.7,
@@ -201,17 +197,18 @@ const styles = ScaledSheet.create({
     borderColor: Color.blue,
   },
   text: {
-    fontSize: moderateScale(12, 0.6),
-    paddingTop: moderateScale(5, 0.6),
+
+    fontSize: moderateScale(13, 0.6),
+    width: windowWidth*0.67,
   },
   row: {
-    // backgroundColor:Color.blue,
+    backgroundColor:Color.veryLightGray,
     width: windowWidth,
     height: windowHeight * 0.06,
-    paddingHorizontal: moderateScale(10, 0.6),
+    paddingHorizontal: moderateScale(15, 0.6),
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: windowHeight * 0.02,
+    justifyContent:'space-between',
   },
   text2: {
     fontSize: moderateScale(10, 0.6),

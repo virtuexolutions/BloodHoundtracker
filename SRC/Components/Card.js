@@ -12,8 +12,12 @@ import navigationService from '../navigationService';
 import { windowHeight, windowWidth } from '../Utillity/utils';
 import CustomImage from './CustomImage';
 import CustomText from './CustomText';
+import { useSelector } from 'react-redux';
 
 const Card = ({item, fromProfile, setSelected, selected ,index}) => {
+  console.log("🚀 ~ Card ~ item:", item)
+  const userData = useSelector(state =>  state.commonReducer.userData)
+  // console.log("🚀 ~ Card ~ userData: ========== ", userData)
   const videoRef = useRef();
   const navigation = useNavigation();
   const refRBSheet = useRef(null);
@@ -25,9 +29,7 @@ const Card = ({item, fromProfile, setSelected, selected ,index}) => {
   console.log("🚀 ~ Card ~ like:", like)
   const [playingIndex, setPlayingIndex] = useState(null);
 
-  // Function to handle video play/pause toggle
   const handleVideoPress = (index) => {
-    // If the same video is clicked, pause it; otherwise, play the clicked video
     setPlayingIndex(playingIndex === index ? null : index);
   };
 
@@ -53,7 +55,7 @@ const Card = ({item, fromProfile, setSelected, selected ,index}) => {
               borderRadius: moderateScale(20, 0.6),
             }}>
             <CustomImage
-              source={item?.profile_image}
+              source={userData?.photo ? userData?.photo : require('../Assets/Images/dummyman5.png')}
               style={{
                 width: '100%',
                 height: '100%',
@@ -78,7 +80,7 @@ const Card = ({item, fromProfile, setSelected, selected ,index}) => {
                 width: windowWidth * 0.4,
               }}
               isBold>
-              {item?.name}
+              {userData?.name}
             </CustomText>
             <CustomText
               style={{color: Color.lightGrey, width: 100, ...FONTS.Regular10}}>

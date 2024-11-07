@@ -1,5 +1,5 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Modal from 'react-native-modal';
 import {windowHeight, windowWidth} from '../Utillity/utils';
 import CustomText from './CustomText';
@@ -12,6 +12,10 @@ import {FlatList} from 'react-native';
 import {Icon} from 'native-base';
 import Entypo from 'react-native-vector-icons/Entypo';
 import CustomButton from './CustomButton';
+import {useIsFocused} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
+import {Get} from '../Axios/AxiosInterceptorFunction';
+import { baseUrl } from '../Config';
 
 const TagPeopleModal = ({
   tagModal,
@@ -21,6 +25,11 @@ const TagPeopleModal = ({
   setSelectedPeople,
   selectedPeople,
 }) => {
+  const isFocused = useIsFocused();
+  const token = useSelector(state => state.authReducer.token);
+  console.log("🚀 ~ token:", token)
+  const [userListData ,setUserListData] = useState([])
+  console.log("🚀 ~ userListData:", baseUrl)
   const dummyArray = [
     {id: 1, name: 'alex', image: require('../Assets/Images/dummyman1.png')},
     {id: 2, name: 'david', image: require('../Assets/Images/dummyman2.png')},
@@ -39,6 +48,19 @@ const TagPeopleModal = ({
       image: require('../Assets/Images/dummyman5.png'),
     },
   ];
+
+  const userListApi = async () => {
+    const url = 'auth/tag_list ';
+    const response = await Get(url, token);
+   console.log("🚀  ============ :", JSON.stringify(response?.data?.data?.tag_list ,null,2))
+    if (response != undefined) {
+      setUserListData(response?.data?.data?.tag_list)
+    }
+  };
+  useEffect(() => {
+    userListApi()
+  }, [isFocused])
+  
 
   return (
     <Modal
@@ -59,7 +81,7 @@ const TagPeopleModal = ({
         <SearchContainer
           style={{
             height: windowHeight * 0.05,
-            borderRadius: 20,
+            borderRadius: 8,
             marginTop: moderateScale(15, 0.6),
           }}
           data={serachData}
@@ -68,7 +90,7 @@ const TagPeopleModal = ({
           width={windowWidth * 0.86}
         />
         <FlatList
-          data={dummyArray}
+          data={userListData}
           contentContainerStyle={{
             paddingBottom: moderateScale(20, 0.6),
           }}
@@ -82,7 +104,7 @@ const TagPeopleModal = ({
                       width: '100%',
                       overflow: 'hidden',
                     }}
-                    source={item?.image}
+                    source={{uri:`${baseUrl}${item?.photo}`}}
                   />
                 </View>
                 <CustomText
@@ -118,27 +140,29 @@ const TagPeopleModal = ({
             );
           }}
         />
-        {selectedPeople?.length > 0 &&<View
-          style={{
-            alignSelf: 'center',
-            position: 'absolute',
-            bottom: 10,
-          }}>
-          <CustomButton
-            text={'done'}
-            textColor={Color.white}
-            width={windowWidth * 0.8}
-            height={windowHeight * 0.06}
-            marginTop={moderateScale(20, 0.3)}
-            onPress={() => {
-              setTagModal(false);
-            }}
-            bgColor={Color.blue}
-            borderColor={Color.blue}
-            borderWidth={1}
-            borderRadius={moderateScale(30, 0.3)}
-          />
-        </View>}
+        {selectedPeople?.length > 0 && (
+          <View
+            style={{
+              alignSelf: 'center',
+              position: 'absolute',
+              bottom: 10,
+            }}>
+            <CustomButton
+              text={'done'}
+              textColor={Color.white}
+              width={windowWidth * 0.8}
+              height={windowHeight * 0.05}
+              marginTop={moderateScale(20, 0.3)}
+              onPress={() => {
+                setTagModal(false);
+              }}
+              bgColor={Color.blue}
+              borderColor={Color.blue}
+              borderWidth={1}
+              borderRadius={moderateScale(8, 0.3)}
+            />
+          </View>
+        )}
       </View>
     </Modal>
   );
