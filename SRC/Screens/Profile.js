@@ -26,10 +26,12 @@ import {useSelector} from 'react-redux';
 import {baseUrl} from '../Config';
 import ProfileComponent from '../Components/ProfileComponent';
 import Myposts from '../Components/Myposts';
+import { Get } from '../Axios/AxiosInterceptorFunction';
 
 const Profile = () => {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
+  const token = useSelector(state => state.authReducer.token)
   const profileData = useSelector(state => state.commonReducer.userData);
   const stolenAssetsArray = [
     {
@@ -89,7 +91,7 @@ const Profile = () => {
       style={styles.mainContainer}
       contentContainerStyle={{
         alignItems: 'center',
-        paddingBottom: moderateScale(20, 0.6),
+        paddingBottom: moderateScale(200, 0.6),
       }}>
       <CustomHeader text={'profile'} leftIcon logout />
       <View style={styles.border}>

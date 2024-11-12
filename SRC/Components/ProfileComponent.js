@@ -15,7 +15,12 @@ import {windowHeight, windowWidth} from '../Utillity/utils';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 
-const ProfileComponent = ({stolenAssetsArray, selected, setSelected ,myPostData}) => {
+const ProfileComponent = ({
+  stolenAssetsArray,
+  selected,
+  setSelected,
+  myPostData,
+}) => {
   const navigation = useNavigation();
   const profileData = useSelector(state => state.commonReducer.userData);
 
@@ -25,7 +30,7 @@ const ProfileComponent = ({stolenAssetsArray, selected, setSelected ,myPostData}
         <CustomText isBold style={styles.contact}>
           contact Details
         </CustomText>
-        <View style={styles.text_row}>
+        {/* <View style={styles.text_row}>
           <CustomText style={styles.buttons_text}>phone :</CustomText>
           <CustomText
             isBold
@@ -37,7 +42,7 @@ const ProfileComponent = ({stolenAssetsArray, selected, setSelected ,myPostData}
             ]}>
             {profileData?.phone}
           </CustomText>
-        </View>
+        </View> */}
         <View style={styles.text_row}>
           <CustomText style={styles.buttons_text}>Email :</CustomText>
           <CustomText
@@ -121,27 +126,17 @@ const ProfileComponent = ({stolenAssetsArray, selected, setSelected ,myPostData}
         numColumns={1}
         data={stolenAssetsArray}
         style={{
-          height: windowHeight * 0.24,
+          height: windowHeight * 0.12,
         }}
-        contentContainerStyle={
-          {
-            // backgroundColor:'red'
-          }
-        }
         renderItem={(item, index) => {
           return <StolenAssetsCard item={item?.item} />;
         }}
       />
       <CustomText
         onPress={() => {
-          navigation.navigate('ViewAllScreen')
+          navigation.navigate('ViewAllScreen');
         }}
-        style={{
-          fontSize: moderateScale(13, 0.6),
-          paddingVertical: moderateScale(8, 0.6),
-          color: Color.textColor,
-          textAlign: 'center',
-        }}>
+        style={styles.all_text}>
         View all
       </CustomText>
       <TouchableOpacity
@@ -308,5 +303,11 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     marginHorizontal: moderateScale(5, 0.3),
     marginTop: moderateScale(5, 0.6),
+  },
+  all_text: {
+    fontSize: moderateScale(13, 0.6),
+    paddingVertical: moderateScale(8, 0.6),
+    color: Color.textColor,
+    textAlign: 'center',
   },
 });

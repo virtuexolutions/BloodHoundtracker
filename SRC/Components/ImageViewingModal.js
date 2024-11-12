@@ -1,6 +1,6 @@
-import { useNavigation } from '@react-navigation/native';
-import { Icon } from 'native-base';
-import React, { useEffect, useRef, useState } from 'react';
+import {useNavigation} from '@react-navigation/native';
+import {Icon} from 'native-base';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Dimensions,
   FlatList,
@@ -11,18 +11,21 @@ import {
   View,
 } from 'react-native';
 import ImageZoom from 'react-native-image-pan-zoom';
-import { moderateScale } from 'react-native-size-matters';
+import {moderateScale} from 'react-native-size-matters';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Color from '../Assets/Utilities/Color';
-import { windowHeight, windowWidth } from '../Utillity/utils';
+import {windowHeight, windowWidth} from '../Utillity/utils';
 import CustomImage from './CustomImage';
-import Entypo from 'react-native-vector-icons/Entypo'
+import Entypo from 'react-native-vector-icons/Entypo';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 const ImageViewingModal = ({
   visible,
   setIsVisible,
   selectedImageIndex,
   multiImages,
+  fromCreatePost,
+  setMultiImages,
 }) => {
   const flatListRef = useRef(null);
   const navigation = useNavigation();
@@ -38,21 +41,21 @@ const ImageViewingModal = ({
   const scrollToIndex = index => {
     flatListRef.current.scrollToOffset({offset: index * windowWidth});
   };
+
   return (
-    <Modal visible={visible}
-    onBackdropPress={() => {
-      setIsVisible(false);
-    }}
-    hasBackdrop={true}
+    <Modal
+      visible={visible}
+      onBackdropPress={() => {
+        setIsVisible(false);
+      }}
+      hasBackdrop={true}
       style={{
         justifyContent: 'center',
         alignItems: 'center',
-      }}
-      >
+      }}>
       <SafeAreaView>
         <View style={styles.imageView}>
           <View style={styles.row}>
-
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => {
@@ -70,9 +73,14 @@ const ImageViewingModal = ({
                 }}
               />
             </TouchableOpacity>
-            
+
             <TouchableOpacity>
-              <Icon as={Entypo} name='dots-three-vertical' size={moderateScale(15,.6)} color={Color.black}/>
+              <Icon
+                as={Entypo}
+                name="dots-three-vertical"
+                size={moderateScale(15, 0.6)}
+                color={Color.black}
+              />
             </TouchableOpacity>
           </View>
 
@@ -97,12 +105,39 @@ const ImageViewingModal = ({
                       width: windowWidth,
                       height: windowHeight * 0.4,
                     }}
-                    source={require('../Assets/Images/dummyman5.png')}
+                    source={{uri: item?.uri}}
                   />
                 </ImageZoom>
               );
             }}
           />
+          {fromCreatePost && (
+            <TouchableOpacity
+              onPress={() => {
+                let newArray = [...multiImages];
+                newArray.splice(selectedImageIndex, 1);
+                setMultiImages(newArray);
+                if(selectedImageIndex == 0 ){
+                  setIsVisible(false)
+                }
+              }}
+              style={styles.customBtn}>
+              <Icon
+                onPress={() => {
+                  let newArray = [...multiImages];
+                  newArray.splice(selectedImageIndex, 1);
+                  setMultiImages(newArray);
+                  if(selectedImageIndex == 0 ){
+                    setIsVisible(false)
+                  }
+                }}
+                as={FontAwesome5}
+                name="trash"
+                size={moderateScale(22, 0.6)}
+                color={Color.black}
+              />
+            </TouchableOpacity>
+          )}
         </View>
       </SafeAreaView>
     </Modal>
@@ -126,10 +161,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.16)',
   },
   customBtn: {
-    width: windowWidth * 0.13,
+    width: windowWidth,
     height: windowWidth * 0.13,
-    borderRadius: (windowWidth * 0.13) / 2,
     justifyContent: 'center',
     alignItems: 'center',
+    position: 'absolute',
+    bottom: 160,
   },
 });

@@ -1,4 +1,11 @@
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {homeListData} from '../Config/dummyData';
 import {moderateScale} from 'react-native-size-matters';
@@ -9,17 +16,23 @@ import Video from 'react-native-video';
 import ProfileComponent from './ProfileComponent';
 import ImageViewingModal from './ImageViewingModal';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
-import { Get } from '../Axios/AxiosInterceptorFunction';
-import { useSelector } from 'react-redux';
+import {Get} from '../Axios/AxiosInterceptorFunction';
+import {useSelector} from 'react-redux';
+import CustomText from './CustomText';
+import {color} from 'native-base/lib/typescript/theme/styled-system';
+import Color from '../Assets/Utilities/Color';
 
 const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
   console.log('🚀 ~ Myposts ~ selected:', selected);
-  const token = useSelector(state => state.authReducer.token)
-  const isFocused =useIsFocused()
+  console.log('🚀 ~ Myposts ~ selected:', selected);
+  const token = useSelector(state => state.authReducer.token);
+  const isFocused = useIsFocused();
   const navigation = useNavigation();
   const [imageIndex, setimageIndex] = useState(0);
-  const [myPostData ,setMyPostdata ] =useState([])
+  const [myPostData, setMyPostdata] = useState([]);
+  const [galleryData, setGalleryData] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
+  const [isloading, setIsLoading] = useState(false);
   const imageArray = [
     {id: 1, uri: require('../Assets/Images/dummyman5.png')},
     {id: 2, uri: require('../Assets/Images/scoter_image.png')},
@@ -27,7 +40,7 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
     {id: 4, uri: require('../Assets/Images/scoter_image.png')},
     {id: 5, uri: require('../Assets/Images/dummyman5.png')},
     {id: 6, uri: require('../Assets/Images/dummyman5.png')},
-  {id: 7, uri: require('../Assets/Images/dummyman5.png')},
+    {id: 7, uri: require('../Assets/Images/dummyman5.png')},
     {id: 8, uri: require('../Assets/Images/scoter_image.png')},
   ];
 
@@ -73,134 +86,189 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
     },
   ];
 
-
-
-  const myPostApi = async ( ) =>{
-    const url='auth/post'
-    const response = await Get(url ,token)
-    if(response != undefined ){
-      setMyPostdata(response?.data?.post_list)
-
+  const myPostApi = async () => {
+    const url = 'auth/post';
+    setIsLoading(true);
+    const response = await Get(url, token);
+    setIsLoading(false);
+    if (response != undefined) {
+      setMyPostdata(response?.data?.post_list);
     }
+  };
 
-  }
+  const usergalleryApi = async () => {
+    const url = `auth/gallery?type=${selected}`;
+    setIsLoading(true);
+    const response = await Get(url, token);
+    setIsLoading(false);
+    console.log(
+      '🚀 ~ usergalleryApi ~ response:',
+      response?.data?.gallery_list,
+    );
+    if (response != undefined) {
+      setGalleryData(response?.data?.gallery_list);
+    }
+  };
 
-useEffect(() => {
-  myPostApi()
-}, [isFocused])
-
-
-
-
-
-
-
-
-
+  useEffect(() => {
+    if (selected != 'ProfileComponent' && selected != 'posts') {
+      usergalleryApi();
+    } else {
+      myPostApi();
+    }
+  }, [selected]);
 
   return (
     <View>
       {selected == 'photo' ? (
-        <FlatList
-          key={'photo'}
-          showsVerticalScrollIndicator={true}
-          nestedScrollEnabled={true}
-          numColumns={3}
-          data={imageArray}
-          keyExtractor={(item ,index) => index.toString()}
-          contentContainerStyle={{
-            paddingTop: moderateScale(10, 0.6),
-            paddingBottom: moderateScale(50, 0.6),
-          }}
-          style={{
-            alignSelf: 'center',
-            width: windowWidth * 0.9,
-          }}
-          renderItem={({item, index}) => {
-            return (
-              <TouchableOpacity
-                style={styles.imageContainer}
-                onPress={() => {}}
-                onLongPress={() => {}}>
-                <CustomImage
-                  onPress={() => {
-                    console.log('hetttttttttttttttttttttttttttttttttttttttttt');
-                    setIsVisible(true);
-                    setimageIndex(index);
-                  }}
-                  style={{height: '100%', width: '100%'}}
-                  source={item?.uri}
-                />
-              </TouchableOpacity>
-            );
-          }}
-        />
-      ) : selected == 'videos' || selected == 'saved' ? (
-        <FlatList
-          key={'videos'}
-          numColumns={3}
-          data={videodata}
-          keyExtractor={(item) => item.id}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingTop: moderateScale(10, 0.6),
-          }}
-          renderItem={({item, index}) => {
-            return (
-              <TouchableOpacity
-                style={styles.activityImage}
-                onPress={() => {
-                  console.log('hello this console  from video component ');
-                  navigation.navigate('MediaPlayerScreen');
+        isloading ? (
+          <ActivityIndicator
+            style={{
+              paddingTop: windowHeight * 0.15,
+            }}
+            size={'small'}
+            color={Color.blue}
+          />
+        ) : (
+          <FlatList
+            key={'photo'}
+            showsVerticalScrollIndicator={true}
+            nestedScrollEnabled={true}
+            numColumns={3}
+            data={galleryData}
+            keyExtractor={(item, index) => index.toString()}
+            contentContainerStyle={{
+              paddingTop: moderateScale(10, 0.6),
+              paddingBottom: moderateScale(50, 0.6),
+            }}
+            style={{
+              alignSelf: 'center',
+              width: windowWidth * 0.9,
+            }}
+            ListEmptyComponent={
+              <CustomText
+                style={{
+                  color: Color.lightGrey,
+                  textAlign: 'center',
+                  paddingTop: windowHeight * 0.15,
                 }}>
-                <Video
-                  repeat={true}
-                  resizeMode={'stretch'}
-                  mute={true}
-                  // poster={"cover"}
-                  // controls={true}
-                  // source={require('../Assets/Images/video2.mp4')}
-                  source={{uri: item}}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                  }}
-                  onBuffer={(e) =>{
-                    console.log('=---------------> ',e)
-                  }}
-                />
-              </TouchableOpacity>
-            );
-          }}
-        />
+                no photo added yet!
+              </CustomText>
+            }
+            renderItem={({item, index}) => {
+              return (
+                <TouchableOpacity
+                  style={styles.imageContainer}
+                  onPress={() => {}}
+                  onLongPress={() => {}}>
+                  <CustomImage
+                    onPress={() => {
+                      setIsVisible(true);
+                      setimageIndex(index);
+                    }}
+                    style={{height: '100%', width: '100%'}}
+                    source={item?.uri}
+                  />
+                </TouchableOpacity>
+              );
+            }}
+          />
+        )
+      ) : selected == 'videos' || selected == 'saved' ? (
+        isloading ? (
+          <ActivityIndicator
+            style={{
+              paddingTop: windowHeight * 0.15,
+            }}
+            size={'small'}
+            color={Color.blue}
+          />
+        ) : (
+          <FlatList
+            key={'videos'}
+            numColumns={3}
+            data={galleryData}
+            keyExtractor={item => item.id}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingTop: moderateScale(10, 0.6),
+            }}
+            ListEmptyComponent={
+              <CustomText
+                style={{
+                  color: Color.lightGrey,
+                  textAlign: 'center',
+                  paddingTop: windowHeight * 0.15,
+                }}>
+                no video added yet!
+              </CustomText>
+            }
+            renderItem={({item, index}) => {
+              return (
+                <TouchableOpacity
+                  style={styles.activityImage}
+                  onPress={() => {
+                    console.log('hello this console  from video component ');
+                    navigation.navigate('MediaPlayerScreen');
+                  }}>
+                  <Video
+                    repeat={true}
+                    resizeMode={'stretch'}
+                    mute={true}
+                    // poster={"cover"}
+                    // controls={true}
+                    // source={require('../Assets/Images/video2.mp4')}
+                    source={{uri: item}}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                    }}
+                    onBuffer={e => {
+                      console.log('=---------------> ', e);
+                    }}
+                  />
+                </TouchableOpacity>
+              );
+            }}
+          />
+        )
       ) : selected == 'posts' ? (
-        <FlatList
-          key={'posts'}
-          showsVerticalScrollIndicator={false}
-          numColumns={1}
-          style={{
-            marginVertical: moderateScale(20, 0.6),
-            marginBottom: moderateScale(10, 0.6),
-          }}
-          data={homeListData}
-          renderItem={({item, index}) => {
-            return (
-              <Card
-                setSelected={seSelectedAssets}
-                selected={selectedAssets}
-                fromProfile={true}
-                item={item}
-              />
-            );
-          }}
-        />
+        isloading ? (
+          <ActivityIndicator
+            style={{
+              paddingTop: windowHeight * 0.15,
+            }}
+            size={'small'}
+            color={Color.blue}
+          />
+        ) : (
+          <FlatList
+            key={'posts'}
+            showsVerticalScrollIndicator={false}
+            numColumns={1}
+            style={{
+              marginVertical: moderateScale(20, 0.6),
+              marginBottom: moderateScale(10, 0.6),
+            }}
+            data={myPostData}
+            renderItem={({item, index}) => {
+              return (
+                <Card
+                  setSelected={seSelectedAssets}
+                  selected={selectedAssets}
+                  fromProfile={true}
+                  item={item}
+                />
+              );
+            }}
+          />
+        )
       ) : (
         <ProfileComponent
-        myPostData={myPostData}
+          myPostData={myPostData}
           selected={selected}
           setSelected={setSelected}
           fromProfile={true}
-
           stolenAssetsArray={stolenAssetsArray}
         />
       )}

@@ -15,7 +15,7 @@ import CustomButton from './CustomButton';
 import {useIsFocused} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {Get} from '../Axios/AxiosInterceptorFunction';
-import { baseUrl } from '../Config';
+import { baseUrl, imageUrl } from '../Config';
 
 const TagPeopleModal = ({
   tagModal,
@@ -27,9 +27,7 @@ const TagPeopleModal = ({
 }) => {
   const isFocused = useIsFocused();
   const token = useSelector(state => state.authReducer.token);
-  console.log("🚀 ~ token:", token)
   const [userListData ,setUserListData] = useState([])
-  console.log("🚀 ~ userListData:", baseUrl)
   const dummyArray = [
     {id: 1, name: 'alex', image: require('../Assets/Images/dummyman1.png')},
     {id: 2, name: 'david', image: require('../Assets/Images/dummyman2.png')},
@@ -104,7 +102,7 @@ const TagPeopleModal = ({
                       width: '100%',
                       overflow: 'hidden',
                     }}
-                    source={{uri:`${baseUrl}${item?.photo}`}}
+                    source={{uri:`${baseUrl}/${item?.photo}`}}
                   />
                 </View>
                 <CustomText

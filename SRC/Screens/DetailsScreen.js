@@ -19,19 +19,28 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {comentlist} from '../Config/dummyData';
 import ImageSlider from 'react-native-image-slider';
 import Video from 'react-native-video';
+import Feather from 'react-native-vector-icons/Feather';
+import TextInputWithTitle from '../Components/TextInputWithTitle';
+import {baseUrl, imageUrl} from '../Config';
+import SwiperFlatList from 'react-native-swiper-flatlist';
 
 const DetailScreen = props => {
   const item = props?.route?.params?.item;
-  console.log('🚀 ~ DetailScreen ~ Detaildata:', item);
+  const index = props?.route?.params?.index;
+
+  console.log('🚀 ~ from detail screen  :', item);
   const videoRef = useRef();
   const [isLoading, setIsLoading] = useState(false);
   const [paused, setPaused] = useState(false);
   const [clicked, setClicked] = useState(false);
   const [like, setLike] = useState(false);
-  const [share ,setShare] =useState(false)
+  const [share, setShare] = useState(false);
   console.log('🚀 ~ Card ~ like:', like);
+  const [comment, setComment] = useState('');
   const [commentReply, setCommentReply] = useState(false);
   console.log('🚀 ~ DetailScreen ~ commentReply:', commentReply);
+  const [playingIndex, setPlayingIndex] = useState(null);
+
   const locationName = [
     '@South Beach',
     ' @Wynwood Arts District',
@@ -39,6 +48,10 @@ const DetailScreen = props => {
     '@South Beach',
     ' @Wynwood Arts District',
   ];
+
+  const handleVideoPress = index => {
+    setPlayingIndex(playingIndex === index ? null : index);
+  };
   return (
     <>
       <CustomStatusBar
@@ -68,7 +81,7 @@ const DetailScreen = props => {
               }}
             />
           </View> */}
-          {item?.images.length > 1 ? (
+          {/* {item?.images.length > 1 ? (
             <View
               style={{
                 width: windowWidth * 0.8,
@@ -78,7 +91,6 @@ const DetailScreen = props => {
               }}>
               <ImageSlider
                 loopBothSides
-                // autoPlayWithInterval={3000}
                 images={item?.images}
                 style={{backgroundColor: 'white'}}
                 customSlide={({index, item, style, width}) => (
@@ -95,7 +107,7 @@ const DetailScreen = props => {
                 )}
               />
             </View>
-          ) : item?.mediatype == 'image' ? (
+          ) : item?.images[0]?.type == 'image' ? (
             <View
               style={{
                 width: windowWidth * 0.8,
@@ -105,7 +117,7 @@ const DetailScreen = props => {
                 marginTop: moderateScale(10, 0.6),
               }}>
               <CustomImage
-                source={item?.images}
+                source={{uri:`${imageUrl}${item?.images[0]?.file}`}}
                 style={{
                   width: '100%',
                   height: '100%',
@@ -132,7 +144,6 @@ const DetailScreen = props => {
               }}>
               <Video
                 ref={videoRef}
-                // ref={ref => setvideoRef(ref)}
                 muted={true}
                 resizeMode={'stretch'}
                 repeat={true}
@@ -156,30 +167,148 @@ const DetailScreen = props => {
                 }
               />
             </TouchableOpacity>
-          )}
-          <CustomText
-            style={{...FONTS.Medium15, marginTop: SIZES.padding2}}
-            isBold>
-            Detail Discription
-          </CustomText>
+          )} */}
+          <SwiperFlatList
+            style={styles.swipe}
+            index={0}
+            paginationDefaultColor={Color.themeLightGray}
+            showPagination={item?.images.length > 1 ? true : false}
+            paginationActiveColor={Color.blue}
+            data={item?.images}
+            paginationStyle={{
+              position: 'absolute',
+              top: '41%',
+            }}
+            paginationStyleItem={styles.paginationItem}
+            renderItem={data =>
+              data?.item?.type == 'image' ? (
+                <View style={styles.imagebox}>
+                  <CustomImage
+                    source={{uri: `${imageUrl}${data?.item?.file}`}}
+                    style={styles.images}
+                  />
+                </View>
+              ) : (
+                <TouchableOpacity
+                  onPress={() => {
+                    setClicked(prev => !prev);
+                    setPaused(prev => !prev);
+                    console.log('Logging video');
+                    handleVideoPress(index);
+                  }}
+                  activeOpacity={1}
+                  style={styles.Video}>
+                  <Video
+                    ref={videoRef}
+                    resizeMode={'stretch'}
+                    repeat={true}
+                    paused={playingIndex !== index}
+                    source={{uri: `${imageUrl}${data?.item?.file}`}}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                    }}
+                    onProgress={data => {}}
+                    onLoadStart={data => {
+                      setIsLoading(true);
+                    }}
+                    onLoad={x => {
+                      setIsLoading(false);
+                      setPaused(false);
+                    }}
+                    onBuffer={x => console.log('buffering video', x)}
+                    onError={error =>
+                      console.log('error ================> ', error)
+                    }
+                  />
+                  <TouchableOpacity
+                    onPress={() => {
+                      setPaused(prev => !prev);
+                      console.log('Logging video');
+                      handleVideoPress(index);
+                    }}
+                    style={styles.play}>
+                    <CustomImage
+                      onPress={() => {
+                        console.log('hello from paused button');
+
+                        setPaused(prev => !prev);
+                        console.log('Logging video');
+                        handleVideoPress(index);
+                      }}
+                      style={{
+                        height: '100%',
+                        width: '100%',
+                      }}
+                      source={
+                        paused
+                          ? require('../Assets/Images/paused.png')
+                          : require('../Assets/Images/play.png')
+                      }
+                    />
+                  </TouchableOpacity>
+                </TouchableOpacity>
+              )
+            }
+          />
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <CustomText
+              style={{...FONTS.Medium15, marginTop: SIZES.padding2}}
+              isBold>
+              Detail Discription
+            </CustomText>
+            <CustomText
+              style={{
+                ...FONTS.Medium11,
+                marginTop: SIZES.padding2,
+                paddingTop: moderateScale(2, 0.6),
+              }}
+              isBold>
+              {item?.category}
+            </CustomText>
+          </View>
           <CustomText
             style={{
               ...FONTS.light12,
               color: Color.lightGrey,
               marginTop: moderateScale(5, 0.6),
             }}>
-            In Miami, my electric trail motorbike, painted in striking blue, has
-            gone missing, leaving only a scratched fuel tank as a clue to its
-            whereabouts. I'm fervently searching, longing to reunite with my
-            prized ride and resume exploring the city's scenic trails.
+            {item?.description}
           </CustomText>
           <CustomText
             style={{...FONTS.Medium15, marginTop: moderateScale(10, 0.6)}}
             isBold>
             Location
           </CustomText>
-
           <View
+            style={{
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              alignItems: 'center',
+              marginTop: moderateScale(10, 0.6),
+            }}>
+            {item?.locations?.map((item, index) => {
+              return (
+                <View
+                  style={{
+                    padding: moderateScale(6, 0.6),
+                    backgroundColor: Color.veryLightGray,
+                    borderRadius: moderateScale(17, 0.6),
+                    marginVertical: moderateScale(3, 0.3),
+                  }}>
+                  <CustomText style={styles.location_text}>
+                    {' '}
+                    {`${item?.location}`}{' '}
+                  </CustomText>
+                </View>
+              );
+            })}
+          </View>
+          {/* <View
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
@@ -241,7 +370,7 @@ const DetailScreen = props => {
                 @Wynwood Arts District
               </CustomText>
             </View>
-          </View>
+          </View> */}
           <CustomText
             style={{...FONTS.Medium15, marginTop: moderateScale(10, 0.6)}}
             isBold>
@@ -253,7 +382,7 @@ const DetailScreen = props => {
               marginTop: moderateScale(6, 0.6),
               color: Color.lightGrey,
             }}>
-            UTC-5:00 during Standard Time and UTC-4:00
+            {`${item?.start_time} during Standard Time and ${item?.end_time}`}
           </CustomText>
           <View
             style={{
@@ -275,7 +404,7 @@ const DetailScreen = props => {
                   color: Color.lightGrey,
                   marginLeft: moderateScale(3, 0.6),
                 }}>
-                12 Coments
+                {`${item?.comment_count} comments`}
               </CustomText>
             </View>
             <View style={{flexDirection: 'row'}}>
@@ -294,7 +423,7 @@ const DetailScreen = props => {
                   color: Color.lightGrey,
                   marginLeft: moderateScale(3, 0.6),
                 }}>
-                85 Likes
+                {`${item?.like_count} like `}
               </CustomText>
             </View>
             <View style={{flexDirection: 'row'}}>
@@ -315,7 +444,7 @@ const DetailScreen = props => {
             </View>
           </View>
           <FlatList
-            data={comentlist}
+            data={item?.comment}
             showsVerticalScrollIndicator={false}
             style={{
               marginTop: moderateScale(20, 0.6),
@@ -424,11 +553,10 @@ const DetailScreen = props => {
                         <View
                           style={{
                             width: '93%',
-                            // height: windowHeight * 0.2,
                             borderRadius: SIZES.padding,
                             borderWidth: 1,
                             marginVertical: SIZES.padding - 10,
-                            marginLeft:moderateScale(22,.3),
+                            marginLeft: moderateScale(22, 0.3),
                             borderColor: Color.veryLightGray,
                             paddingHorizontal: SIZES.padding - 10,
                             paddingVertical: SIZES.padding - 15,
@@ -532,6 +660,32 @@ const DetailScreen = props => {
           />
         </View>
       </ScrollView>
+      <View style={styles.commentRow}>
+        <TextInputWithTitle
+          secureText={false}
+          placeholder={'write a comment'}
+          setText={setComment}
+          value={comment}
+          viewHeight={0.07}
+          viewWidth={0.74}
+          inputWidth={0.66}
+          borderColor={'#ffffff'}
+          backgroundColor={Color.veryLightGray}
+          borderRadius={moderateScale(15, 0.6)}
+          marginTop={moderateScale(15, 0.3)}
+          color={Color.themeColor}
+          placeholderColor={Color.themeLightGray}
+          multiline
+        />
+        <TouchableOpacity style={styles.send_btn}>
+          <Icon
+            name="send"
+            as={Feather}
+            size={moderateScale(20, 0.6)}
+            color={Color.white}
+          />
+        </TouchableOpacity>
+      </View>
     </>
   );
 };
@@ -549,11 +703,12 @@ const styles = StyleSheet.create({
     paddingVertical: SIZES.padding,
     backgroundColor: Color.white,
     width: windowWidth * 0.93,
-    alignSelf: 'center',
     // height: windowHeight,
+    alignSelf: 'center',
   },
   location_text: {
     ...FONTS.Medium11,
+    color: Color.mediumGray,
   },
   profile_view: {
     flexDirection: 'row',
@@ -561,7 +716,6 @@ const styles = StyleSheet.create({
   },
   coment_view: {
     width: '100%',
-    // height: windowHeight * 0.2,
     borderRadius: SIZES.padding,
     borderWidth: 1,
     marginVertical: SIZES.padding - 10,
@@ -573,6 +727,62 @@ const styles = StyleSheet.create({
     width: windowWidth * 0.8,
     height: windowHeight * 0.3,
     marginLeft: moderateScale(0.6, 0.6),
+    borderRadius: moderateScale(20, 0.6),
+  },
+  commentRow: {
+    flexDirection: 'row',
+    position: 'absolute',
+    bottom: 10,
+    marginHorizontal: moderateScale(20, 0.3),
+  },
+  send_btn: {
+    height: windowHeight * 0.065,
+    backgroundColor: Color.blue,
+    width: windowWidth * 0.14,
+    marginTop: moderateScale(16, 0.3),
+    marginHorizontal: moderateScale(5, 0.3),
+    borderRadius: moderateScale(10, 0.6),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  play: {
+    width: windowWidth * 0.1,
+    height: windowHeight * 0.04,
+    top: '45%',
+    right: '43%',
+    position: 'absolute',
+  },
+  paginationItem: {
+    width: windowWidth * 0.023,
+    height: windowHeight * 0.014,
+    borderRadius: moderateScale(20, 0.6),
+    backgroundColor: 'red',
+    marginHorizontal: moderateScale(5, 0.3),
+  },
+  imagebox: {
+    width: windowWidth * 0.8,
+    height: windowHeight * 0.3,
+    borderRadius: moderateScale(20, 0.6),
+    alignSelf: 'center',
+    marginTop: moderateScale(10, 0.6),
+  },
+  Video: {
+    width: windowWidth * 0.8,
+    height: windowHeight * 0.3,
+    borderRadius: moderateScale(20, 0.6),
+    alignSelf: 'center',
+    overflow: 'hidden',
+    marginTop: moderateScale(10, 0.6),
+  },
+  images: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+    borderRadius: moderateScale(20, 0.6),
+  },
+  swipe: {
+    width: windowWidth * 0.8,
+    height: windowHeight * 0.3,
     borderRadius: moderateScale(20, 0.6),
   },
 });

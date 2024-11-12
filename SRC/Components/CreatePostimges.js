@@ -193,6 +193,7 @@ const CreatePostimges = ({multiImages, setMultiImages}) => {
         <View style={styles.image}></View>
       )}
       <ImageViewingModal
+        fromCreatePost={true}
         visible={isVisible}
         setIsVisible={setIsVisible}
         setSelectedImageIndex={setSelectedImageIndex}

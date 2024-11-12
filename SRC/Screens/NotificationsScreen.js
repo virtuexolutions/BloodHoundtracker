@@ -99,7 +99,7 @@ const NotificationsScreen = () => {
               style={{
                 alignItems: 'center',
                 backgroundColor: Color.themeColor,
-                height: windowHeight * 0.065,
+                height: windowHeight * 0.062,
                 width: windowWidth * 0.15,
                 justifyContent: 'center',
                 borderRadius: moderateScale(8, 0.6),

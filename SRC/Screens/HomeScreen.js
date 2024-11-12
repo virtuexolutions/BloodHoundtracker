@@ -1,40 +1,44 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, TouchableOpacity, View, FlatList} from 'react-native';
+import {
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  FlatList,
+  ActivityIndicator,
+} from 'react-native';
 import CustomText from '../Components/CustomText';
 import CustomHeader from '../Components/CustomHeader';
 import CustomStatusBar from '../Components/CustomStatusBar';
 import Color from '../Assets/Utilities/Color';
-import {windowHeight, windowWidth} from '../Utillity/utils';
+import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
 import {moderateScale} from 'react-native-size-matters';
-import {homeListData} from '../Config/dummyData';
 import Card from '../Components/Card';
 import {SIZES} from '../Config/theme';
 import {useSelector} from 'react-redux';
-import { Get } from '../Axios/AxiosInterceptorFunction';
-import { useIsFocused } from '@react-navigation/native';
+import {Get, Post} from '../Axios/AxiosInterceptorFunction';
+import {useIsFocused} from '@react-navigation/native';
 
 const HomeScreen = () => {
-  const isFocused =  useIsFocused()
-  const token =useSelector(state => state.authReducer.token)
-  console.log("🚀 ~ HomeScreen ~ token:", token)
+  const isFocused = useIsFocused();
+  const token = useSelector(state => state.authReducer.token);
   const profileData = useSelector(state => state.commonReducer.userData);
-  const [selectedData, setSelectedData] = useState('Stolen');
-  const [postData ,setPostData] =useState([])
+  const [selectedData, setSelectedData] = useState('founded');
+  const [postData, setPostData] = useState([]);
+  const [isloading, setIsLoading] = useState(false);
 
-
-  const postlist =async () =>{
-    const url = 'auth/post'
-    const response = await Get(url ,token)
-    console.log("🚀 ~ postlist ~ response:", JSON.stringify(response?.data?.post_list ,null ,2))
-    if(response != undefined){
-      setPostData(response?.data?.post_list)
+  const postlist = async () => {
+    const url = `auth/post?category=${selectedData}` ;
+    setIsLoading(true);
+    const response = await Get(url, token);
+    console.log("🚀 ~ postlist ~ response:", JSON.stringify(response?.data,null ,2))
+    setIsLoading(false);
+    if (response != undefined) {
+      setPostData(response?.data?.post_list);
     }
-  }
-
-
-  useEffect(() =>{
-    postlist()
-  },[isFocused])
+  };
+  useEffect(() => {
+    postlist();
+  }, [isFocused]);
 
   return (
     <>
@@ -66,7 +70,10 @@ const HomeScreen = () => {
                 onPress={() => {
                   setSelectedData('Stolen');
                 }}
-                style={[styles.btn_text ,{color:   selectedData == 'Stolen' ? Color.white :Color.black}]}>
+                style={[
+                  styles.btn_text,
+                  {color: selectedData == 'Stolen' ? Color.white : Color.black},
+                ]}>
                 Stolen
               </CustomText>
             </TouchableOpacity>
@@ -85,25 +92,41 @@ const HomeScreen = () => {
                 onPress={() => {
                   setSelectedData('Founded');
                 }}
-                style={[styles.btn_text, {color:   selectedData == 'Founded' ? Color.white :Color.black}]}>
+                style={[
+                  styles.btn_text,
+                  {
+                    color:
+                      selectedData == 'Founded' ? Color.white : Color.black,
+                  },
+                ]}>
                 Founded
               </CustomText>
             </TouchableOpacity>
           </View>
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            style={{
-              marginVertical: moderateScale(20, 0.6),
-              marginBottom: moderateScale(70, 0.6),
-            }}
-            ListFooterComponent={
-              <View style={{paddingBottom: moderateScale(80, 0.6)}} />
-            }
-            data={homeListData}
-            renderItem={({item, index}) => {
-              return <Card item={item} index={index}/>;
-            }}
-          />
+          {isloading ? (
+            <ActivityIndicator
+              style={{
+                height: windowHeight * 0.8,
+              }}
+              size={'small'}
+              color={Color.blue}
+            />
+          ) : (
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              style={{
+                marginVertical: moderateScale(20, 0.6),
+                marginBottom: moderateScale(70, 0.6),
+              }}
+              ListFooterComponent={
+                <View style={{paddingBottom: moderateScale(120, 0.6)}} />
+              }
+              data={postData.reverse()}
+              renderItem={({item, index}) => {
+                return <Card item={item} index={index} loading={isloading} />;
+              }}
+            />
+          )}
         </View>
       </View>
     </>
@@ -128,7 +151,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     height: moderateScale(50, 0.5),
-    
   },
   btn: {
     width: '48%',
@@ -137,14 +159,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: Color.white,
     borderRadius: moderateScale(10, 0.6),
-    shadowColor: "#000000",
-shadowOffset: {
-  width: 0,
-  height: 2,
-},
-shadowOpacity:  0.16,
-shadowRadius: 2.54,
-elevation: 2
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.16,
+    shadowRadius: 2.54,
+    elevation: 2,
   },
   btn_text: {
     fontSize: moderateScale(14, 0.6),

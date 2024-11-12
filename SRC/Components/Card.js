@@ -1,77 +1,74 @@
-import { useNavigation } from '@react-navigation/native';
-import { Icon } from 'native-base';
-import React, { useRef, useState } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import ImageSlider from 'react-native-image-slider';
-import Video from 'react-native-video';
-import { moderateScale } from 'react-native-size-matters';
+import {useNavigation} from '@react-navigation/native';
+import moment from 'moment';
+import {Icon} from 'native-base';
+import React, {useRef, useState} from 'react';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {moderateScale} from 'react-native-size-matters';
+import SwiperFlatList from 'react-native-swiper-flatlist';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Video from 'react-native-video';
+import {useSelector} from 'react-redux';
 import Color from '../Assets/Utilities/Color';
-import { FONTS } from '../Config/theme';
+import {baseUrl, imageUrl} from '../Config';
+import {FONTS} from '../Config/theme';
 import navigationService from '../navigationService';
-import { windowHeight, windowWidth } from '../Utillity/utils';
+import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
 import CustomImage from './CustomImage';
 import CustomText from './CustomText';
-import { useSelector } from 'react-redux';
+import {Post} from '../Axios/AxiosInterceptorFunction';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
-const Card = ({item, fromProfile, setSelected, selected ,index}) => {
-  console.log("🚀 ~ Card ~ item:", item)
-  const userData = useSelector(state =>  state.commonReducer.userData)
-  // console.log("🚀 ~ Card ~ userData: ========== ", userData)
+const Card = ({item, fromProfile, setSelected, selected, index, loading}) => {
+  console.log('🚀 ~ Card ~ loading:', loading);
+  const userData = useSelector(state => state.commonReducer.userData);
+  const token = useSelector(state => state.authReducer.token);
+
   const videoRef = useRef();
   const navigation = useNavigation();
   const refRBSheet = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const [paused, setPaused] = useState(false);
-  console.log("🚀 ~ Card ~ paused:", paused)
   const [clicked, setClicked] = useState(false);
-  const [like ,setLike] =useState(false)
-  console.log("🚀 ~ Card ~ like:", like)
+  const [like, setLike] = useState(
+    item?.my_like?.post_id == item?.id ? true : false,
+  );
   const [playingIndex, setPlayingIndex] = useState(null);
 
-  const handleVideoPress = (index) => {
+  const handleVideoPress = index => {
     setPlayingIndex(playingIndex === index ? null : index);
   };
 
-  const imageArray = [
-    require('../Assets/Images/scoter_image.png'),
-    require('../Assets/Images/scoter_image.png'),
-    require('../Assets/Images/scoter_image.png'),
-    require('../Assets/Images/scoter_image.png'),
-  ];
+  const post_like = async () => {
+    const url = 'auth/post_like';
+    setIsLoading(true);
+    const response = await Post(url, {post_id: item?.id}, apiHeader(token));
+    setIsLoading(false);
+    if (response != undefined) {
+    }
+  };
   return (
-    <TouchableOpacity
-    activeOpacity={0.4}
+    <View
+      activeOpacity={0.4}
       style={styles.cardstyle}
       onPress={() => {
-      // navigationService.navigate('DetailScreen')}
+        // navigationService.navigate('DetailScreen')}
       }}>
       <View style={{flexDirection: 'row'}}>
         <View style={styles.text_view}>
-          <View
-            style={{
-              width: moderateScale(40, 0.6),
-              height: moderateScale(40, 0.6),
-              borderRadius: moderateScale(20, 0.6),
-            }}>
+          <View style={styles.profile_image}>
             <CustomImage
-              source={userData?.photo ? userData?.photo : require('../Assets/Images/dummyman5.png')}
+              source={
+                userData?.photo
+                  ? {uri: `${baseUrl}${userData?.photo}`}
+                  : require('../Assets/Images/dummyman5.png')
+              }
               style={{
                 width: '100%',
                 height: '100%',
                 borderRadius: moderateScale(20, 0.6),
               }}
             />
-            <View
-              style={{
-                width: 10,
-                height: 10,
-                backgroundColor: 'green',
-                borderRadius: moderateScale(20, 0.6),
-                top: -10,
-                alignSelf: 'flex-end',
-              }}
-            />
+            <View style={styles.firstRow} />
           </View>
           <View style={{paddingHorizontal: moderateScale(10, 0.6)}}>
             <CustomText
@@ -84,7 +81,8 @@ const Card = ({item, fromProfile, setSelected, selected ,index}) => {
             </CustomText>
             <CustomText
               style={{color: Color.lightGrey, width: 100, ...FONTS.Regular10}}>
-              {item?.time}
+              {/* {moment().startOf('day').fromNow()} */}
+              {moment(item?.created_at).format('ll')}
             </CustomText>
           </View>
         </View>
@@ -98,14 +96,17 @@ const Card = ({item, fromProfile, setSelected, selected ,index}) => {
                 styles.founded_bnt,
                 {
                   backgroundColor:
-                    selected == 'stolen' ? Color.themeColor : Color.mediumGray,
+                    item?.category == 'stolen'
+                      ? Color.themeColor
+                      : Color.mediumGray,
                 },
               ]}>
               <CustomText
                 style={[
                   styles.founded_text,
                   {
-                    color: selected == 'stolen' ? Color.white : Color.black,
+                    color:
+                      item?.category == 'stolen' ? Color.white : Color.black,
                   },
                 ]}>
                 stolen
@@ -119,8 +120,9 @@ const Card = ({item, fromProfile, setSelected, selected ,index}) => {
                 styles.founded_bnt,
                 {
                   backgroundColor:
-                    selected == 'founded' ? Color.themeColor : Color.mediumGray,
-                  // padding: moderateScale(5, 0.6),
+                    item?.category == 'founded'
+                      ? Color.themeColor
+                      : Color.mediumGray,
                   width: '55%',
                 },
               ]}>
@@ -128,7 +130,8 @@ const Card = ({item, fromProfile, setSelected, selected ,index}) => {
                 style={[
                   styles.founded_text,
                   {
-                    color: selected == 'founded' ? Color.white : Color.black,
+                    color:
+                      item?.category == 'founded' ? Color.white : Color.black,
                   },
                 ]}>
                 founded
@@ -152,13 +155,122 @@ const Card = ({item, fromProfile, setSelected, selected ,index}) => {
           }}>
           {item?.description}
         </CustomText>
-        <CustomText onPress={() =>{
-          navigation.navigate('DetailScreen' ,{item:item})
-        }} style={{color: '#0201FF', ...FONTS.Regular12}}>
+        <CustomText
+          onPress={() => {
+            navigation.navigate('DetailScreen', {item: item}, {index: index});
+          }}
+          style={{color: '#0201FF', ...FONTS.Regular12}}>
           Read More....
         </CustomText>
       </View>
-      {item?.images.length > 1 ? (
+      <SwiperFlatList
+        style={{
+          width: windowWidth * 0.8,
+          height: windowHeight * 0.4,
+          borderRadius: moderateScale(20, 0.6),
+        }}
+        index={0}
+        showPagination={item?.images.length > 1 ? true : false}
+        paginationDefaultColor={Color.themeLightGray}
+        paginationActiveColor={Color.blue}
+        data={item?.images}
+        paginationStyle={{
+          position: 'absolute',
+          bottom: 40,
+        }}
+        paginationStyleItem={styles.pagination}
+        renderItem={data =>
+          loading ? (
+            <SkeletonPlaceholder>
+              <SkeletonPlaceholder.Item
+                width={windowWidth * 0.8}
+                height={windowHeight * 0.4}
+                borderRadius={moderateScale(20, 0.6)}
+              />
+            </SkeletonPlaceholder>
+          ) : data?.item?.type == 'image' ? (
+            <View style={styles.imageBox}>
+              <CustomImage
+                source={{uri: `${imageUrl}${data?.item?.file}`}}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  resizeMode: 'cover',
+                  borderRadius: moderateScale(20, 0.6),
+                }}
+              />
+            </View>
+          ) : (
+            <TouchableOpacity
+              onPress={() => {
+                // setClicked(prev => !prev);
+                // setPaused(prev => !prev);
+                // console.log('Logging video');
+                // handleVideoPress(index);
+              }}
+              activeOpacity={1}
+              style={styles.videoBox}>
+              <Video
+                ref={videoRef}
+                resizeMode={'stretch'}
+                repeat={true}
+                paused={playingIndex !== index}
+                source={{uri: `${imageUrl}${data?.item?.file}`}}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                }}
+                onProgress={data => {}}
+                onLoadStart={data => {
+                  setIsLoading(true);
+                }}
+                onLoad={x => {
+                  setIsLoading(false);
+                  setPaused(false);
+                }}
+                onBuffer={x => console.log('buffering video', x)}
+                onError={error =>
+                  console.log('error ================> ', error)
+                }
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  setPaused(prev => !prev);
+                  console.log('Logging video');
+                  handleVideoPress(index);
+                }}
+                style={{
+                  width: windowWidth * 0.1,
+                  height: windowHeight * 0.04,
+                  top: '45%',
+                  right: '43%',
+                  position: 'absolute',
+                }}>
+                <CustomImage
+                  onPress={() => {
+                    console.log('hello from paused button');
+
+                    setPaused(prev => !prev);
+                    console.log('Logging video');
+                    handleVideoPress(index);
+                  }}
+                  style={{
+                    height: '100%',
+                    width: '100%',
+                    // backgroundColor: 'pink',
+                  }}
+                  source={
+                    paused
+                      ? require('../Assets/Images/paused.png')
+                      : require('../Assets/Images/play.png')
+                  }
+                />
+              </TouchableOpacity>
+            </TouchableOpacity>
+          )
+        }
+      />
+      {/* {item?.images.length > 1 ? (
         <View
           style={{
             width: windowWidth * 0.8,
@@ -168,7 +280,6 @@ const Card = ({item, fromProfile, setSelected, selected ,index}) => {
           }}>
           <ImageSlider
             loopBothSides
-            // autoPlayWithInterval={3000}
             images={item?.images}
             style={{backgroundColor: 'white'}}
             customSlide={({index, item, style, width}) => (
@@ -185,7 +296,7 @@ const Card = ({item, fromProfile, setSelected, selected ,index}) => {
             )}
           />
         </View>
-      ) : item?.mediatype == 'image' ? (
+      ) : item?.images[0]?.type == 'image' ? (
         <View
           style={{
             width: windowWidth * 0.8,
@@ -195,7 +306,7 @@ const Card = ({item, fromProfile, setSelected, selected ,index}) => {
             marginTop: moderateScale(10, 0.6),
           }}>
           <CustomImage
-            source={item?.images}
+            source={{uri: `${imageUrl}/${item?.images[0]?.file}`}}
             style={{
               width: '100%',
               height: '100%',
@@ -210,7 +321,7 @@ const Card = ({item, fromProfile, setSelected, selected ,index}) => {
             setClicked(prev => !prev);
             setPaused(prev => !prev);
             console.log('Logging video');
-            handleVideoPress(index)
+            handleVideoPress(index);
           }}
           activeOpacity={1}
           style={{
@@ -226,8 +337,7 @@ const Card = ({item, fromProfile, setSelected, selected ,index}) => {
             resizeMode={'stretch'}
             repeat={false}
             paused={playingIndex !== index}
-          
-            source={require('../Assets/Images/video1.mp4')}
+            source={{uri: `${imageUrl}${item?.images[0]?.file}`}}
             style={{
               width: '100%',
               height: '100%',
@@ -244,7 +354,7 @@ const Card = ({item, fromProfile, setSelected, selected ,index}) => {
             onError={error => console.log('error ================> ', error)}
           />
         </TouchableOpacity>
-      )}
+      )} */}
       <View
         style={{
           flexDirection: 'row',
@@ -265,18 +375,22 @@ const Card = ({item, fromProfile, setSelected, selected ,index}) => {
               color: Color.lightGrey,
               marginLeft: moderateScale(3, 0.6),
             }}>
-            {item?.coments}
+            {item?.comment_counts == null
+              ? '0 comments'
+              : `${item?.comment_counts} comments`}
           </CustomText>
         </View>
         <View style={{flexDirection: 'row'}}>
-          <Icon onPress={() =>{
-            console.log('------------------- > > >> > > ')
-            setLike(!like)
-          }}
-            name={like ? 'heart' :"heart-outline"}
+          <Icon
+            onPress={() => {
+              post_like();
+              console.log('------------------- > > >> > > ');
+              setLike(!like);
+            }}
+            name={like ? 'heart' : 'heart-outline'}
             as={MaterialCommunityIcons}
             size={moderateScale(20, 0.3)}
-            color={like ?  Color.blue :Color.lightGrey}
+            color={like ? Color.blue : Color.lightGrey}
           />
           <CustomText
             style={{
@@ -284,7 +398,8 @@ const Card = ({item, fromProfile, setSelected, selected ,index}) => {
               color: Color.lightGrey,
               marginLeft: moderateScale(3, 0.6),
             }}>
-            {item?.likes}
+            {`${item?.like_count} likes`}
+            {/* {item?.likes} */}
           </CustomText>
         </View>
         <View style={{flexDirection: 'row'}}>
@@ -300,11 +415,12 @@ const Card = ({item, fromProfile, setSelected, selected ,index}) => {
               color: Color.lightGrey,
               marginLeft: moderateScale(3, 0.6),
             }}>
-            {item?.shares}
+            shares
+            {/* {item?.shares} */}
           </CustomText>
         </View>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 };
 
@@ -312,7 +428,6 @@ export default Card;
 
 const styles = StyleSheet.create({
   cardstyle: {
-    // height: windowHeight * 0.61,
     width: windowWidth * 0.9,
     paddingHorizontal: 15,
     borderRadius: 12,
@@ -328,10 +443,17 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderRadius: 12,
   },
+  firstRow: {
+    width: 10,
+    height: 10,
+    backgroundColor: 'green',
+    borderRadius: moderateScale(20, 0.6),
+    top: -10,
+    alignSelf: 'flex-end',
+  },
   text_view: {
     flexDirection: 'row',
     alignItems: 'center',
-    // backgroundColor: 'red',
     width: windowWidth * 0.5,
     justifyContent: 'space-between',
     marginTop: moderateScale(10, 0.6),
@@ -369,5 +491,31 @@ const styles = StyleSheet.create({
     height: windowHeight * 0.3,
     marginLeft: moderateScale(0.6, 0.6),
     borderRadius: moderateScale(20, 0.6),
+  },
+  profile_image: {
+    width: moderateScale(40, 0.6),
+    height: moderateScale(40, 0.6),
+    borderRadius: moderateScale(20, 0.6),
+  },
+  videoBox: {
+    width: windowWidth * 0.8,
+    height: '100%',
+    borderRadius: moderateScale(20, 0.6),
+    alignSelf: 'center',
+    overflow: 'hidden',
+    marginTop: moderateScale(10, 0.6),
+  },
+  imageBox: {
+    width: windowWidth * 0.8,
+    height: '100',
+    borderRadius: moderateScale(20, 0.6),
+    alignSelf: 'center',
+    marginTop: moderateScale(10, 0.6),
+  },
+  pagination: {
+    width: windowWidth * 0.023,
+    height: windowHeight * 0.014,
+    borderRadius: moderateScale(20, 0.6),
+    marginHorizontal: moderateScale(5, 0.3),
   },
 });
