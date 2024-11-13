@@ -21,9 +21,10 @@ import ShowMoreAndShowLessText from '../Components/ShowMoreAndShowLessText';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import CustomHeader from '../Components/CustomHeader';
 
-const MediaPlayerScreen = ({props}) => {
+const MediaPlayerScreen = props => {
   console.log('🚀 ~heeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
-  const video = props?.route?.params?.array;
+  const video = props?.route?.params?.item;
+  console.log('🚀 ~ MediaPlayerScreen ~ video:', video);
   const videoRef = useRef();
   const navigation = useNavigation();
   const refRBSheet = useRef(null);
@@ -37,10 +38,6 @@ const MediaPlayerScreen = ({props}) => {
     require('../Assets/Images/video1.mp4'),
     require('../Assets/Images/video2.mp4'),
     require('../Assets/Images/video1.mp4'),
-    // require('../Assets/Images/video2.mp4'),
-    // require('../Assets/Images/video1.mp4'),
-    // require('../Assets/Images/video2.mp4'),
-    // require('../Assets/Images/video1.mp4'),
     require('../Assets/Images/video2.mp4'),
   ];
   const viewabilityConfig = useRef({
@@ -112,7 +109,6 @@ const MediaPlayerScreen = ({props}) => {
                 onError={error =>
                   console.log('error ================> ', error)
                 }
-              
               />
 
               <LinearGradient

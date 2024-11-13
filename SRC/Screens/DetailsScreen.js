@@ -8,7 +8,7 @@ import {
 import React, {useRef, useState} from 'react';
 import CustomStatusBar from '../Components/CustomStatusBar';
 import Color from '../Assets/Utilities/Color';
-import {windowHeight, windowWidth} from '../Utillity/utils';
+import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
 import {moderateScale} from 'react-native-size-matters';
 import CustomHeader from '../Components/CustomHeader';
 import CustomImage from '../Components/CustomImage';
@@ -23,22 +23,24 @@ import Feather from 'react-native-vector-icons/Feather';
 import TextInputWithTitle from '../Components/TextInputWithTitle';
 import {baseUrl, imageUrl} from '../Config';
 import SwiperFlatList from 'react-native-swiper-flatlist';
+import {Post} from '../Axios/AxiosInterceptorFunction';
+import {useSelector} from 'react-redux';
 
 const DetailScreen = props => {
   const item = props?.route?.params?.item;
   const index = props?.route?.params?.index;
-
-  console.log('🚀 ~ from detail screen  :', item);
+  const token = useSelector(state => state.authReducer.token);
   const videoRef = useRef();
   const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [paused, setPaused] = useState(false);
   const [clicked, setClicked] = useState(false);
-  const [like, setLike] = useState(false);
+  const [like, setLike] = useState(
+    item?.my_like?.post_id == item?.id ? true : false,
+  );
   const [share, setShare] = useState(false);
-  console.log('🚀 ~ Card ~ like:', like);
   const [comment, setComment] = useState('');
   const [commentReply, setCommentReply] = useState(false);
-  console.log('🚀 ~ DetailScreen ~ commentReply:', commentReply);
   const [playingIndex, setPlayingIndex] = useState(null);
 
   const locationName = [
@@ -51,6 +53,29 @@ const DetailScreen = props => {
 
   const handleVideoPress = index => {
     setPlayingIndex(playingIndex === index ? null : index);
+  };
+
+  const addComment = async () => {
+    const body = {
+      post_id: item?.id,
+      description: comment,
+    };
+    const url = 'auth/comment ';
+    setLoading(true);
+    const response = await Post(url, body, apiHeader(token));
+    setLoading(false);
+    if (response != undefined) {
+      setComment('');
+    }
+  };
+
+  const post_like = async () => {
+    const url = 'auth/post_like';
+    setIsLoading(true);
+    const response = await Post(url, {post_id: item?.id}, apiHeader(token));
+    setIsLoading(false);
+    if (response != undefined) {
+    }
   };
   return (
     <>
@@ -230,10 +255,7 @@ const DetailScreen = props => {
                     style={styles.play}>
                     <CustomImage
                       onPress={() => {
-                        console.log('hello from paused button');
-
                         setPaused(prev => !prev);
-                        console.log('Logging video');
                         handleVideoPress(index);
                       }}
                       style={{
@@ -253,62 +275,34 @@ const DetailScreen = props => {
           />
           <View
             style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
+              backgroundColor: 'white',
+              height:
+                item?.comment?.length > 1 ? windowHeight : windowHeight * 0.6,
             }}>
-            <CustomText
-              style={{...FONTS.Medium15, marginTop: SIZES.padding2}}
-              isBold>
-              Detail Discription
+            <View style={styles.row}>
+              <CustomText style={styles.detail} isBold>
+                Detail Discription
+              </CustomText>
+              <CustomText style={styles.category} isBold>
+                {item?.category}
+              </CustomText>
+            </View>
+            <CustomText style={styles.des}>{item?.description}</CustomText>
+            <CustomText style={styles.loc_h1} isBold>
+              Location
             </CustomText>
-            <CustomText
-              style={{
-                ...FONTS.Medium11,
-                marginTop: SIZES.padding2,
-                paddingTop: moderateScale(2, 0.6),
-              }}
-              isBold>
-              {item?.category}
-            </CustomText>
-          </View>
-          <CustomText
-            style={{
-              ...FONTS.light12,
-              color: Color.lightGrey,
-              marginTop: moderateScale(5, 0.6),
-            }}>
-            {item?.description}
-          </CustomText>
-          <CustomText
-            style={{...FONTS.Medium15, marginTop: moderateScale(10, 0.6)}}
-            isBold>
-            Location
-          </CustomText>
-          <View
-            style={{
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              alignItems: 'center',
-              marginTop: moderateScale(10, 0.6),
-            }}>
-            {item?.locations?.map((item, index) => {
-              return (
-                <View
-                  style={{
-                    padding: moderateScale(6, 0.6),
-                    backgroundColor: Color.veryLightGray,
-                    borderRadius: moderateScale(17, 0.6),
-                    marginVertical: moderateScale(3, 0.3),
-                  }}>
-                  <CustomText style={styles.location_text}>
-                    {' '}
-                    {`${item?.location}`}{' '}
-                  </CustomText>
-                </View>
-              );
-            })}
-          </View>
-          {/* <View
+            <View style={styles.location_view}>
+              {item?.locations?.map((item, index) => {
+                return (
+                  <View style={styles.loc_text_view}>
+                    <CustomText style={styles.location_text}>
+                      {`${item?.name}`}
+                    </CustomText>
+                  </View>
+                );
+              })}
+            </View>
+            {/* <View
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
@@ -371,237 +365,213 @@ const DetailScreen = props => {
               </CustomText>
             </View>
           </View> */}
-          <CustomText
-            style={{...FONTS.Medium15, marginTop: moderateScale(10, 0.6)}}
-            isBold>
-            Time
-          </CustomText>
-          <CustomText
-            style={{
-              ...FONTS.Regular10,
-              marginTop: moderateScale(6, 0.6),
-              color: Color.lightGrey,
-            }}>
-            {`${item?.start_time} during Standard Time and ${item?.end_time}`}
-          </CustomText>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginTop: moderateScale(15, 0.6),
-            }}>
-            <View style={{flexDirection: 'row'}}>
-              <Icon
-                name="message-processing-outline"
-                as={MaterialCommunityIcons}
-                size={moderateScale(20, 0.3)}
-                color={Color.lightGrey}
-              />
-              <CustomText
-                style={{
-                  ...FONTS.light12,
-                  color: Color.lightGrey,
-                  marginLeft: moderateScale(3, 0.6),
-                }}>
-                {`${item?.comment_count} comments`}
-              </CustomText>
+            <CustomText
+              style={{...FONTS.Medium15, marginTop: moderateScale(10, 0.6)}}
+              isBold>
+              Time
+            </CustomText>
+            <CustomText
+              style={{
+                ...FONTS.Regular10,
+                marginTop: moderateScale(6, 0.6),
+                color: Color.lightGrey,
+              }}>
+              {`${item?.start_time} during Standard Time and ${item?.end_time}`}
+            </CustomText>
+            <View style={styles.icon_row}>
+              <View style={{flexDirection: 'row'}}>
+                <Icon
+                  name="message-processing-outline"
+                  as={MaterialCommunityIcons}
+                  size={moderateScale(20, 0.3)}
+                  color={Color.lightGrey}
+                />
+                <CustomText style={styles.comment_text}>
+                  {`${item?.comment_count} comments`}
+                </CustomText>
+              </View>
+              <View style={{flexDirection: 'row'}}>
+                <Icon
+                  onPress={() => {
+                    post_like();
+                    setLike(!like);
+                  }}
+                  name={like ? 'heart' : 'heart-outline'}
+                  as={MaterialCommunityIcons}
+                  size={moderateScale(20, 0.3)}
+                  color={like ? Color.blue : Color.lightGrey}
+                />
+                <CustomText style={styles.like_t}>
+                  {`${item?.like_count} like `}
+                </CustomText>
+              </View>
+              <View style={{flexDirection: 'row'}}>
+                <Icon
+                  name="share-outline"
+                  as={MaterialCommunityIcons}
+                  size={moderateScale(20, 0.3)}
+                  color={Color.lightGrey}
+                />
+                <CustomText style={styles.share_t}>36 Shared</CustomText>
+              </View>
             </View>
-            <View style={{flexDirection: 'row'}}>
-              <Icon
-                onPress={() => {
-                  setLike(!like);
-                }}
-                name={like ? 'heart' : 'heart-outline'}
-                as={MaterialCommunityIcons}
-                size={moderateScale(20, 0.3)}
-                color={like ? Color.blue : Color.lightGrey}
-              />
-              <CustomText
-                style={{
-                  ...FONTS.light12,
-                  color: Color.lightGrey,
-                  marginLeft: moderateScale(3, 0.6),
-                }}>
-                {`${item?.like_count} like `}
-              </CustomText>
-            </View>
-            <View style={{flexDirection: 'row'}}>
-              <Icon
-                name="share-outline"
-                as={MaterialCommunityIcons}
-                size={moderateScale(20, 0.3)}
-                color={Color.lightGrey}
-              />
-              <CustomText
-                style={{
-                  ...FONTS.light12,
-                  color: Color.lightGrey,
-                  marginLeft: moderateScale(3, 0.6),
-                }}>
-                36 Shared
-              </CustomText>
-            </View>
-          </View>
-          <FlatList
-            data={item?.comment}
-            showsVerticalScrollIndicator={false}
-            style={{
-              marginTop: moderateScale(20, 0.6),
-            }}
-            contentContainerStyle={{
-              paddingBottom: moderateScale(30, 0.6),
-            }}
-            renderItem={({item, index}) => {
-              return (
-                <>
-                  <View style={styles.coment_view}>
-                    <View style={styles.profile_view}>
-                      <View
+            <FlatList
+              // data={[]}
+              data={item?.comment}
+              showsVerticalScrollIndicator={false}
+              style={{
+                marginTop: moderateScale(20, 0.6),
+              }}
+              contentContainerStyle={{
+                paddingBottom: moderateScale(30, 0.6),
+              }}
+              renderItem={({item, index}) => {
+                return (
+                  <>
+                    <View style={styles.coment_view}>
+                      <View style={styles.profile_view}>
+                        <View style={styles.image_con}>
+                          <CustomImage
+                            source={{
+                              uri: `${baseUrl}${item?.user_info?.photo}`,
+                            }}
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              borderRadius: moderateScale(20, 0.6),
+                            }}
+                          />
+                        </View>
+                        <View style={{marginLeft: moderateScale(10, 0.6)}}>
+                          <CustomText style={{...FONTS.Medium13, width: 120}}>
+                            {item?.user_info?.name}
+                          </CustomText>
+                          <CustomText
+                            style={{
+                              color: Color.lightGrey,
+                              width: 100,
+                              ...FONTS.Regular10,
+                            }}>
+                            {item?.time}
+                          </CustomText>
+                        </View>
+                      </View>
+                      <CustomText
                         style={{
-                          width: moderateScale(40, 0.6),
-                          height: moderateScale(40, 0.6),
-                          borderRadius: moderateScale(20, 0.6),
+                          ...FONTS.Regular10,
+                          color: Color.lightGrey,
+                          paddingVertical: moderateScale(5, 0.6),
                         }}>
-                        <CustomImage
-                          source={item?.profile_image}
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            borderRadius: moderateScale(20, 0.6),
-                          }}
-                        />
-                      </View>
-                      <View style={{marginLeft: moderateScale(10, 0.6)}}>
-                        <CustomText style={{...FONTS.Medium13, width: 120}}>
-                          {item?.name}
-                        </CustomText>
-                        <CustomText
-                          style={{
-                            color: Color.lightGrey,
-                            width: 100,
-                            ...FONTS.Regular10,
-                          }}>
-                          {item?.time}
-                        </CustomText>
-                      </View>
-                    </View>
-                    <CustomText
-                      style={{
-                        ...FONTS.Regular10,
-                        color: Color.lightGrey,
-                        paddingVertical: moderateScale(5, 0.6),
-                      }}>
-                      Lorem Ipsum is simply dummy text of the printing and
-                      typesetting industry.
-                    </CustomText>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'flex-start',
-                        alignItems: 'center',
-                        marginTop: moderateScale(10, 0.6),
-                      }}>
-                      <View style={{flexDirection: 'row'}}>
-                        <Icon
-                          name="heart-outline"
-                          as={MaterialCommunityIcons}
-                          size={moderateScale(20, 0.3)}
-                          color={Color.lightGrey}
-                        />
-                        <CustomText
-                          style={{
-                            ...FONTS.light12,
-                            color: Color.lightGrey,
-                            marginLeft: moderateScale(3, 0.6),
-                          }}>
-                          {item?.likes}
-                        </CustomText>
-                      </View>
+                        {item?.description}
+                      </CustomText>
                       <View
                         style={{
                           flexDirection: 'row',
-                          marginLeft: moderateScale(10, 0.6),
+                          justifyContent: 'flex-start',
+                          alignItems: 'center',
+                          marginTop: moderateScale(10, 0.6),
                         }}>
-                        <Icon
-                          onPress={() => {
-                            setCommentReply(!commentReply);
-                          }}
-                          name="message-processing-outline"
-                          as={MaterialCommunityIcons}
-                          size={moderateScale(20, 0.3)}
-                          color={Color.lightGrey}
-                        />
-                        <CustomText
-                          onPress={() => {
-                            setCommentReply(!commentReply);
-                          }}
-                          style={{
-                            ...FONTS.light12,
-                            color: Color.lightGrey,
-                            marginLeft: moderateScale(3, 0.6),
-                          }}>
-                          {item?.replaycount}
-                        </CustomText>
-                      </View>
-                    </View>
-                  </View>
-                  {item?.replay?.length > 0 &&
-                    commentReply == true &&
-                    item?.replay?.map((data, index) => {
-                      return (
-                        <View
-                          style={{
-                            width: '93%',
-                            borderRadius: SIZES.padding,
-                            borderWidth: 1,
-                            marginVertical: SIZES.padding - 10,
-                            marginLeft: moderateScale(22, 0.3),
-                            borderColor: Color.veryLightGray,
-                            paddingHorizontal: SIZES.padding - 10,
-                            paddingVertical: SIZES.padding - 15,
-                          }}>
-                          <View style={styles.profile_view}>
-                            <View
-                              style={{
-                                width: moderateScale(40, 0.6),
-                                height: moderateScale(40, 0.6),
-                                borderRadius: moderateScale(20, 0.6),
-                              }}>
-                              <CustomImage
-                                source={item?.profile_image}
-                                style={{
-                                  width: '100%',
-                                  height: '100%',
-                                  borderRadius: moderateScale(20, 0.6),
-                                }}
-                              />
-                            </View>
-                            <View style={{marginLeft: moderateScale(10, 0.6)}}>
-                              <CustomText
-                                style={{...FONTS.Medium13, width: 120}}>
-                                {item?.name}
-                              </CustomText>
-                              <CustomText
-                                style={{
-                                  color: Color.lightGrey,
-                                  width: 100,
-                                  ...FONTS.Regular10,
-                                }}>
-                                {item?.time}
-                              </CustomText>
-                            </View>
-                          </View>
+                        <View style={{flexDirection: 'row'}}>
+                          <Icon
+                            name="heart-outline"
+                            as={MaterialCommunityIcons}
+                            size={moderateScale(20, 0.3)}
+                            color={Color.lightGrey}
+                          />
                           <CustomText
                             style={{
-                              ...FONTS.Regular10,
+                              ...FONTS.light12,
                               color: Color.lightGrey,
-                              paddingVertical: moderateScale(5, 0.6),
+                              marginLeft: moderateScale(3, 0.6),
                             }}>
-                            Lorem Ipsum is simply dummy text of the printing and
-                            typesetting industry.
+                            {item?.likes}
                           </CustomText>
-                          {/* <View
+                        </View>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            marginLeft: moderateScale(10, 0.6),
+                          }}>
+                          <Icon
+                            onPress={() => {
+                              setCommentReply(!commentReply);
+                            }}
+                            name="message-processing-outline"
+                            as={MaterialCommunityIcons}
+                            size={moderateScale(20, 0.3)}
+                            color={Color.lightGrey}
+                          />
+                          <CustomText
+                            onPress={() => {
+                              setCommentReply(!commentReply);
+                            }}
+                            style={{
+                              ...FONTS.light12,
+                              color: Color.lightGrey,
+                              marginLeft: moderateScale(3, 0.6),
+                            }}>
+                            {item?.replaycount}
+                          </CustomText>
+                        </View>
+                      </View>
+                    </View>
+                    {item?.replay?.length > 0 &&
+                      commentReply == true &&
+                      item?.replay?.map((data, index) => {
+                        return (
+                          <View
+                            style={{
+                              width: '93%',
+                              borderRadius: SIZES.padding,
+                              borderWidth: 1,
+                              marginVertical: SIZES.padding - 10,
+                              marginLeft: moderateScale(22, 0.3),
+                              borderColor: Color.veryLightGray,
+                              paddingHorizontal: SIZES.padding - 10,
+                              paddingVertical: SIZES.padding - 15,
+                            }}>
+                            <View style={styles.profile_view}>
+                              <View
+                                style={{
+                                  width: moderateScale(40, 0.6),
+                                  height: moderateScale(40, 0.6),
+                                  borderRadius: moderateScale(20, 0.6),
+                                }}>
+                                <CustomImage
+                                  source={item?.profile_image}
+                                  style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    borderRadius: moderateScale(20, 0.6),
+                                  }}
+                                />
+                              </View>
+                              <View
+                                style={{marginLeft: moderateScale(10, 0.6)}}>
+                                <CustomText
+                                  style={{...FONTS.Medium13, width: 120}}>
+                                  {item?.name}
+                                </CustomText>
+                                <CustomText
+                                  style={{
+                                    color: Color.lightGrey,
+                                    width: 100,
+                                    ...FONTS.Regular10,
+                                  }}>
+                                  {item?.time}
+                                </CustomText>
+                              </View>
+                            </View>
+                            <CustomText
+                              style={{
+                                ...FONTS.Regular10,
+                                color: Color.lightGrey,
+                                paddingVertical: moderateScale(5, 0.6),
+                              }}>
+                              Lorem Ipsum is simply dummy text of the printing
+                              and typesetting industry.
+                            </CustomText>
+                            {/* <View
                             style={{
                               flexDirection: 'row',
                               justifyContent: 'flex-start',
@@ -651,13 +621,14 @@ const DetailScreen = props => {
                               </CustomText>
                             </View>
                           </View> */}
-                        </View>
-                      );
-                    })}
-                </>
-              );
-            }}
-          />
+                          </View>
+                        );
+                      })}
+                  </>
+                );
+              }}
+            />
+          </View>
         </View>
       </ScrollView>
       <View style={styles.commentRow}>
@@ -677,8 +648,15 @@ const DetailScreen = props => {
           placeholderColor={Color.themeLightGray}
           multiline
         />
-        <TouchableOpacity style={styles.send_btn}>
+        <TouchableOpacity
+          onPress={() => {
+            addComment();
+          }}
+          style={styles.send_btn}>
           <Icon
+            onPress={() => {
+              addComment();
+            }}
             name="send"
             as={Feather}
             size={moderateScale(20, 0.6)}
@@ -703,7 +681,6 @@ const styles = StyleSheet.create({
     paddingVertical: SIZES.padding,
     backgroundColor: Color.white,
     width: windowWidth * 0.93,
-    // height: windowHeight,
     alignSelf: 'center',
   },
   location_text: {
@@ -714,6 +691,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
   },
+  des: {
+    ...FONTS.light12,
+    color: Color.lightGrey,
+    marginTop: moderateScale(5, 0.6),
+  },
+  loc_h1: {...FONTS.Medium15, marginTop: moderateScale(10, 0.6)},
   coment_view: {
     width: '100%',
     borderRadius: SIZES.padding,
@@ -764,7 +747,6 @@ const styles = StyleSheet.create({
     height: windowHeight * 0.3,
     borderRadius: moderateScale(20, 0.6),
     alignSelf: 'center',
-    marginTop: moderateScale(10, 0.6),
   },
   Video: {
     width: windowWidth * 0.8,
@@ -772,7 +754,6 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(20, 0.6),
     alignSelf: 'center',
     overflow: 'hidden',
-    marginTop: moderateScale(10, 0.6),
   },
   images: {
     width: '100%',
@@ -783,6 +764,55 @@ const styles = StyleSheet.create({
   swipe: {
     width: windowWidth * 0.8,
     height: windowHeight * 0.3,
+    backgroundColor: 'red',
+    borderRadius: moderateScale(20, 0.6),
+  },
+  location_view: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    marginTop: moderateScale(10, 0.6),
+  },
+  loc_text_view: {
+    padding: moderateScale(6, 0.6),
+    backgroundColor: Color.veryLightGray,
+    borderRadius: moderateScale(17, 0.6),
+    marginVertical: moderateScale(3, 0.3),
+  },
+  category: {
+    ...FONTS.Medium11,
+    marginTop: SIZES.padding2,
+    paddingTop: moderateScale(2, 0.6),
+  },
+  detail: {...FONTS.Medium15, marginTop: SIZES.padding2},
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  icon_row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: moderateScale(15, 0.6),
+  },
+  comment_text: {
+    ...FONTS.light12,
+    color: Color.lightGrey,
+    marginLeft: moderateScale(3, 0.6),
+  },
+  like_t: {
+    ...FONTS.light12,
+    color: Color.lightGrey,
+    marginLeft: moderateScale(3, 0.6),
+  },
+  share_t: {
+    ...FONTS.light12,
+    color: Color.lightGrey,
+    marginLeft: moderateScale(3, 0.6),
+  },
+  image_con: {
+    width: moderateScale(40, 0.6),
+    height: moderateScale(40, 0.6),
     borderRadius: moderateScale(20, 0.6),
   },
 });

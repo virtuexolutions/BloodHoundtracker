@@ -19,12 +19,11 @@ import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {Get} from '../Axios/AxiosInterceptorFunction';
 import {useSelector} from 'react-redux';
 import CustomText from './CustomText';
-import {color} from 'native-base/lib/typescript/theme/styled-system';
 import Color from '../Assets/Utilities/Color';
+import {imageUrl} from '../Config';
 
 const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
-  console.log('🚀 ~ Myposts ~ selected:', selected);
-  console.log('🚀 ~ Myposts ~ selected:', selected);
+
   const token = useSelector(state => state.authReducer.token);
   const isFocused = useIsFocused();
   const navigation = useNavigation();
@@ -101,10 +100,6 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
     setIsLoading(true);
     const response = await Get(url, token);
     setIsLoading(false);
-    console.log(
-      '🚀 ~ usergalleryApi ~ response:',
-      response?.data?.gallery_list,
-    );
     if (response != undefined) {
       setGalleryData(response?.data?.gallery_list);
     }
@@ -209,7 +204,7 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
                   style={styles.activityImage}
                   onPress={() => {
                     console.log('hello this console  from video component ');
-                    navigation.navigate('MediaPlayerScreen');
+                    navigation.navigate('MediaPlayerScreen', {item: item});
                   }}>
                   <Video
                     repeat={true}
@@ -218,7 +213,7 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
                     // poster={"cover"}
                     // controls={true}
                     // source={require('../Assets/Images/video2.mp4')}
-                    source={{uri: item}}
+                    source={{uri: `${imageUrl}${item?.file}`}}
                     style={{
                       width: '100%',
                       height: '100%',

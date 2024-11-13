@@ -46,6 +46,7 @@ import {ActivityIndicator} from 'react-native';
 const CreatePost = () => {
   const navigation = useNavigation();
   const token = useSelector(state => state.authReducer.token);
+  console.log("🚀 ~ CreatePost ~ token:", token)
   const userData = useSelector(state => state.commonReducer.userData);
   const [tagModal, setTagModal] = useState(false);
   const [selectedPeople, setSelectedPeople] = useState([]);
@@ -62,6 +63,8 @@ const CreatePost = () => {
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [assetName, setAssetName] = useState('');
+  const [assetColor, setAssetColor] = useState('');
 
   const openCamera = async () => {
     let options = {
@@ -182,13 +185,20 @@ const CreatePost = () => {
       category: assetsCategory,
       end_time: endTime,
       start_time: startTime,
+      assetname: assetName,
+      assetcolor: assetColor,
+      // location: [{
+      //   name: 'KFC, Linking Road, Bandra West, Mumbai, Maharashtra, India',
+      //   lat: 19.0654974,
+      //   lng: 72.83405669999999,
+      // }],
     };
     selectedPeople?.forEach((item, index) => {
       formData.append(`tags[${index}]`, item?.id);
     });
 
     searchData?.forEach((item, index) => {
-      formData.append(`location[${index}]`, 'item');
+      return formData.append(`location[${index}]`,item);
     });
     multiImages?.forEach((item, index) => {
       formData.append(`images[${index}]`, item);
@@ -197,22 +207,11 @@ const CreatePost = () => {
     for (let key in body) {
       formData.append(key, body[key]);
     }
-    // const allFilesAreValid = multiImages.find(item => {
-    //   return // ['video/mp4', 'image/jpeg', 'image/png'].includes(item?.type),
-    //   console.log("🚀 ~ postCreate ~ item:", item)
-    // 	);
-    // })
-    // if (!allFilesAreValid) {
-    //   Platform.OS === 'android'
-    //     ? ToastAndroid.show('Files must be MP4 format', ToastAndroid.SHORT)
-    //     : Alert.alert('Files must be MP4 format');
-    //   return;
-    // }
+  //  return   console.log('form datea =======', JSON.stringify(formData, null, 2));
     const url = 'auth/post';
     setIsLoading(true);
     const response = await Post(url, formData, apiHeader(token));
     setIsLoading(false);
-    console.log('🚀 ~ postCreate ~ response:', response?.data);
     if (response != undefined) {
       navigation.navigate('HomeScreen');
     }
@@ -244,28 +243,15 @@ const CreatePost = () => {
             />
           </View>
           <View style={styles.text_view}>
-            <CustomText
-              isBold
-              style={{
-                ...FONTS.Medium15,
-                color: Color.textColor,
-                paddingHorizontal: moderateScale(10, 0.6),
-                paddingTop: moderateScale(5, 0.6),
-              }}>
+            <CustomText isBold style={styles.user_name}>
               {userData?.name}
               {selectedPeople?.length > 0 && (
-                <CustomText
-                  numberOfLines={1}
-                  isBold
-                  style={{
-                    ...FONTS.Medium11,
-                    color: Color.textColor,
-                    paddingHorizontal: moderateScale(10, 0.6),
-                    paddingTop: moderateScale(5, 0.6),
-                  }}>
-                  {` - with  ${selectedPeople[0]?.name} and ${
-                    selectedPeople?.length - 1
-                  } others. `}
+                <CustomText numberOfLines={1} isBold style={styles.text}>
+                  {selectedPeople.length === 1
+                    ? ` - with ${selectedPeople[0]?.name}`
+                    : ` - with ${selectedPeople[0]?.name} and ${
+                        selectedPeople.length - 1
+                      } others`}
                 </CustomText>
               )}
             </CustomText>
@@ -425,7 +411,6 @@ const CreatePost = () => {
 
         <TouchableOpacity
           onPress={() => {
-            console.log('hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
             setTagModal(true);
           }}
           style={styles.row}>
@@ -589,6 +574,36 @@ const CreatePost = () => {
             )}
           </View>
         </View>
+        <TextInputWithTitle
+          titleText={'Email'}
+          secureText={false}
+          placeholder={'Assets Name '}
+          setText={setAssetName}
+          value={assetName}
+          viewHeight={0.045}
+          viewWidth={0.85}
+          inputWidth={0.8}
+          borderColor={Color.mediumGray}
+          border={1}
+          backgroundColor={'transparent'}
+          color={Color.themeColor}
+          placeholderColor={Color.textColor}
+        />
+        <TextInputWithTitle
+          titleText={'Email'}
+          secureText={false}
+          placeholder={'Assets Color '}
+          setText={setAssetColor}
+          value={assetColor}
+          viewHeight={0.045}
+          viewWidth={0.85}
+          inputWidth={0.8}
+          borderColor={Color.mediumGray}
+          border={1}
+          backgroundColor={'transparent'}
+          color={Color.themeColor}
+          placeholderColor={Color.textColor}
+        />
         <View
           style={{
             flexDirection: 'row',
@@ -606,7 +621,7 @@ const CreatePost = () => {
             border={1}
             backgroundColor={'transparent'}
             color={Color.themeColor}
-            placeholderColor={Color.themeLightGray}
+            placeholderColor={Color.textColor}
           />
           <TextInputWithTitle
             titleText={'Email'}
@@ -621,7 +636,7 @@ const CreatePost = () => {
             border={1}
             backgroundColor={'transparent'}
             color={Color.themeColor}
-            placeholderColor={Color.themeLightGray}
+            placeholderColor={Color.textColor}
           />
         </View>
         <CustomButton
@@ -725,5 +740,17 @@ const styles = StyleSheet.create({
   },
   location_text: {
     ...FONTS.Medium11,
+  },
+  user_name: {
+    ...FONTS.Medium15,
+    color: Color.textColor,
+    paddingHorizontal: moderateScale(10, 0.6),
+    paddingTop: moderateScale(5, 0.6),
+  },
+  text: {
+    ...FONTS.Medium11,
+    color: Color.textColor,
+    paddingHorizontal: moderateScale(10, 0.6),
+    paddingTop: moderateScale(5, 0.6),
   },
 });

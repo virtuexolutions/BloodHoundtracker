@@ -22,15 +22,15 @@ const HomeScreen = () => {
   const isFocused = useIsFocused();
   const token = useSelector(state => state.authReducer.token);
   const profileData = useSelector(state => state.commonReducer.userData);
-  const [selectedData, setSelectedData] = useState('founded');
+  const [selectedData, setSelectedData] = useState('Stolen');
   const [postData, setPostData] = useState([]);
   const [isloading, setIsLoading] = useState(false);
 
   const postlist = async () => {
-    const url = `auth/post?category=${selectedData}` ;
+    const url = `auth/post?category=${selectedData}`;
     setIsLoading(true);
     const response = await Get(url, token);
-    console.log("🚀 ~ postlist ~ response:", JSON.stringify(response?.data,null ,2))
+    console.log("🚀 ~ postlist ~ response:", JSON.stringify(response?.data,null,2))
     setIsLoading(false);
     if (response != undefined) {
       setPostData(response?.data?.post_list);
@@ -38,7 +38,7 @@ const HomeScreen = () => {
   };
   useEffect(() => {
     postlist();
-  }, [isFocused]);
+  }, [selectedData]);
 
   return (
     <>
@@ -116,10 +116,16 @@ const HomeScreen = () => {
               showsVerticalScrollIndicator={false}
               style={{
                 marginVertical: moderateScale(20, 0.6),
-                marginBottom: moderateScale(70, 0.6),
+                paddingBottom: moderateScale(70, 0.6),
               }}
-              ListFooterComponent={
-                <View style={{paddingBottom: moderateScale(120, 0.6)}} />
+              ListEmptyComponent={
+                <View
+                  style={{
+                    paddingBottom: moderateScale(120, 0.6),
+                    alignItems: 'center',
+                  }}>
+                  <CustomText>no posted yet ! </CustomText>
+                </View>
               }
               data={postData.reverse()}
               renderItem={({item, index}) => {

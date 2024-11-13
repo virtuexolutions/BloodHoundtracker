@@ -19,7 +19,6 @@ import {Post} from '../Axios/AxiosInterceptorFunction';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 const Card = ({item, fromProfile, setSelected, selected, index, loading}) => {
-  console.log('🚀 ~ Card ~ loading:', loading);
   const userData = useSelector(state => state.commonReducer.userData);
   const token = useSelector(state => state.authReducer.token);
 
@@ -46,6 +45,7 @@ const Card = ({item, fromProfile, setSelected, selected, index, loading}) => {
     if (response != undefined) {
     }
   };
+
   return (
     <View
       activeOpacity={0.4}
@@ -248,10 +248,7 @@ const Card = ({item, fromProfile, setSelected, selected, index, loading}) => {
                 }}>
                 <CustomImage
                   onPress={() => {
-                    console.log('hello from paused button');
-
                     setPaused(prev => !prev);
-                    console.log('Logging video');
                     handleVideoPress(index);
                   }}
                   style={{
@@ -375,16 +372,13 @@ const Card = ({item, fromProfile, setSelected, selected, index, loading}) => {
               color: Color.lightGrey,
               marginLeft: moderateScale(3, 0.6),
             }}>
-            {item?.comment_counts == null
-              ? '0 comments'
-              : `${item?.comment_counts} comments`}
+            {`${item?.comment_count} comments`}
           </CustomText>
         </View>
         <View style={{flexDirection: 'row'}}>
           <Icon
             onPress={() => {
               post_like();
-              console.log('------------------- > > >> > > ');
               setLike(!like);
             }}
             name={like ? 'heart' : 'heart-outline'}
@@ -446,7 +440,6 @@ const styles = StyleSheet.create({
   firstRow: {
     width: 10,
     height: 10,
-    backgroundColor: 'green',
     borderRadius: moderateScale(20, 0.6),
     top: -10,
     alignSelf: 'flex-end',
@@ -503,14 +496,12 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(20, 0.6),
     alignSelf: 'center',
     overflow: 'hidden',
-    marginTop: moderateScale(10, 0.6),
   },
   imageBox: {
     width: windowWidth * 0.8,
     height: '100',
     borderRadius: moderateScale(20, 0.6),
     alignSelf: 'center',
-    marginTop: moderateScale(10, 0.6),
   },
   pagination: {
     width: windowWidth * 0.023,
