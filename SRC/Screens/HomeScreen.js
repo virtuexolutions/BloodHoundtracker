@@ -30,7 +30,10 @@ const HomeScreen = () => {
     const url = `auth/post?category=${selectedData}`;
     setIsLoading(true);
     const response = await Get(url, token);
-    console.log("🚀 ~ postlist ~ response:", JSON.stringify(response?.data,null,2))
+    console.log(
+      '🚀 ~ postlist ~ response:',
+      JSON.stringify(response?.data, null, 2),
+    );
     setIsLoading(false);
     if (response != undefined) {
       setPostData(response?.data?.post_list);
@@ -116,7 +119,9 @@ const HomeScreen = () => {
               showsVerticalScrollIndicator={false}
               style={{
                 marginVertical: moderateScale(20, 0.6),
-                paddingBottom: moderateScale(70, 0.6),
+              }}
+              contentContainerStyle={{
+                paddingBottom: moderateScale(150, 0.6),
               }}
               ListEmptyComponent={
                 <View

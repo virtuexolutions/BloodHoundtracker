@@ -46,7 +46,6 @@ import {ActivityIndicator} from 'react-native';
 const CreatePost = () => {
   const navigation = useNavigation();
   const token = useSelector(state => state.authReducer.token);
-  console.log("🚀 ~ CreatePost ~ token:", token)
   const userData = useSelector(state => state.commonReducer.userData);
   const [tagModal, setTagModal] = useState(false);
   const [selectedPeople, setSelectedPeople] = useState([]);
@@ -187,18 +186,15 @@ const CreatePost = () => {
       start_time: startTime,
       assetname: assetName,
       assetcolor: assetColor,
-      // location: [{
-      //   name: 'KFC, Linking Road, Bandra West, Mumbai, Maharashtra, India',
-      //   lat: 19.0654974,
-      //   lng: 72.83405669999999,
-      // }],
     };
     selectedPeople?.forEach((item, index) => {
       formData.append(`tags[${index}]`, item?.id);
     });
 
     searchData?.forEach((item, index) => {
-      return formData.append(`location[${index}]`,item);
+      formData.append(`location[${index}][name]`, item?.name);
+      formData.append(`location[${index}][lat]`, item?.lat);
+      formData.append(`location[${index}][lng]`, item?.lng);
     });
     multiImages?.forEach((item, index) => {
       formData.append(`images[${index}]`, item);
@@ -207,7 +203,7 @@ const CreatePost = () => {
     for (let key in body) {
       formData.append(key, body[key]);
     }
-  //  return   console.log('form datea =======', JSON.stringify(formData, null, 2));
+    // console.log('form datea =======', JSON.stringify(formData, null, 2));
     const url = 'auth/post';
     setIsLoading(true);
     const response = await Post(url, formData, apiHeader(token));
@@ -364,21 +360,25 @@ const CreatePost = () => {
           Location
         </CustomText>
         <FlatList
-          horizontal
+          showsVerticalScrollIndicator={false}
           data={searchData}
+          style={{
+            width:'85%',
+          }}
           renderItem={({item, index}) => {
-            const parts = item?.name?.split(',');
-            const locationName = parts[1]?.trim();
             return (
               <View
                 style={{
-                  // width: windowWidth * 0.3,
-                  padding: moderateScale(8, 0.6),
+                  width: windowWidth * 0.75,
+                  marginVertical: moderateScale(5, 0.3),
+                  padding: moderateScale(7, 0.6),
                   backgroundColor: Color.veryLightGray,
                   borderRadius: moderateScale(17, 0.6),
+                  textAlign: 'left',
                 }}>
-                <CustomText style={styles.location_text}>
-                  {`@${locationName}`}
+                <CustomText numberOfLines={1}
+                style={styles.location_text}>
+                  {`@${item?.name}`}
                 </CustomText>
                 <Icon
                   onPress={() => {
@@ -397,7 +397,6 @@ const CreatePost = () => {
                     right: 9,
                     backgroundColor: Color.blue,
                     borderRadius: 5,
-                    // padding:moderateScale(10,.6)
                   }}
                   name="cross"
                   as={Entypo}

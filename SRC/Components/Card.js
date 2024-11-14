@@ -372,7 +372,7 @@ const Card = ({item, fromProfile, setSelected, selected, index, loading}) => {
               color: Color.lightGrey,
               marginLeft: moderateScale(3, 0.6),
             }}>
-            {`${item?.comment_count} comments`}
+            {`${item?.total_comment} comments`}
           </CustomText>
         </View>
         <View style={{flexDirection: 'row'}}>
@@ -392,7 +392,7 @@ const Card = ({item, fromProfile, setSelected, selected, index, loading}) => {
               color: Color.lightGrey,
               marginLeft: moderateScale(3, 0.6),
             }}>
-            {`${item?.like_count} likes`}
+            {`${item?.total_post_like} likes`}
             {/* {item?.likes} */}
           </CustomText>
         </View>

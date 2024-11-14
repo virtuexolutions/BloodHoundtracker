@@ -5,7 +5,7 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import CustomStatusBar from '../Components/CustomStatusBar';
 import Color from '../Assets/Utilities/Color';
 import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
@@ -40,16 +40,12 @@ const DetailScreen = props => {
   );
   const [share, setShare] = useState(false);
   const [comment, setComment] = useState('');
-  const [commentReply, setCommentReply] = useState(false);
+  const [commentReplyViewToggle, setCommentReplyViewToggle] = useState(false);
+  const [commentLike, setCommentLlike] = useState(
+    item?.comment?.my_like ? true : false,
+  );
+  const [reply, setReply] = useState({});
   const [playingIndex, setPlayingIndex] = useState(null);
-
-  const locationName = [
-    '@South Beach',
-    ' @Wynwood Arts District',
-    '@Little Havana',
-    '@South Beach',
-    ' @Wynwood Arts District',
-  ];
 
   const handleVideoPress = index => {
     setPlayingIndex(playingIndex === index ? null : index);
@@ -75,6 +71,26 @@ const DetailScreen = props => {
     const response = await Post(url, {post_id: item?.id}, apiHeader(token));
     setIsLoading(false);
     if (response != undefined) {
+      setLike(!like);
+    }
+  };
+
+  const commentReplyApi = async () => {
+    const url = `auth/comment_replies/${reply?.id}`;
+    setIsLoading(true);
+    const response = await Post(url, {description: comment}, apiHeader(token));
+    if (response != undefined) {
+      setComment('');
+      setReply({});
+    }
+  };
+
+  const commentLikeApi = async id => {
+    const url = `auth/comment_like`;
+    setIsLoading(true);
+    const response = await Post(url, {comment_id: id}, apiHeader(token));
+    if (response != undefined) {
+      setCommentLlike(!commentLike);
     }
   };
   return (
@@ -91,108 +107,6 @@ const DetailScreen = props => {
         }}
         style={styles.container}>
         <View style={styles.main_view}>
-          {/* <View
-            style={{
-              width: windowWidth * 0.8,
-              height: windowHeight * 0.3,
-              borderRadius: SIZES.padding,
-            }}>
-            <CustomImage
-              source={require('../Assets/Images/scoter_image.png')}
-              style={{
-                width: '100%',
-                height: '100%',
-                borderRadius: moderateScale(20, 0.6),
-              }}
-            />
-          </View> */}
-          {/* {item?.images.length > 1 ? (
-            <View
-              style={{
-                width: windowWidth * 0.8,
-                height: windowHeight * 0.3,
-                alignSelf: 'center',
-                borderRadius: moderateScale(20, 0.6),
-              }}>
-              <ImageSlider
-                loopBothSides
-                images={item?.images}
-                style={{backgroundColor: 'white'}}
-                customSlide={({index, item, style, width}) => (
-                  <View key={index} style={[style, styles.Slide]}>
-                    <CustomImage
-                      source={item}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        borderRadius: moderateScale(20, 0.6),
-                      }}
-                    />
-                  </View>
-                )}
-              />
-            </View>
-          ) : item?.images[0]?.type == 'image' ? (
-            <View
-              style={{
-                width: windowWidth * 0.8,
-                height: windowHeight * 0.3,
-                borderRadius: moderateScale(20, 0.6),
-                alignSelf: 'center',
-                marginTop: moderateScale(10, 0.6),
-              }}>
-              <CustomImage
-                source={{uri:`${imageUrl}${item?.images[0]?.file}`}}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  resizeMode: 'cover',
-                  borderRadius: moderateScale(20, 0.6),
-                }}
-              />
-            </View>
-          ) : (
-            <TouchableOpacity
-              onPress={() => {
-                setClicked(prev => !prev);
-                setPaused(prev => !prev);
-                console.log('Logging video');
-              }}
-              activeOpacity={1}
-              style={{
-                width: windowWidth * 0.8,
-                height: windowHeight * 0.3,
-                borderRadius: moderateScale(20, 0.6),
-                alignSelf: 'center',
-                overflow: 'hidden',
-                marginTop: moderateScale(10, 0.6),
-              }}>
-              <Video
-                ref={videoRef}
-                muted={true}
-                resizeMode={'stretch'}
-                repeat={true}
-                paused={paused}
-                source={require('../Assets/Images/video1.mp4')}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                }}
-                onProgress={data => {}}
-                onLoadStart={data => {
-                  setIsLoading(true);
-                }}
-                onLoad={x => {
-                  setIsLoading(false);
-                  setPaused(false);
-                }}
-                onBuffer={x => console.log('buffering video', x)}
-                onError={error =>
-                  console.log('error ================> ', error)
-                }
-              />
-            </TouchableOpacity>
-          )} */}
           <SwiperFlatList
             style={styles.swipe}
             index={0}
@@ -288,6 +202,16 @@ const DetailScreen = props => {
               </CustomText>
             </View>
             <CustomText style={styles.des}>{item?.description}</CustomText>
+            <CustomText
+              style={{...FONTS.Medium15, marginTop: moderateScale(10, 0.6)}}
+              isBold>
+              Assets name
+            </CustomText>
+            <CustomText style={styles.ass_name}>{item?.assetname}</CustomText>
+            <CustomText style={{...FONTS.Medium15}} isBold>
+              Assets color
+            </CustomText>
+            <CustomText style={styles.ass_color}>{item?.assetcolor}</CustomText>
             <CustomText style={styles.loc_h1} isBold>
               Location
             </CustomText>
@@ -302,82 +226,15 @@ const DetailScreen = props => {
                 );
               })}
             </View>
-            {/* <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginTop: moderateScale(10, 0.6),
-            }}>
-            <View
-              style={{
-                padding: moderateScale(8, 0.6),
-                backgroundColor: Color.veryLightGray,
-                borderRadius: moderateScale(17, 0.6),
-              }}>
-              <CustomText style={styles.location_text}>@South Beach</CustomText>
-            </View>
-            <View
-              style={{
-                padding: moderateScale(8, 0.6),
-                backgroundColor: Color.veryLightGray,
-                borderRadius: moderateScale(17, 0.6),
-              }}>
-              <CustomText style={styles.location_text}>
-                @Wynwood Arts District
-              </CustomText>
-            </View>
-            <View
-              style={{
-                padding: moderateScale(8, 0.6),
-                backgroundColor: Color.veryLightGray,
-                borderRadius: moderateScale(17, 0.6),
-              }}>
-              <CustomText style={styles.location_text}>
-                @Little Havana
-              </CustomText>
-            </View>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'flex-start',
-              alignItems: 'center',
-              marginTop: moderateScale(10, 0.6),
-            }}>
-            <View
-              style={{
-                padding: moderateScale(8, 0.6),
-                backgroundColor: Color.veryLightGray,
-                borderRadius: moderateScale(17, 0.6),
-              }}>
-              <CustomText style={styles.location_text}>@South Beach</CustomText>
-            </View>
-            <View
-              style={{
-                padding: moderateScale(8, 0.6),
-                marginLeft: moderateScale(10, 0.6),
-                backgroundColor: Color.veryLightGray,
-                borderRadius: moderateScale(17, 0.6),
-              }}>
-              <CustomText style={styles.location_text}>
-                @Wynwood Arts District
-              </CustomText>
-            </View>
-          </View> */}
             <CustomText
               style={{...FONTS.Medium15, marginTop: moderateScale(10, 0.6)}}
               isBold>
               Time
             </CustomText>
-            <CustomText
-              style={{
-                ...FONTS.Regular10,
-                marginTop: moderateScale(6, 0.6),
-                color: Color.lightGrey,
-              }}>
+            <CustomText style={styles.time}>
               {`${item?.start_time} during Standard Time and ${item?.end_time}`}
             </CustomText>
+
             <View style={styles.icon_row}>
               <View style={{flexDirection: 'row'}}>
                 <Icon
@@ -387,14 +244,13 @@ const DetailScreen = props => {
                   color={Color.lightGrey}
                 />
                 <CustomText style={styles.comment_text}>
-                  {`${item?.comment_count} comments`}
+                  {`${item?.total_comment} comments`}
                 </CustomText>
               </View>
               <View style={{flexDirection: 'row'}}>
                 <Icon
                   onPress={() => {
                     post_like();
-                    setLike(!like);
                   }}
                   name={like ? 'heart' : 'heart-outline'}
                   as={MaterialCommunityIcons}
@@ -402,7 +258,7 @@ const DetailScreen = props => {
                   color={like ? Color.blue : Color.lightGrey}
                 />
                 <CustomText style={styles.like_t}>
-                  {`${item?.like_count} like `}
+                  {`${item?.total_post_like} like `}
                 </CustomText>
               </View>
               <View style={{flexDirection: 'row'}}>
@@ -416,16 +272,17 @@ const DetailScreen = props => {
               </View>
             </View>
             <FlatList
-              // data={[]}
+              scrollEnabled={false}
               data={item?.comment}
               showsVerticalScrollIndicator={false}
               style={{
                 marginTop: moderateScale(20, 0.6),
               }}
               contentContainerStyle={{
-                paddingBottom: moderateScale(30, 0.6),
+                paddingBottom: moderateScale(10, 0.6),
               }}
               renderItem={({item, index}) => {
+                console.log('🚀 ~ DetailScreen ~ item:', item?.my_like);
                 return (
                   <>
                     <View style={styles.coment_view}>
@@ -433,7 +290,7 @@ const DetailScreen = props => {
                         <View style={styles.image_con}>
                           <CustomImage
                             source={{
-                              uri: `${baseUrl}${item?.user_info?.photo}`,
+                              uri: `${baseUrl}${item?.user?.photo}`,
                             }}
                             style={{
                               width: '100%',
@@ -442,49 +299,45 @@ const DetailScreen = props => {
                             }}
                           />
                         </View>
-                        <View style={{marginLeft: moderateScale(10, 0.6)}}>
-                          <CustomText style={{...FONTS.Medium13, width: 120}}>
-                            {item?.user_info?.name}
+                        <View style={styles.user_row}>
+                          <CustomText style={styles.user_name}>
+                            {item?.user?.name}
                           </CustomText>
                           <CustomText
+                            onPress={() => {
+                              setReply(item);
+                            }}
                             style={{
-                              color: Color.lightGrey,
+                              color: Color.blue,
                               width: 100,
+                              textAlign: 'center',
                               ...FONTS.Regular10,
                             }}>
-                            {item?.time}
+                            reply
+                            {/* {item?.time} */}
                           </CustomText>
                         </View>
                       </View>
-                      <CustomText
-                        style={{
-                          ...FONTS.Regular10,
-                          color: Color.lightGrey,
-                          paddingVertical: moderateScale(5, 0.6),
-                        }}>
+                      <CustomText style={styles.desc}>
                         {item?.description}
                       </CustomText>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          justifyContent: 'flex-start',
-                          alignItems: 'center',
-                          marginTop: moderateScale(10, 0.6),
-                        }}>
+                      <View style={styles.like_row}>
                         <View style={{flexDirection: 'row'}}>
                           <Icon
-                            name="heart-outline"
+                            onPress={() => {
+                              commentLikeApi(item?.id);
+                            }}
+                            name={item?.my_like ? 'heart' : 'heart-outline'}
                             as={MaterialCommunityIcons}
                             size={moderateScale(20, 0.3)}
-                            color={Color.lightGrey}
+                            color={item?.my_like ? Color.blue : Color.lightGrey}
                           />
                           <CustomText
-                            style={{
-                              ...FONTS.light12,
-                              color: Color.lightGrey,
-                              marginLeft: moderateScale(3, 0.6),
-                            }}>
-                            {item?.likes}
+                            onPress={() => {
+                              commentLikeApi(item?.id);
+                            }}
+                            style={styles.like_text}>
+                            {`${item?.total_comment_likes} likes`}
                           </CustomText>
                         </View>
                         <View
@@ -494,7 +347,10 @@ const DetailScreen = props => {
                           }}>
                           <Icon
                             onPress={() => {
-                              setCommentReply(!commentReply);
+                              setCommentReplyViewToggle(
+                                item?.replies?.length > 0 &&
+                                  !commentReplyViewToggle,
+                              );
                             }}
                             name="message-processing-outline"
                             as={MaterialCommunityIcons}
@@ -503,54 +359,37 @@ const DetailScreen = props => {
                           />
                           <CustomText
                             onPress={() => {
-                              setCommentReply(!commentReply);
+                              setCommentReplyViewToggle(
+                                item?.replies?.length > 0 &&
+                                  !commentReplyViewToggle,
+                              );
                             }}
-                            style={{
-                              ...FONTS.light12,
-                              color: Color.lightGrey,
-                              marginLeft: moderateScale(3, 0.6),
-                            }}>
-                            {item?.replaycount}
+                            style={styles.like_text}>
+                            {`${item?.total_comment_replies} comments`}
                           </CustomText>
                         </View>
                       </View>
                     </View>
-                    {item?.replay?.length > 0 &&
-                      commentReply == true &&
-                      item?.replay?.map((data, index) => {
+                    {item?.replies?.length > 0 &&
+                      commentReplyViewToggle == true &&
+                      item?.replies?.map((data, index) => {
+                        console.log('🚀 ~ DetailScreen ~ data:', data);
                         return (
-                          <View
-                            style={{
-                              width: '93%',
-                              borderRadius: SIZES.padding,
-                              borderWidth: 1,
-                              marginVertical: SIZES.padding - 10,
-                              marginLeft: moderateScale(22, 0.3),
-                              borderColor: Color.veryLightGray,
-                              paddingHorizontal: SIZES.padding - 10,
-                              paddingVertical: SIZES.padding - 15,
-                            }}>
+                          <View style={styles.reply_view}>
                             <View style={styles.profile_view}>
-                              <View
-                                style={{
-                                  width: moderateScale(40, 0.6),
-                                  height: moderateScale(40, 0.6),
-                                  borderRadius: moderateScale(20, 0.6),
-                                }}>
+                              <View style={styles.reply_imageView}>
                                 <CustomImage
-                                  source={item?.profile_image}
-                                  style={{
-                                    width: '100%',
-                                    height: '100%',
-                                    borderRadius: moderateScale(20, 0.6),
+                                  source={{
+                                    uri: `${baseUrl}${data?.user?.photo}`,
                                   }}
+                                  style={styles.reply_image}
                                 />
                               </View>
                               <View
                                 style={{marginLeft: moderateScale(10, 0.6)}}>
                                 <CustomText
                                   style={{...FONTS.Medium13, width: 120}}>
-                                  {item?.name}
+                                  {data?.user?.name}
                                 </CustomText>
                                 <CustomText
                                   style={{
@@ -568,59 +407,56 @@ const DetailScreen = props => {
                                 color: Color.lightGrey,
                                 paddingVertical: moderateScale(5, 0.6),
                               }}>
-                              Lorem Ipsum is simply dummy text of the printing
-                              and typesetting industry.
+                              {data?.description}
                             </CustomText>
-                            {/* <View
-                            style={{
-                              flexDirection: 'row',
-                              justifyContent: 'flex-start',
-                              alignItems: 'center',
-                              marginTop: moderateScale(10, 0.6),
-                            }}>
-                            <View style={{flexDirection: 'row'}}>
-                              <Icon
-                                name="heart-outline"
-                                as={MaterialCommunityIcons}
-                                size={moderateScale(20, 0.3)}
-                                color={Color.lightGrey}
-                              />
-                              <CustomText
-                                style={{
-                                  ...FONTS.light12,
-                                  color: Color.lightGrey,
-                                  marginLeft: moderateScale(3, 0.6),
-                                }}>
-                                {item?.likes}
-                              </CustomText>
-                            </View>
                             <View
                               style={{
                                 flexDirection: 'row',
-                                marginLeft: moderateScale(10, 0.6),
+                                justifyContent: 'flex-start',
+                                alignItems: 'center',
+                                marginTop: moderateScale(10, 0.6),
                               }}>
-                              <Icon
-                                onPress={() => {
-                                  setCommentReply(true);
-                                }}
-                                name="message-processing-outline"
-                                as={MaterialCommunityIcons}
-                                size={moderateScale(20, 0.3)}
-                                color={Color.lightGrey}
-                              />
-                              <CustomText
-                                onPress={() => {
-                                  setCommentReply(true);
-                                }}
+                              <View style={{flexDirection: 'row'}}>
+                                <Icon
+                                  name={
+                                    data?.my_like ? 'heart' : 'heart-outline'
+                                  }
+                                  as={MaterialCommunityIcons}
+                                  size={moderateScale(20, 0.3)}
+                                  color={
+                                    data?.my_like ? Color.blue : Color.lightGrey
+                                  }
+                                />
+                                <CustomText
+                                  style={{
+                                    ...FONTS.light12,
+                                    color: Color.lightGrey,
+                                    marginLeft: moderateScale(3, 0.6),
+                                  }}>
+                                  {`${data?.total_reply_likes} likes`}
+                                </CustomText>
+                              </View>
+                              {/* <View
                                 style={{
-                                  ...FONTS.light12,
-                                  color: Color.lightGrey,
-                                  marginLeft: moderateScale(3, 0.6),
+                                  flexDirection: 'row',
+                                  marginLeft: moderateScale(10, 0.6),
                                 }}>
-                                {item?.replaycount}
-                              </CustomText>
+                                <Icon
+                                  name="message-processing-outline"
+                                  as={MaterialCommunityIcons}
+                                  size={moderateScale(20, 0.3)}
+                                  color={Color.lightGrey}
+                                />
+                                <CustomText
+                                  style={{
+                                    ...FONTS.light12,
+                                    color: Color.lightGrey,
+                                    marginLeft: moderateScale(3, 0.6),
+                                  }}>
+                                  {item?.replaycount}
+                                </CustomText>
+                              </View> */}
                             </View>
-                          </View> */}
                           </View>
                         );
                       })}
@@ -650,7 +486,7 @@ const DetailScreen = props => {
         />
         <TouchableOpacity
           onPress={() => {
-            addComment();
+            reply?.id == null || undefined ? addComment() : commentReplyApi();
           }}
           style={styles.send_btn}>
           <Icon
@@ -704,7 +540,7 @@ const styles = StyleSheet.create({
     marginVertical: SIZES.padding - 10,
     borderColor: Color.veryLightGray,
     paddingHorizontal: SIZES.padding - 10,
-    paddingVertical: SIZES.padding - 15,
+    paddingVertical: SIZES.padding - 18,
   },
   Slide: {
     width: windowWidth * 0.8,
@@ -739,7 +575,6 @@ const styles = StyleSheet.create({
     width: windowWidth * 0.023,
     height: windowHeight * 0.014,
     borderRadius: moderateScale(20, 0.6),
-    backgroundColor: 'red',
     marginHorizontal: moderateScale(5, 0.3),
   },
   imagebox: {
@@ -764,7 +599,6 @@ const styles = StyleSheet.create({
   swipe: {
     width: windowWidth * 0.8,
     height: windowHeight * 0.3,
-    backgroundColor: 'red',
     borderRadius: moderateScale(20, 0.6),
   },
   location_view: {
@@ -811,8 +645,67 @@ const styles = StyleSheet.create({
     marginLeft: moderateScale(3, 0.6),
   },
   image_con: {
+    width: moderateScale(35, 0.6),
+    height: moderateScale(35, 0.6),
+    borderRadius: moderateScale(20, 0.6),
+  },
+  like_row: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
+  ass_name: {
+    ...FONTS.Regular10,
+    color: Color.lightGrey,
+  },
+  ass_color: {
+    ...FONTS.Regular10,
+    color: Color.lightGrey,
+  },
+  time: {
+    ...FONTS.Regular10,
+    marginTop: moderateScale(6, 0.6),
+    color: Color.lightGrey,
+  },
+  user_row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingTop: moderateScale(5, 0.6),
+  },
+  user_name: {
+    marginLeft: moderateScale(10, 0.6),
+    ...FONTS.Medium11,
+    width: 120,
+  },
+  desc: {
+    ...FONTS.Regular10,
+    color: Color.lightGrey,
+    paddingVertical: moderateScale(5, 0.6),
+  },
+  like_text: {
+    ...FONTS.light12,
+    color: Color.lightGrey,
+    marginLeft: moderateScale(3, 0.6),
+  },
+  reply_view: {
+    width: '93%',
+    borderRadius: SIZES.padding,
+    borderWidth: 1,
+    marginVertical: SIZES.padding - 10,
+    marginLeft: moderateScale(22, 0.3),
+    borderColor: Color.veryLightGray,
+    paddingHorizontal: SIZES.padding - 10,
+    paddingVertical: SIZES.padding - 15,
+  },
+  reply_imageView: {
     width: moderateScale(40, 0.6),
     height: moderateScale(40, 0.6),
+    borderRadius: moderateScale(20, 0.6),
+  },
+  reply_image: {
+    width: '100%',
+    height: '100%',
     borderRadius: moderateScale(20, 0.6),
   },
 });

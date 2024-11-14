@@ -103,17 +103,16 @@ const MessagesScreen = (props) => {
             containerStyle={{}}
             textStyle={{
               left: {
-                color: Color.white,
+                color: Color.black,
               },
               right: {
-                color: 'black',
+                color: Color.textColor,
               },
             }}
             wrapperStyle={{
               right: {
-                backgroundColor: Color.white,
-                // borderWidth: 1,
-                // borderColor: Color.blue,
+                backgroundColor: '#E6E6FA',
+       
                 borderRadius: moderateScale(8, 0.6),
                 marginBottom: moderateScale(10, 0.3),
                 shadowColor: '#000000',
@@ -126,10 +125,8 @@ const MessagesScreen = (props) => {
                 elevation: 2,
               },
               left: {
-                borderWidth: 1,
-                backgroundColor: Color.blue,
+                backgroundColor: Color.veryLightGray,
                 borderRadius: moderateScale(8, 0.6),
-                borderColor: Color.blue,
                 marginHorizontal: moderateScale(10, 0.3),
                 marginBottom: moderateScale(5, 0.3),
               },
