@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import {Icon} from 'native-base';
 import React, {useRef, useState} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Share, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {moderateScale} from 'react-native-size-matters';
 import SwiperFlatList from 'react-native-swiper-flatlist';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -17,6 +17,7 @@ import CustomImage from './CustomImage';
 import CustomText from './CustomText';
 import {Post} from '../Axios/AxiosInterceptorFunction';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const Card = ({item, fromProfile, setSelected, selected, index, loading}) => {
   const userData = useSelector(state => state.commonReducer.userData);
@@ -28,6 +29,7 @@ const Card = ({item, fromProfile, setSelected, selected, index, loading}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [paused, setPaused] = useState(false);
   const [clicked, setClicked] = useState(false);
+  const [save, setSave] = useState(false);
   const [like, setLike] = useState(
     item?.my_like?.post_id == item?.id ? true : false,
   );
@@ -43,6 +45,48 @@ const Card = ({item, fromProfile, setSelected, selected, index, loading}) => {
     const response = await Post(url, {post_id: item?.id}, apiHeader(token));
     setIsLoading(false);
     if (response != undefined) {
+    }
+  };
+
+  // const linking = {
+  //   prefixes: ['https://blood-hound.cstmpanel.com', 'yourapp://'],
+  //   config: {
+  //     screens: {
+  //       Post: `HomeScreen/${item?.id}`,
+  //     },
+  //   },
+  // };
+
+  // const onShare = async () => {
+  //   try {
+  //     const result = await Share.share({
+  //       // message: 'Hello from React Native!',
+  //       message: `${baseUrl}${item?.id}`,
+  //     });
+  //     if (result.action === Share.sharedAction) {
+  //       linking;
+  //       console.log(
+  //         'here is url which is im sharing to the other',
+  //         `${baseUrl}/post/${item?.id} `,
+  //       );
+
+  //       console.log('Shared successfully');
+  //     } else if (result.action === Share.dismissedAction) {
+  //       console.log('Share dismissed');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error sharing:', error);
+  //   }
+  // };
+
+  const onsave = async () => {
+    const url = 'auth/posts_save ';
+    setIsLoading(true);
+    const response = await Post(url, {post_id: item?.id}, apiHeader(token));
+    console.log('🚀 ~ onsave ~ response:', response?.data);
+    setIsLoading(false);
+    if (response != undefined) {
+      setSave(!save);
     }
   };
 
@@ -192,12 +236,7 @@ const Card = ({item, fromProfile, setSelected, selected, index, loading}) => {
             <View style={styles.imageBox}>
               <CustomImage
                 source={{uri: `${imageUrl}${data?.item?.file}`}}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  resizeMode: 'cover',
-                  borderRadius: moderateScale(20, 0.6),
-                }}
+                style={styles.image}
               />
             </View>
           ) : (
@@ -239,13 +278,7 @@ const Card = ({item, fromProfile, setSelected, selected, index, loading}) => {
                   console.log('Logging video');
                   handleVideoPress(index);
                 }}
-                style={{
-                  width: windowWidth * 0.1,
-                  height: windowHeight * 0.04,
-                  top: '45%',
-                  right: '43%',
-                  position: 'absolute',
-                }}>
+                style={styles.paused}>
                 <CustomImage
                   onPress={() => {
                     setPaused(prev => !prev);
@@ -267,91 +300,6 @@ const Card = ({item, fromProfile, setSelected, selected, index, loading}) => {
           )
         }
       />
-      {/* {item?.images.length > 1 ? (
-        <View
-          style={{
-            width: windowWidth * 0.8,
-            height: windowHeight * 0.3,
-            alignSelf: 'center',
-            borderRadius: moderateScale(20, 0.6),
-          }}>
-          <ImageSlider
-            loopBothSides
-            images={item?.images}
-            style={{backgroundColor: 'white'}}
-            customSlide={({index, item, style, width}) => (
-              <View key={index} style={[style, styles.Slide]}>
-                <CustomImage
-                  source={item}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    borderRadius: moderateScale(20, 0.6),
-                  }}
-                />
-              </View>
-            )}
-          />
-        </View>
-      ) : item?.images[0]?.type == 'image' ? (
-        <View
-          style={{
-            width: windowWidth * 0.8,
-            height: windowHeight * 0.3,
-            borderRadius: moderateScale(20, 0.6),
-            alignSelf: 'center',
-            marginTop: moderateScale(10, 0.6),
-          }}>
-          <CustomImage
-            source={{uri: `${imageUrl}/${item?.images[0]?.file}`}}
-            style={{
-              width: '100%',
-              height: '100%',
-              resizeMode: 'cover',
-              borderRadius: moderateScale(20, 0.6),
-            }}
-          />
-        </View>
-      ) : (
-        <TouchableOpacity
-          onPress={() => {
-            setClicked(prev => !prev);
-            setPaused(prev => !prev);
-            console.log('Logging video');
-            handleVideoPress(index);
-          }}
-          activeOpacity={1}
-          style={{
-            width: windowWidth * 0.8,
-            height: windowHeight * 0.3,
-            borderRadius: moderateScale(20, 0.6),
-            alignSelf: 'center',
-            overflow: 'hidden',
-            marginTop: moderateScale(10, 0.6),
-          }}>
-          <Video
-            ref={videoRef}
-            resizeMode={'stretch'}
-            repeat={false}
-            paused={playingIndex !== index}
-            source={{uri: `${imageUrl}${item?.images[0]?.file}`}}
-            style={{
-              width: '100%',
-              height: '100%',
-            }}
-            onProgress={data => {}}
-            onLoadStart={data => {
-              setIsLoading(true);
-            }}
-            onLoad={x => {
-              setIsLoading(false);
-              setPaused(false);
-            }}
-            onBuffer={x => console.log('buffering video', x)}
-            onError={error => console.log('error ================> ', error)}
-          />
-        </TouchableOpacity>
-      )} */}
       <View
         style={{
           flexDirection: 'row',
@@ -393,10 +341,13 @@ const Card = ({item, fromProfile, setSelected, selected, index, loading}) => {
               marginLeft: moderateScale(3, 0.6),
             }}>
             {`${item?.total_post_like} likes`}
-            {/* {item?.likes} */}
           </CustomText>
         </View>
-        <View style={{flexDirection: 'row'}}>
+        <TouchableOpacity
+          onPress={() => {
+            // onShare();
+          }}
+          style={{flexDirection: 'row'}}>
           <Icon
             name="share-outline"
             as={MaterialCommunityIcons}
@@ -412,7 +363,29 @@ const Card = ({item, fromProfile, setSelected, selected, index, loading}) => {
             shares
             {/* {item?.shares} */}
           </CustomText>
-        </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            onsave();
+            // setSave(!save);
+          }}
+          style={{flexDirection: 'row'}}>
+          <Icon
+            name={save ? 'bookmark' : 'bookmark-o'}
+            as={FontAwesome}
+            size={moderateScale(20, 0.3)}
+            color={Color.lightGrey}
+          />
+          <CustomText
+            style={{
+              ...FONTS.light12,
+              color: Color.lightGrey,
+              marginLeft: moderateScale(3, 0.6),
+            }}>
+            save
+            {/* {item?.shares} */}
+          </CustomText>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -503,10 +476,24 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(20, 0.6),
     alignSelf: 'center',
   },
+  image: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+    borderRadius: moderateScale(20, 0.6),
+  },
   pagination: {
     width: windowWidth * 0.023,
     height: windowHeight * 0.014,
     borderRadius: moderateScale(20, 0.6),
     marginHorizontal: moderateScale(5, 0.3),
+  },
+
+  paused: {
+    width: windowWidth * 0.1,
+    height: windowHeight * 0.04,
+    top: '45%',
+    right: '43%',
+    position: 'absolute',
   },
 });

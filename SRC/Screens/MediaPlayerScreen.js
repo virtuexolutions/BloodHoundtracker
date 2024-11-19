@@ -20,12 +20,16 @@ import LinearGradient from 'react-native-linear-gradient';
 import ShowMoreAndShowLessText from '../Components/ShowMoreAndShowLessText';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import CustomHeader from '../Components/CustomHeader';
+import {imageUrl} from '../Config';
 
 const MediaPlayerScreen = props => {
   console.log('🚀 ~heeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
   const video = props?.route?.params?.item;
   console.log('🚀 ~ MediaPlayerScreen ~ video:', video);
-  const videoRef = useRef();
+  const selectedIndex = props?.route?.params?.index;
+
+  console.log('🚀 ~ MediaPlayerScreen ~ video:', selectedIndex);
+  const videoRef = useRef(null);
   const navigation = useNavigation();
   const refRBSheet = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -33,15 +37,9 @@ const MediaPlayerScreen = props => {
   const [currentVisibleIndex, setCurrentVisibleIndex] = useState(0);
   const [clicked, setClicked] = useState(false);
   // const [videoRef, setvideoRef] = useState(null);
-  // const [videoRef ,setvideoRef] =useState()
-  const videodata = [
-    require('../Assets/Images/video1.mp4'),
-    require('../Assets/Images/video2.mp4'),
-    require('../Assets/Images/video1.mp4'),
-    require('../Assets/Images/video2.mp4'),
-  ];
+
   const viewabilityConfig = useRef({
-    viewAreaCoveragePercentThreshold: 50, // only 50% or more visible videos play
+    viewAreaCoveragePercentThreshold: 50,
   }).current;
 
   const onViewableItemsChanged = useRef(({viewableItems}) => {
@@ -57,10 +55,16 @@ const MediaPlayerScreen = props => {
       }}>
       <CustomHeader leftIcon />
       <FlatList
-        data={videodata}
+        data={video}
         showsVerticalScrollIndicator={false}
+        initialScrollIndex={selectedIndex}
+        getItemLayout={(data, index) => ({
+          length: windowHeight,
+          offset: 20 * index,
+          index,
+        })}
         numColumns={1}
-        pagingEnabled // for snapping effect between videos
+        pagingEnabled
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
         renderItem={({item, index}) => {
@@ -77,21 +81,17 @@ const MediaPlayerScreen = props => {
                 {
                   height: windowHeight,
                   justifyContent: 'center',
-
-                  paddingBottom: moderateScale(0, 0.3),
                 },
               ]}>
               <Video
                 ref={videoRef}
                 resizeMode={'stretch'}
                 repeat={true}
-                // muted={true}
                 paused={index !== currentVisibleIndex}
-                source={{uri: item}}
+                source={{uri: `${imageUrl}${item?.file}`}}
                 style={{
                   width: '100%',
-                  height: windowHeight * 0.5,
-                  backgroundColor: 'red',
+                  height: windowHeight * 0.55,
                 }}
                 onProgress={data => {}}
                 onLoadStart={data => {
@@ -189,7 +189,7 @@ const MediaPlayerScreen = props => {
                     </CustomText>
                     <TouchableOpacity
                       onPress={() => {
-                        likePost();
+                        // likePost();
                       }}
                       style={styles.btn2}>
                       <Icon
@@ -248,7 +248,6 @@ const styles = StyleSheet.create({
   profileSection1: {
     height: windowHeight * 0.05,
     width: windowHeight * 0.05,
-    // backgroundColor: '#fff',
     borderRadius: (windowHeight * 0.05) / 2,
     overflow: 'hidden',
     borderWidth: 1,
@@ -292,8 +291,6 @@ const styles = StyleSheet.create({
   customSlide: {
     width: windowWidth,
     height: windowHeight * 0.34,
-    // backgroundColor: 'green',
-    // overflow:'hidden',
     alignItems: 'center',
     justifyContent: 'center',
   },

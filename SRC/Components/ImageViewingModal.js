@@ -18,6 +18,7 @@ import {windowHeight, windowWidth} from '../Utillity/utils';
 import CustomImage from './CustomImage';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import {imageUrl} from '../Config';
 
 const ImageViewingModal = ({
   visible,
@@ -87,7 +88,13 @@ const ImageViewingModal = ({
           <FlatList
             horizontal
             data={multiImages}
+            initialScrollIndex={selectedImageIndex}
             pagingEnabled
+            getItemLayout={(data, index) => ({
+              length:  windowWidth, // Width of each item (same as the style width)
+              offset: 400 * index, // Offset for the given index
+              index,
+            })}
             keyExtractor={(item, index) =>
               item?.id?.toString() || index.toString()
             }
@@ -105,7 +112,7 @@ const ImageViewingModal = ({
                       width: windowWidth,
                       height: windowHeight * 0.4,
                     }}
-                    source={{uri: item?.uri}}
+                    source={{uri: `${imageUrl}${item?.file}`}}
                   />
                 </ImageZoom>
               );
@@ -117,8 +124,8 @@ const ImageViewingModal = ({
                 let newArray = [...multiImages];
                 newArray.splice(selectedImageIndex, 1);
                 setMultiImages(newArray);
-                if(selectedImageIndex == 0 ){
-                  setIsVisible(false)
+                if (selectedImageIndex == 0) {
+                  setIsVisible(false);
                 }
               }}
               style={styles.customBtn}>
@@ -127,8 +134,8 @@ const ImageViewingModal = ({
                   let newArray = [...multiImages];
                   newArray.splice(selectedImageIndex, 1);
                   setMultiImages(newArray);
-                  if(selectedImageIndex == 0 ){
-                    setIsVisible(false)
+                  if (selectedImageIndex == 0) {
+                    setIsVisible(false);
                   }
                 }}
                 as={FontAwesome5}

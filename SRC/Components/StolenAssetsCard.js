@@ -12,7 +12,7 @@ const StolenAssetsCard = ({item}) => {
   const navigation = useNavigation()
   return (
     <TouchableOpacity onPress={() =>{
-      navigation.navigate('DetailScreen')
+      // navigation.navigate('DetailScreen')
     }} style={styles.card}>
       <View
         style={{

@@ -26,12 +26,12 @@ import {useSelector} from 'react-redux';
 import {baseUrl} from '../Config';
 import ProfileComponent from '../Components/ProfileComponent';
 import Myposts from '../Components/Myposts';
-import { Get } from '../Axios/AxiosInterceptorFunction';
+import {Get} from '../Axios/AxiosInterceptorFunction';
 
 const Profile = () => {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
-  const token = useSelector(state => state.authReducer.token)
+  const token = useSelector(state => state.authReducer.token);
   const profileData = useSelector(state => state.commonReducer.userData);
   const stolenAssetsArray = [
     {
@@ -63,11 +63,12 @@ const Profile = () => {
       post: '10K Posts',
     },
   ];
-  const [stolenAssets, setStolenAssets] = useState('');
-  const [foundedAssets, setFoundedAssets] = useState('');
+
   const [selected, setSelected] = useState('stolen');
   const [numColumns, setNumColumns] = useState(1);
-  const [selectedTab, setSelectedTab] = useState('ProfileComponent');
+  const [selectedTab, setSelectedTab] = useState('profile');
+  const [isloading, setIsLoading] = useState(false);
+  const [myPostData, setMyPostdata] = useState([]);
   const tabs = ['profile', 'posts', 'photo', 'videos', 'saved'];
   useEffect(() => {
     if (selectedTab != isFocused) {
@@ -125,7 +126,7 @@ const Profile = () => {
           width={windowWidth * 0.43}
           height={windowHeight * 0.045}
           onPress={() => {
-            navigation.navigate('MessageList')
+            navigation.navigate('MessageList');
           }}
           bgColor={Color.themeColor}
           borderRadius={moderateScale(5, 0.3)}
@@ -138,7 +139,7 @@ const Profile = () => {
           width={windowWidth * 0.43}
           height={windowHeight * 0.045}
           onPress={() => {
-            navigation.navigate('GroupDeatils')
+            navigation.navigate('GroupDeatils');
           }}
           bgColor={Color.themeColor}
           borderRadius={moderateScale(5, 0.3)}
@@ -151,7 +152,7 @@ const Profile = () => {
           showsHorizontalScrollIndicator={false}
           style={{
             paddingHorizontal: moderateScale(3, 0.6),
-            paddingVertical: moderateScale(5, 0.6),
+            paddingVertical: moderateScale(4, 0.6),
           }}
           data={tabs}
           renderItem={({item, index}) => {
@@ -248,9 +249,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Color.mediumGray,
     borderRadius: moderateScale(5, 0.6),
-    padding: moderateScale(2, 0.6),
-    marginHorizontal: moderateScale(4, 0.3),
-    width: windowWidth * 0.15,
+    padding: moderateScale(7, 0.6),
+    marginHorizontal: moderateScale(2.5, 0.3),
+    width: windowWidth * 0.16,
     alignItems: 'center',
   },
   buttons_text: {

@@ -23,11 +23,11 @@ import Color from '../Assets/Utilities/Color';
 import {imageUrl} from '../Config';
 
 const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
-
   const token = useSelector(state => state.authReducer.token);
   const isFocused = useIsFocused();
   const navigation = useNavigation();
   const [imageIndex, setimageIndex] = useState(0);
+  const [imageView, setImageView] = useState(false);
   const [myPostData, setMyPostdata] = useState([]);
   const [galleryData, setGalleryData] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
@@ -96,22 +96,22 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
   };
 
   const usergalleryApi = async () => {
-    const url = `auth/gallery?type=${selected}`;
+    const url = `auth/gallery`;
     setIsLoading(true);
     const response = await Get(url, token);
     setIsLoading(false);
     if (response != undefined) {
-      setGalleryData(response?.data?.gallery_list);
+      setGalleryData(response?.data);
     }
   };
 
   useEffect(() => {
-    if (selected != 'ProfileComponent' && selected != 'posts') {
-      usergalleryApi();
-    } else {
+    if (selected == 'profile') {
       myPostApi();
+    } else {
+      usergalleryApi();
     }
-  }, [selected]);
+  }, [selected, isFocused]);
 
   return (
     <View>
@@ -130,7 +130,7 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
             showsVerticalScrollIndicator={true}
             nestedScrollEnabled={true}
             numColumns={3}
-            data={galleryData}
+            data={galleryData?.data?.image}
             keyExtractor={(item, index) => index.toString()}
             contentContainerStyle={{
               paddingTop: moderateScale(10, 0.6),
@@ -162,7 +162,7 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
                       setimageIndex(index);
                     }}
                     style={{height: '100%', width: '100%'}}
-                    source={item?.uri}
+                    source={{uri: `${imageUrl}${item?.file}`}}
                   />
                 </TouchableOpacity>
               );
@@ -182,7 +182,11 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
           <FlatList
             key={'videos'}
             numColumns={3}
-            data={galleryData}
+            data={
+              selected == 'videos'
+                ? galleryData?.data?.video
+                : galleryData?.data?.saved_post
+            }
             keyExtractor={item => item.id}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{
@@ -204,7 +208,13 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
                   style={styles.activityImage}
                   onPress={() => {
                     console.log('hello this console  from video component ');
-                    navigation.navigate('MediaPlayerScreen', {item: item});
+                    navigation.navigate('MediaPlayerScreen', {
+                      item:
+                        selected == 'videos'
+                          ? galleryData?.data?.video
+                          : galleryData?.data?.saved_post,
+                      index: index,
+                    });
                   }}>
                   <Video
                     repeat={true}
@@ -231,7 +241,7 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
         isloading ? (
           <ActivityIndicator
             style={{
-              paddingTop: windowHeight * 0.15,
+              paddingTop: windowHeight * 0.2,
             }}
             size={'small'}
             color={Color.blue}
@@ -245,7 +255,8 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
               marginVertical: moderateScale(20, 0.6),
               marginBottom: moderateScale(10, 0.6),
             }}
-            data={myPostData}
+            data={galleryData?.data?.post}
+            ListEmptyComponent={<CustomText>no post yet</CustomText>}
             renderItem={({item, index}) => {
               return (
                 <Card
@@ -258,6 +269,14 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
             }}
           />
         )
+      ) : isloading ? (
+        <ActivityIndicator
+          style={{
+            height: windowHeight * 0.5,
+          }}
+          size={'small'}
+          color={Color.blue}
+        />
       ) : (
         <ProfileComponent
           myPostData={myPostData}
@@ -271,7 +290,7 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
         setIsVisible={setIsVisible}
         visible={isVisible}
         selectedImageIndex={imageIndex}
-        multiImages={imageArray}
+        multiImages={galleryData?.data?.image}
         fromgallery={true}
       />
     </View>
