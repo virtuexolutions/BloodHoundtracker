@@ -30,6 +30,7 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
   const [imageView, setImageView] = useState(false);
   const [myPostData, setMyPostdata] = useState([]);
   const [galleryData, setGalleryData] = useState([]);
+  console.log("🚀 ~ Myposts ~ galleryData:", galleryData?.data?.image)
   const [isVisible, setIsVisible] = useState(false);
   const [isloading, setIsLoading] = useState(false);
   const imageArray = [

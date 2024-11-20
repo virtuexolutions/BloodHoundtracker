@@ -4,6 +4,8 @@ import {
   ScrollView,
   View,
   TouchableOpacity,
+  ToastAndroid,
+  Alert,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import CustomStatusBar from '../Components/CustomStatusBar';
@@ -57,6 +59,12 @@ const DetailScreen = props => {
       description: comment,
     };
     const url = 'auth/comment ';
+
+    if (comment == '') {
+      return Platform.OS == 'android'
+        ? ToastAndroid.show('Add some text', ToastAndroid.SHORT)
+        : Alert.alert('Add some text');
+    }
     setLoading(true);
     const response = await Post(url, body, apiHeader(token));
     setLoading(false);
@@ -77,6 +85,12 @@ const DetailScreen = props => {
 
   const commentReplyApi = async () => {
     const url = `auth/comment_replies/${reply?.id}`;
+
+    if (comment == '') {
+      return Platform.OS == 'android'
+        ? ToastAndroid.show('Add some text', ToastAndroid.SHORT)
+        : Alert.alert('Add some text');
+    }
     setIsLoading(true);
     const response = await Post(url, {description: comment}, apiHeader(token));
     if (response != undefined) {
@@ -103,7 +117,7 @@ const DetailScreen = props => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          paddingBottom: moderateScale(10, 0.6),
+          paddingBottom: moderateScale(30, 0.6),
         }}
         style={styles.container}>
         <View style={styles.main_view}>
@@ -187,12 +201,7 @@ const DetailScreen = props => {
               )
             }
           />
-          <View
-            style={{
-              backgroundColor: 'white',
-              height:
-                item?.comment?.length > 1 ? windowHeight : windowHeight * 0.6,
-            }}>
+          <View>
             <View style={styles.row}>
               <CustomText style={styles.detail} isBold>
                 Detail Discription
@@ -272,17 +281,26 @@ const DetailScreen = props => {
               </View>
             </View>
             <FlatList
-              scrollEnabled={false}
               data={item?.comment}
               showsVerticalScrollIndicator={false}
               style={{
-                marginTop: moderateScale(20, 0.6),
+                marginTop: moderateScale(10, 0.6),
+                backgroundColor: Color.white,
               }}
               contentContainerStyle={{
-                paddingBottom: moderateScale(10, 0.6),
+                marginBottom: moderateScale(50, 0.6),
               }}
+              ListEmptyComponent={
+                <CustomText
+                  style={{
+                    backgroundColor: 'white',
+                    textAlign: 'center',
+                    paddingTop: moderateScale(50, 0.6),
+                  }}>
+                  no comment !
+                </CustomText>
+              }
               renderItem={({item, index}) => {
-                console.log('🚀 ~ DetailScreen ~ item:', item?.my_like);
                 return (
                   <>
                     <View style={styles.coment_view}>
@@ -373,7 +391,6 @@ const DetailScreen = props => {
                     {item?.replies?.length > 0 &&
                       commentReplyViewToggle == true &&
                       item?.replies?.map((data, index) => {
-                        console.log('🚀 ~ DetailScreen ~ data:', data);
                         return (
                           <View style={styles.reply_view}>
                             <View style={styles.profile_view}>
@@ -509,7 +526,6 @@ export default DetailScreen;
 const styles = StyleSheet.create({
   container: {
     width: windowWidth,
-    height: windowHeight,
     backgroundColor: Color.background_color,
   },
   main_view: {
@@ -534,10 +550,9 @@ const styles = StyleSheet.create({
   },
   loc_h1: {...FONTS.Medium15, marginTop: moderateScale(10, 0.6)},
   coment_view: {
-    width: '100%',
     borderRadius: SIZES.padding,
     borderWidth: 1,
-    marginVertical: SIZES.padding - 10,
+    marginVertical: SIZES.padding - 15,
     borderColor: Color.veryLightGray,
     paddingHorizontal: SIZES.padding - 10,
     paddingVertical: SIZES.padding - 18,

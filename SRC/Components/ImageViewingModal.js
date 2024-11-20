@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {Icon} from 'native-base';
 import React, {useEffect, useRef, useState} from 'react';
 import {
@@ -14,11 +14,16 @@ import ImageZoom from 'react-native-image-pan-zoom';
 import {moderateScale} from 'react-native-size-matters';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Color from '../Assets/Utilities/Color';
-import {windowHeight, windowWidth} from '../Utillity/utils';
+import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
 import CustomImage from './CustomImage';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {imageUrl} from '../Config';
+import CustomText from './CustomText';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {Post} from '../Axios/AxiosInterceptorFunction';
+import {useSelector} from 'react-redux';
+import ComentsSection from './ComentsSection';
 
 const ImageViewingModal = ({
   visible,
@@ -28,10 +33,19 @@ const ImageViewingModal = ({
   fromCreatePost,
   setMultiImages,
 }) => {
+  console.log("🚀 ~ multiImages: == = = = == ==  = = = = =", multiImages)
+  const isFocused = useIsFocused();
   const flatListRef = useRef(null);
   const navigation = useNavigation();
+  const refRBSheet = useRef();
 
-  const [modalVisible, setModalVisible] = useState(false);
+  const token = useSelector(state => state.authReducer.token);
+  const [isloading, setIsLoading] = useState(false);
+  const [like, setLike] = useState(false);
+  const [comment, setComments] = useState(
+    multiImages?.comment ? multiImages?.comment : [],
+  );
+  const [commentsCount, setCommentsCount] = useState(0);
 
   useEffect(() => {
     if (visible && flatListRef.current && selectedImageIndex !== undefined) {
@@ -43,6 +57,23 @@ const ImageViewingModal = ({
     flatListRef.current.scrollToOffset({offset: index * windowWidth});
   };
 
+  const post_like = async postid => {
+    console.log('🚀 ~ postid ================== >:', postid);
+    const url = 'auth/post_like';
+    setIsLoading(true);
+    const response = await Post(url, {post_id: postid}, apiHeader(token));
+    setIsLoading(false);
+    if (response != undefined) {
+      setLike(!like);
+    }
+  };
+
+  // useEffect(() => {
+  //   multiImages?.map((data, index) =>
+  //     // console.log('console from useEffect ==== === = = = = == = ', data?.post?.my_like)
+  //     data?.post?.my_likepost_id == data?.id ? setLike(true) : setLike(false),
+  //   );
+  // }, [isFocused]);
   return (
     <Modal
       visible={visible}
@@ -88,11 +119,12 @@ const ImageViewingModal = ({
           <FlatList
             horizontal
             data={multiImages}
+            showsHorizontalScrollIndicator={false}
             initialScrollIndex={selectedImageIndex}
             pagingEnabled
             getItemLayout={(data, index) => ({
-              length:  windowWidth, // Width of each item (same as the style width)
-              offset: 400 * index, // Offset for the given index
+              length: windowWidth,
+              offset: 400 * index,
               index,
             })}
             keyExtractor={(item, index) =>
@@ -100,24 +132,75 @@ const ImageViewingModal = ({
             }
             renderItem={({item, index}) => {
               return (
-                <ImageZoom
-                  style={{height: windowHeight, width: windowWidth}}
-                  cropWidth={Dimensions.get('screen').width}
-                  cropHeight={Dimensions.get('screen').height}
-                  imageWidth={390}
-                  pinchToZoom={true}
-                  imageHeight={500}>
-                  <CustomImage
-                    style={{
-                      width: windowWidth,
-                      height: windowHeight * 0.4,
-                    }}
-                    source={{uri: `${imageUrl}${item?.file}`}}
+                <>
+                  <ImageZoom
+                    style={{height: windowHeight, width: windowWidth}}
+                    cropWidth={Dimensions.get('screen').width}
+                    cropHeight={Dimensions.get('screen').height}
+                    imageWidth={390}
+                    pinchToZoom={true}
+                    imageHeight={500}>
+                    <CustomImage
+                      style={{
+                        width: windowWidth,
+                        height: windowHeight * 0.4,
+                      }}
+                      source={{uri: `${imageUrl}${item?.file}`}}
+                    />
+                  </ImageZoom>
+                  <View style={styles.like_row}>
+                    <View style={styles.inner_row}>
+                      <Icon
+                        onPress={() => {
+                          post_like(item?.post_id);
+                        }}
+                        name={
+                          item?.post?.my_like?.post_id == item?.post_id
+                            ? 'heart'
+                            : 'heart-outline'
+                        }
+                        as={MaterialCommunityIcons}
+                        size={moderateScale(20, 0.3)}
+                        color={
+                          item?.post?.my_like?.post_id == item?.post_id
+                            ? Color.blue
+                            : Color.lightGrey
+                        }
+                      />
+                      <CustomText style={styles.custext}>
+                        {`${item?.post?.total_post_like} likes`}
+                      </CustomText>
+                    </View>
+                    <View style={styles.verticalLine}></View>
+                    <TouchableOpacity
+                      onPress={() => {
+                        refRBSheet.current.open();
+                      }}
+                      style={styles.inner_row}>
+                      <Icon
+                        name="message-processing-outline"
+                        as={MaterialCommunityIcons}
+                        size={moderateScale(20, 0.3)}
+                        color={Color.lightGrey}
+                      />
+                      <CustomText style={styles.custext}>
+                        {`${item?.post?.total_comment} Comments`}
+                      </CustomText>
+                    </TouchableOpacity>
+                  </View>
+                  <ComentsSection
+                    fromimage={true}
+                    isBubble={false}
+                    refRBSheet={refRBSheet}
+                    data={item?.post}
+                    setCommentsCount={setCommentsCount}
+                    // bubbleInfo={bubbleInfo}
                   />
-                </ImageZoom>
+                </>
               );
             }}
           />
+
           {fromCreatePost && (
             <TouchableOpacity
               onPress={() => {
@@ -174,5 +257,30 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'absolute',
     bottom: 160,
+  },
+  like_row: {
+    flexDirection: 'row',
+    position: 'absolute',
+    bottom: 15,
+    borderColor: Color.lightGrey,
+    borderBottomWidth: 0.7,
+    paddingVertical: moderateScale(8, 0.6),
+    width: '95%',
+    marginHorizontal: moderateScale(8, 0.6),
+    justifyContent: 'space-between',
+    paddingHorizontal: moderateScale(20, 0.6),
+  },
+  inner_row: {
+    flexDirection: 'row',
+    width: '40%',
+  },
+  custext: {
+    fontSize: moderateScale(13, 0.6),
+    color: Color.black,
+    paddingHorizontal: moderateScale(5, 0.6),
+  },
+  verticalLine: {
+    borderWidth: 1,
+    borderColor: Color.lightGrey,
   },
 });

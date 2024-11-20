@@ -21,22 +21,23 @@ import ShowMoreAndShowLessText from '../Components/ShowMoreAndShowLessText';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import CustomHeader from '../Components/CustomHeader';
 import {imageUrl} from '../Config';
+import { mode } from 'native-base/lib/typescript/theme/tools';
+import ComentsSection from '../Components/ComentsSection';
+import { comentlist } from '../Config/dummyData';
 
 const MediaPlayerScreen = props => {
   console.log('🚀 ~heeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
   const video = props?.route?.params?.item;
-  console.log('🚀 ~ MediaPlayerScreen ~ video:', video);
   const selectedIndex = props?.route?.params?.index;
 
-  console.log('🚀 ~ MediaPlayerScreen ~ video:', selectedIndex);
   const videoRef = useRef(null);
   const navigation = useNavigation();
-  const refRBSheet = useRef(null);
+  const refRBSheet = useRef();
   const [isLoading, setIsLoading] = useState(false);
   const [paused, setPaused] = useState(false);
   const [currentVisibleIndex, setCurrentVisibleIndex] = useState(0);
   const [clicked, setClicked] = useState(false);
-  // const [videoRef, setvideoRef] = useState(null);
+  const [ commentsCount ,setCommentsCount] =useState(0)
 
   const viewabilityConfig = useRef({
     viewAreaCoveragePercentThreshold: 50,
@@ -53,9 +54,16 @@ const MediaPlayerScreen = props => {
         height: windowHeight,
         width: windowWidth,
       }}>
-      <CustomHeader leftIcon />
+      <CustomHeader
+        style={{
+          backgroundColor: 'white',
+          width: windowWidth,
+        }}
+        leftIcon
+      />
       <FlatList
         data={video}
+        ref={videoRef}
         showsVerticalScrollIndicator={false}
         initialScrollIndex={selectedIndex}
         getItemLayout={(data, index) => ({
@@ -65,9 +73,14 @@ const MediaPlayerScreen = props => {
         })}
         numColumns={1}
         pagingEnabled
+        style={{
+          backgroundColor: 'red',
+          marginBottom:moderateScale(-100,.6)
+        }}
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
         renderItem={({item, index}) => {
+          console.log("🚀 ~ MediaPlayerScreen ~ item:", item)
           return (
             <TouchableOpacity
               onPress={() => {
@@ -79,8 +92,8 @@ const MediaPlayerScreen = props => {
               style={[
                 styles.card,
                 {
-                  height: windowHeight,
-                  justifyContent: 'center',
+                  height : windowHeight ,
+                  justifyContent : 'center',
                 },
               ]}>
               <Video
@@ -90,8 +103,8 @@ const MediaPlayerScreen = props => {
                 paused={index !== currentVisibleIndex}
                 source={{uri: `${imageUrl}${item?.file}`}}
                 style={{
-                  width: '100%',
-                  height: windowHeight * 0.55,
+                  width : '100%' ,
+                  height : windowHeight * 0.55 ,
                 }}
                 onProgress={data => {}}
                 onLoadStart={data => {
@@ -173,7 +186,7 @@ const MediaPlayerScreen = props => {
                   <View style={styles.btnView}>
                     <TouchableOpacity
                       onPress={() => {
-                        // refRBSheet.current.open();
+                        refRBSheet.current.open();
                       }}
                       style={styles.btn2}>
                       <Icon
@@ -216,14 +229,14 @@ const MediaPlayerScreen = props => {
                           ? `${(currentTime / duration) * 100}%`
                           : '0%'
                         : '0%',
-                    }}></View>
+                    }}></View> */}
                   <ComentsSection
                     isBubble={false}
                     refRBSheet={refRBSheet}
-                    data={data}
+                    data={item}
                     setCommentsCount={setCommentsCount}
                     // bubbleInfo={bubbleInfo}
-                  /> */}
+                  />
               </LinearGradient>
             </TouchableOpacity>
           );
@@ -300,6 +313,7 @@ const styles = StyleSheet.create({
     top: 35,
   },
   card: {
+    // marginBottom:moderateScale(50,.3),
     shadowColor: Color.black,
     shadowOffset: {
       width: 0,
@@ -310,7 +324,6 @@ const styles = StyleSheet.create({
     elevation: 2,
     overflow: 'hidden',
     backgroundColor: 'white',
-    // marginVerical :moderateScale(10,.3)
   },
   cT: {
     fontSize: moderateScale(12, 0.6),
@@ -385,7 +398,6 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     fontSize: moderateScale(13, 0.6),
     width: windowWidth * 0.85,
-    // color:'white'
   },
   cmtView: {
     width: 1,
@@ -411,7 +423,6 @@ const styles = StyleSheet.create({
     height: windowHeight * 0.1,
     width: windowWidth * 0.25,
     zIndex: 1,
-    // backgroundColor: 'green',
   },
   arrowLeft: {
     position: 'absolute',

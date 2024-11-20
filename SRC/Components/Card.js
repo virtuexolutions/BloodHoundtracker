@@ -45,6 +45,7 @@ const Card = ({item, fromProfile, setSelected, selected, index, loading}) => {
     const response = await Post(url, {post_id: item?.id}, apiHeader(token));
     setIsLoading(false);
     if (response != undefined) {
+      setLike(!like);
     }
   };
 
@@ -327,7 +328,6 @@ const Card = ({item, fromProfile, setSelected, selected, index, loading}) => {
           <Icon
             onPress={() => {
               post_like();
-              setLike(!like);
             }}
             name={like ? 'heart' : 'heart-outline'}
             as={MaterialCommunityIcons}
