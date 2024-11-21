@@ -7,6 +7,7 @@ import {
   Modal,
   SafeAreaView,
   StyleSheet,
+  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -33,7 +34,6 @@ const ImageViewingModal = ({
   fromCreatePost,
   setMultiImages,
 }) => {
-  console.log("🚀 ~ multiImages: == = = = == ==  = = = = =", multiImages)
   const isFocused = useIsFocused();
   const flatListRef = useRef(null);
   const navigation = useNavigation();
@@ -41,10 +41,13 @@ const ImageViewingModal = ({
 
   const token = useSelector(state => state.authReducer.token);
   const [isloading, setIsLoading] = useState(false);
+  // const [curren]
   const [like, setLike] = useState(false);
+  const [currIndex, setCurrentIndex] = useState(0);
   const [comment, setComments] = useState(
     multiImages?.comment ? multiImages?.comment : [],
   );
+
   const [commentsCount, setCommentsCount] = useState(0);
 
   useEffect(() => {
@@ -58,7 +61,6 @@ const ImageViewingModal = ({
   };
 
   const post_like = async postid => {
-    console.log('🚀 ~ postid ================== >:', postid);
     const url = 'auth/post_like';
     setIsLoading(true);
     const response = await Post(url, {post_id: postid}, apiHeader(token));
@@ -68,12 +70,6 @@ const ImageViewingModal = ({
     }
   };
 
-  // useEffect(() => {
-  //   multiImages?.map((data, index) =>
-  //     // console.log('console from useEffect ==== === = = = = == = ', data?.post?.my_like)
-  //     data?.post?.my_likepost_id == data?.id ? setLike(true) : setLike(false),
-  //   );
-  // }, [isFocused]);
   return (
     <Modal
       visible={visible}
@@ -127,6 +123,12 @@ const ImageViewingModal = ({
               offset: 400 * index,
               index,
             })}
+            onScroll={e => {
+              const contentOffsetX = e.nativeEvent.contentOffset.x;
+              const itemWidth = windowWidth * 0.95;
+              const index = Math.round(contentOffsetX / itemWidth);
+              setCurrentIndex(index);
+            }}
             keyExtractor={(item, index) =>
               item?.id?.toString() || index.toString()
             }
@@ -137,7 +139,7 @@ const ImageViewingModal = ({
                     style={{height: windowHeight, width: windowWidth}}
                     cropWidth={Dimensions.get('screen').width}
                     cropHeight={Dimensions.get('screen').height}
-                    imageWidth={390}
+                    imageWidth={400}
                     pinchToZoom={true}
                     imageHeight={500}>
                     <CustomImage
@@ -192,9 +194,10 @@ const ImageViewingModal = ({
                     fromimage={true}
                     isBubble={false}
                     refRBSheet={refRBSheet}
-                    data={item?.post}
+                    data={multiImages[currIndex]?.post?.comment}
                     setCommentsCount={setCommentsCount}
-                    // bubbleInfo={bubbleInfo}
+                    activeIndex={currIndex}
+                    post_id={multiImages[currIndex]?.post?.id}
                   />
                 </>
               );
@@ -228,6 +231,14 @@ const ImageViewingModal = ({
               />
             </TouchableOpacity>
           )}
+          {/* <ComentsSection
+          fromimage={true}
+          isBubble={false}
+          refRBSheet={refRBSheet}
+          data={multiImages}
+          setCommentsCount={setCommentsCount}
+          // bubbleInfo={bubbleInfo}
+        /> */}
         </View>
       </SafeAreaView>
     </Modal>

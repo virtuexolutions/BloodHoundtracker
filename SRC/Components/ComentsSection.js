@@ -1,6 +1,6 @@
 import moment from 'moment';
-import { Icon } from 'native-base';
-import React, { useState } from 'react';
+import {Icon} from 'native-base';
+import React, {useState} from 'react';
 import {
   Alert,
   FlatList,
@@ -8,37 +8,40 @@ import {
   StyleSheet,
   Text,
   ToastAndroid,
-  View
+  View,
 } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import { moderateScale } from 'react-native-size-matters';
+import {moderateScale} from 'react-native-size-matters';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 import Color from '../Assets/Utilities/Color';
-import { Post } from '../Axios/AxiosInterceptorFunction';
-import { apiHeader, windowHeight, windowWidth } from '../Utillity/utils';
+import {Post} from '../Axios/AxiosInterceptorFunction';
+import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
 import CustomImage from './CustomImage';
 import CustomText from './CustomText';
 import TextInputWithTitle from './TextInputWithTitle';
+import {baseUrl, imageUrl} from '../Config';
 
-const ComentsSection = ({refRBSheet, data, setCommentsCount, fromimage}) => {
-  const [yourComment, setYourComment] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [commentsData, setCommentsData] = useState(data?.comment);
-  console.log('🚀 ~ ComentsSection ~ commentsData:', commentsData);
-  const [loading, setLoading] = useState(false);
-  const [commentsdata, setCommentData] = useState([]);
-
+const ComentsSection = ({
+  refRBSheet,
+  data,
+  setCommentsCount,
+  fromimage,
+  post_id,
+}) => {
   const themeColor = useSelector(state => state.authReducer.ThemeColor);
   const token = useSelector(state => state.authReducer.token);
-  const profileData = useSelector(state => state.commonReducer.selectedProfile);
+  const profileData = useSelector(state => state.commonReducer.userData);
+  const [yourComment, setYourComment] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [commentsData, setCommentsData] = useState(data);
+  const [commentLike, setCommentLike] = useState(false);
 
   const addComment = async () => {
     const url = 'auth/comment';
     const body = {
-      // profile_id: data?.id,
-      post_id: fromimage ? data?.id : data?.post_id,
+      post_id: post_id,
       description: yourComment,
     };
 
@@ -50,20 +53,16 @@ const ComentsSection = ({refRBSheet, data, setCommentsCount, fromimage}) => {
 
     setIsLoading(true);
     const response = await Post(url, body, apiHeader(token));
-    console.log(
-      '🚀 ~ file: ComentsSection.js:54 ~ addComment ~ response:',
-      response,
-    );
     setIsLoading(false);
     if (response != undefined) {
       setCommentsData(prev => [
         ...prev,
         {
-          // id: 12,
-          // user: profileData?.name,
+          id: profileData?.id,
+          user: profileData?.name,
           description: yourComment,
           time: moment(),
-          // image: profileData?.photo,
+          image: profileData?.photo,
         },
       ]);
       setCommentsCount(prev => prev + 1);
@@ -73,12 +72,20 @@ const ComentsSection = ({refRBSheet, data, setCommentsCount, fromimage}) => {
     }
   };
 
+  const commentLikeApi = async id => {
+    const url = `auth/comment_like`;
+    setIsLoading(true);
+    const response = await Post(url, {comment_id: id}, apiHeader(token));
+    if (response != undefined) {
+      return console.log('🚀 ~ commentLikeApi ~ response:', response?.data);
+      setCommentLike(!commentLike);
+    }
+  };
   return (
     <KeyboardAwareScrollView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <RBSheet
-        // closeOnPressBack={false}
         keyboardAvoidingViewEnabled={true}
         ref={refRBSheet}
         closeOnDragDown={false}
@@ -97,34 +104,26 @@ const ComentsSection = ({refRBSheet, data, setCommentsCount, fromimage}) => {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{
               paddingBottom: moderateScale(60, 0.6),
+              paddingTop: moderateScale(10, 0.6),
             }}
+            keyExtractor={(item, index) =>
+              item?.id?.toString() || index.toString()
+            }
+            // data={data}
             data={commentsData}
-            // data={data?.comment}
-            // data={commentsData}
             renderItem={({item, index}) => {
-              console.log(
-                '🚀 ~ ComentsSection ~ item = = = = mg hereeeeeeee :',
-                item?.description,
-              );
+              // console.log('🚀 ~ item:', item);
               return (
                 <View style={styles.mainView}>
                   <View style={styles.View2}>
                     <View style={styles.profileView3}>
                       <View style={styles.profileSection2}>
                         <CustomImage
-                          source={require('../Assets/Images/dummyman5.png')}
-                          // source={
-                          //   item?.profile_info?.photo
-                          //     ? { uri: `${baseUrl}/${item?.profile_info?.photo}` }
-                          //     : item?.image
-                          //       ? { uri: `${baseUrl}/${item?.image}` }
-                          //       : require('../Assets/Images/permissions.png')
-                          // }
+                          source={{uri: `${baseUrl}${item?.user?.photo}`}}
                           style={{
                             height: '100%',
                             width: '100%',
                           }}
-                          // resizeMode="contain"
                         />
                       </View>
 
@@ -144,8 +143,13 @@ const ComentsSection = ({refRBSheet, data, setCommentsCount, fromimage}) => {
                     </View>
 
                     <View style={styles.textView}>
-                      <CustomText style={styles.text} isBold>
-                        Like
+                      <CustomText
+                        onPress={() => {
+                          commentLikeApi(item?.id);
+                        }}
+                        style={styles.text}
+                        isBold>
+                        {item?.total_comment_likes} Like
                       </CustomText>
                       <CustomText style={[styles.text, {fontSize: 11}]} isBold>
                         {moment(item?.created_at).startOf('hour').fromNow()}
@@ -191,14 +195,14 @@ const ComentsSection = ({refRBSheet, data, setCommentsCount, fromimage}) => {
             inputWidth={0.8}
             backgroundColor={'#F5F5F5'}
             marginRight={moderateScale(10, 0.3)}
-            placeholderColor={Color.veryLightGray}
+            placeholderColor={Color.lightGrey}
             borderRadius={moderateScale(10, 0.3)}
           />
           <Icon
-          style={styles.send_icon}
+            style={styles.send_icon}
             name={'send-outline'}
             size={6}
-            color={Color.themeDarkGray}
+            color={Color.white}
             as={Ionicons}
             onPress={() => {
               addComment();
@@ -270,14 +274,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     overflow: 'hidden',
   },
-  send_icon:{
-    backgroundColor :Color.blue,
-    width : windowWidth*0.12,
-    alignItems : 'center',
+  send_icon: {
+    backgroundColor: Color.blue,
+    width: windowWidth * 0.12,
+    alignItems: 'center',
     textAlign: 'center',
-    paddingVertical : moderateScale(12,.6) ,
-    marginHorizontal : moderateScale(6,.3) ,
-    height : windowHeight*0.06,
-    borderRadius : moderateScale(10,.6)
-  }
+    paddingVertical: moderateScale(12, 0.6),
+    marginHorizontal: moderateScale(6, 0.3),
+    height: windowHeight * 0.06,
+    borderRadius: moderateScale(10, 0.6),
+  },
 });

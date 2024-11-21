@@ -21,12 +21,11 @@ import ShowMoreAndShowLessText from '../Components/ShowMoreAndShowLessText';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import CustomHeader from '../Components/CustomHeader';
 import {imageUrl} from '../Config';
-import { mode } from 'native-base/lib/typescript/theme/tools';
+import {mode} from 'native-base/lib/typescript/theme/tools';
 import ComentsSection from '../Components/ComentsSection';
-import { comentlist } from '../Config/dummyData';
+import {comentlist} from '../Config/dummyData';
 
 const MediaPlayerScreen = props => {
-  console.log('🚀 ~heeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
   const video = props?.route?.params?.item;
   const selectedIndex = props?.route?.params?.index;
 
@@ -36,8 +35,11 @@ const MediaPlayerScreen = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [paused, setPaused] = useState(false);
   const [currentVisibleIndex, setCurrentVisibleIndex] = useState(0);
+  console.log("🚀 ~ MediaPlayerScreen ~ currentVisibleIndex:", currentVisibleIndex)
+  const [currIndex, setCurrentIndex] = useState(0);
+  console.log("🚀 ~ MediaPlayerScreen ~  ==================   = = = = = =:", currIndex)
   const [clicked, setClicked] = useState(false);
-  const [ commentsCount ,setCommentsCount] =useState(0)
+  const [commentsCount, setCommentsCount] = useState(0);
 
   const viewabilityConfig = useRef({
     viewAreaCoveragePercentThreshold: 50,
@@ -74,13 +76,17 @@ const MediaPlayerScreen = props => {
         numColumns={1}
         pagingEnabled
         style={{
-          backgroundColor: 'red',
-          marginBottom:moderateScale(-100,.6)
+          marginBottom: moderateScale(-100, 0.6),
+        }}
+        onScroll={e => {
+          const contentOffsetX = e.nativeEvent.contentOffset.x;
+          const itemWidth = windowWidth * 0.95;
+          const index = Math.round(contentOffsetX / itemWidth);
+          setCurrentIndex(index);
         }}
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
         renderItem={({item, index}) => {
-          console.log("🚀 ~ MediaPlayerScreen ~ item:", item)
           return (
             <TouchableOpacity
               onPress={() => {
@@ -92,8 +98,8 @@ const MediaPlayerScreen = props => {
               style={[
                 styles.card,
                 {
-                  height : windowHeight ,
-                  justifyContent : 'center',
+                  height: windowHeight,
+                  justifyContent: 'center',
                 },
               ]}>
               <Video
@@ -103,8 +109,8 @@ const MediaPlayerScreen = props => {
                 paused={index !== currentVisibleIndex}
                 source={{uri: `${imageUrl}${item?.file}`}}
                 style={{
-                  width : '100%' ,
-                  height : windowHeight * 0.55 ,
+                  width: '100%',
+                  height: windowHeight * 0.55,
                 }}
                 onProgress={data => {}}
                 onLoadStart={data => {
@@ -197,8 +203,8 @@ const MediaPlayerScreen = props => {
                       />
                     </TouchableOpacity>
                     <CustomText numberOfLines={1} style={styles.customT}>
-                      gmgj
-                      {/* {commentsCount} */}
+                      
+                      {item?.post?.total_comment}
                     </CustomText>
                     <TouchableOpacity
                       onPress={() => {
@@ -214,8 +220,8 @@ const MediaPlayerScreen = props => {
                       />
                     </TouchableOpacity>
                     <CustomText numberOfLines={1} style={styles.customT}>
-                      55
-                      {/* {data?.comments?.length} */}
+                      
+                      {item?.post?.total_post_like}
                     </CustomText>
                   </View>
                 </View>
@@ -230,13 +236,14 @@ const MediaPlayerScreen = props => {
                           : '0%'
                         : '0%',
                     }}></View> */}
-                  <ComentsSection
-                    isBubble={false}
-                    refRBSheet={refRBSheet}
-                    data={item}
-                    setCommentsCount={setCommentsCount}
-                    // bubbleInfo={bubbleInfo}
-                  />
+                <ComentsSection
+                  isBubble={false}
+                  refRBSheet={refRBSheet}
+                  data={video[currIndex]?.post?.comment}
+                  setCommentsCount={setCommentsCount}
+                  post_id={item?.post?.id}
+                  // bubbleInfo={bubbleInfo}
+                />
               </LinearGradient>
             </TouchableOpacity>
           );
