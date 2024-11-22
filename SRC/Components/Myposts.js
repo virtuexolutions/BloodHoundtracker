@@ -21,7 +21,9 @@ import {useSelector} from 'react-redux';
 import CustomText from './CustomText';
 import Color from '../Assets/Utilities/Color';
 import {imageUrl} from '../Config';
-import {Modal} from 'native-base';
+// import {Modal} from 'native-base';
+import {Modal} from 'react-native-modal';
+import SaveDataModal from './SaveDataModal';
 
 const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
   console.log('🚀 ~ Myposts ~ selected:', selected);
@@ -32,6 +34,7 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
   const [imageView, setImageView] = useState(false);
   const [myPostData, setMyPostdata] = useState([]);
   const [imageModal, setImageModal] = useState(false);
+  console.log('🚀 ~ Myposts ~ imageModal:', imageModal);
   const [galleryData, setGalleryData] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
   const [isloading, setIsLoading] = useState(false);
@@ -115,11 +118,6 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
       usergalleryApi();
     }
   }, [selected, isFocused]);
-  const saveddata = galleryData?.data?.saved_post?.map((item, index) => {
-    return item?.images;
-  });
-
-  console.log('🚀 ~ saveddata ~ s==================== aveddata:', saveddata);
 
   const flattenedData =
     galleryData?.data?.saved_post?.flatMap(post =>
@@ -129,6 +127,7 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
         fileUrl: image.file,
       })),
     ) || [];
+
   return (
     <View>
       {selected == 'photo' ? (
@@ -307,48 +306,62 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
             ListEmptyComponent={<CustomText>no post yet</CustomText>}
             renderItem={({item, index}) => {
               return item.fileType === 'image' ? (
-                <TouchableOpacity
-                  onPress={() => {
-                    console.log('hello im image ');
-                  }}
-                  style={styles.activityImage}>
-                  <CustomImage
+                <>
+                  <TouchableOpacity
                     onPress={() => {
                       console.log('hello im image ');
-                      setImageModal(true);
                     }}
-                    style={styles.save_image}
-                    source={{uri: `${imageUrl}${item?.file}`}}
+                    style={styles.activityImage}>
+                    <CustomImage
+                      onPress={() => {
+                        console.log('hello im image ');
+                        setImageModal(true);
+                      }}
+                      style={styles.save_image}
+                      source={{uri: `${imageUrl}${item?.file}`}}
+                    />
+                  </TouchableOpacity>
+                  <SaveDataModal
+                    setImageModal={setImageModal}
+                    imageModal={imageModal}
+                    data={item}
                   />
-                </TouchableOpacity>
+                </>
               ) : (
-                <TouchableOpacity
-                  style={styles.activityImage}
-                  onPress={() => {
-                    setImageModal(true);
-                    console.log('hello this console  from video component ');
-                    // navigation.navigate('MediaPlayerScreen', {
-                    //   item:
-                    //     selected == 'videos'
-                    //       ? galleryData?.data?.video
-                    //       : galleryData?.data?.saved_post,
-                    //   index: index,
-                    // });
-                  }}>
-                  <Video
-                    repeat={true}
-                    resizeMode={'stretch'}
-                    mute={true}
-                    source={{uri: `${imageUrl}${item?.file}`}}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                    }}
-                    onBuffer={e => {
-                      console.log('=---------------> ', e);
-                    }}
+                <>
+                  <TouchableOpacity
+                    style={styles.activityImage}
+                    onPress={() => {
+                      setImageModal(true);
+                      console.log('hello this console  from video component ');
+                      // navigation.navigate('MediaPlayerScreen', {
+                      //   item:
+                      //     selected == 'videos'
+                      //       ? galleryData?.data?.video
+                      //       : galleryData?.data?.saved_post,
+                      //   index: index,
+                      // });
+                    }}>
+                    <Video
+                      repeat={true}
+                      resizeMode={'stretch'}
+                      mute={true}
+                      source={{uri: `${imageUrl}${item?.file}`}}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                      }}
+                      onBuffer={e => {
+                        console.log('=---------------> ', e);
+                      }}
+                    />
+                  </TouchableOpacity>
+                  <SaveDataModal
+                    setImageModal={setImageModal}
+                    imageModal={imageModal}
+                    data={item}
                   />
-                </TouchableOpacity>
+                </>
               );
             }}
           />
@@ -400,13 +413,7 @@ const styles = StyleSheet.create({
     marginVertical: moderateScale(2, 0.3),
     marginHorizontal: moderateScale(2, 0.3),
   },
-  imageView: {
-    widtth: windowWidth,
-    height: windowHeight,
-    justifyContent: 'center',
-    // backgroundColor: 'rgba(0,0,0,0.16)',
-    backgroundColor: 'red',
-  },
+
   save_image: {
     height: '100%',
     width: '100%',

@@ -180,6 +180,7 @@ const ProfileComponent = ({
         </View>
       </TouchableOpacity>
       <FlatList
+        scrollEnabled={false}
         showsVerticalScrollIndicator={false}
         style={{
           marginVertical: moderateScale(20, 0.6),
