@@ -41,7 +41,6 @@ const ImageViewingModal = ({
 
   const token = useSelector(state => state.authReducer.token);
   const [isloading, setIsLoading] = useState(false);
-  // const [curren]
   const [like, setLike] = useState(false);
   const [currIndex, setCurrentIndex] = useState(0);
   const [comment, setComments] = useState(

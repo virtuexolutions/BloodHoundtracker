@@ -30,6 +30,7 @@ const ComentsSection = ({
   fromimage,
   post_id,
 }) => {
+  console.log('🚀 ~ data:', data);
   const themeColor = useSelector(state => state.authReducer.ThemeColor);
   const token = useSelector(state => state.authReducer.token);
   const profileData = useSelector(state => state.commonReducer.userData);
@@ -112,7 +113,7 @@ const ComentsSection = ({
             // data={data}
             data={commentsData}
             renderItem={({item, index}) => {
-              // console.log('🚀 ~ item:', item);
+              console.log('🚀 ~ item:', item);
               return (
                 <View style={styles.mainView}>
                   <View style={styles.View2}>
@@ -149,7 +150,9 @@ const ComentsSection = ({
                         }}
                         style={styles.text}
                         isBold>
-                        {item?.total_comment_likes} Like
+                        {item?.total_comment_likes > 0
+                          ? item?.total_comment_likes
+                          : 'Like'}
                       </CustomText>
                       <CustomText style={[styles.text, {fontSize: 11}]} isBold>
                         {moment(item?.created_at).startOf('hour').fromNow()}

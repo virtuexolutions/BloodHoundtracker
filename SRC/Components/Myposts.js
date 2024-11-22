@@ -21,16 +21,18 @@ import {useSelector} from 'react-redux';
 import CustomText from './CustomText';
 import Color from '../Assets/Utilities/Color';
 import {imageUrl} from '../Config';
+import {Modal} from 'native-base';
 
 const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
+  console.log('🚀 ~ Myposts ~ selected:', selected);
   const token = useSelector(state => state.authReducer.token);
   const isFocused = useIsFocused();
   const navigation = useNavigation();
   const [imageIndex, setimageIndex] = useState(0);
   const [imageView, setImageView] = useState(false);
   const [myPostData, setMyPostdata] = useState([]);
+  const [imageModal, setImageModal] = useState(false);
   const [galleryData, setGalleryData] = useState([]);
-  console.log("🚀 ~ Myposts ~ galleryData:", galleryData?.data?.image)
   const [isVisible, setIsVisible] = useState(false);
   const [isloading, setIsLoading] = useState(false);
   const imageArray = [
@@ -113,7 +115,20 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
       usergalleryApi();
     }
   }, [selected, isFocused]);
+  const saveddata = galleryData?.data?.saved_post?.map((item, index) => {
+    return item?.images;
+  });
 
+  console.log('🚀 ~ saveddata ~ s==================== aveddata:', saveddata);
+
+  const flattenedData =
+    galleryData?.data?.saved_post?.flatMap(post =>
+      post?.images?.map(image => ({
+        ...image,
+        fileType: image.type,
+        fileUrl: image.file,
+      })),
+    ) || [];
   return (
     <View>
       {selected == 'photo' ? (
@@ -127,6 +142,7 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
           />
         ) : (
           <FlatList
+            scrollEnabled={false}
             key={'photo'}
             showsVerticalScrollIndicator={true}
             nestedScrollEnabled={true}
@@ -170,7 +186,7 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
             }}
           />
         )
-      ) : selected == 'videos' || selected == 'saved' ? (
+      ) : selected == 'videos' ? (
         isloading ? (
           <ActivityIndicator
             style={{
@@ -181,6 +197,7 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
           />
         ) : (
           <FlatList
+            scrollEnabled={false}
             key={'videos'}
             numColumns={3}
             data={
@@ -221,9 +238,6 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
                     repeat={true}
                     resizeMode={'stretch'}
                     mute={true}
-                    // poster={"cover"}
-                    // controls={true}
-                    // source={require('../Assets/Images/video2.mp4')}
                     source={{uri: `${imageUrl}${item?.file}`}}
                     style={{
                       width: '100%',
@@ -249,6 +263,7 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
           />
         ) : (
           <FlatList
+            scrollEnabled={false}
             key={'posts'}
             showsVerticalScrollIndicator={false}
             numColumns={1}
@@ -266,6 +281,74 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
                   fromProfile={true}
                   item={item}
                 />
+              );
+            }}
+          />
+        )
+      ) : selected == 'saved' ? (
+        isloading ? (
+          <ActivityIndicator
+            style={{
+              paddingTop: windowHeight * 0.2,
+            }}
+            size={'small'}
+            color={Color.blue}
+          />
+        ) : (
+          <FlatList
+            scrollEnabled={false}
+            key={'saved_post'}
+            numColumns={3}
+            style={{
+              marginVertical: moderateScale(20, 0.6),
+              marginBottom: moderateScale(10, 0.6),
+            }}
+            data={flattenedData}
+            ListEmptyComponent={<CustomText>no post yet</CustomText>}
+            renderItem={({item, index}) => {
+              return item.fileType === 'image' ? (
+                <TouchableOpacity
+                  onPress={() => {
+                    console.log('hello im image ');
+                  }}
+                  style={styles.activityImage}>
+                  <CustomImage
+                    onPress={() => {
+                      console.log('hello im image ');
+                      setImageModal(true);
+                    }}
+                    style={styles.save_image}
+                    source={{uri: `${imageUrl}${item?.file}`}}
+                  />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  style={styles.activityImage}
+                  onPress={() => {
+                    setImageModal(true);
+                    console.log('hello this console  from video component ');
+                    // navigation.navigate('MediaPlayerScreen', {
+                    //   item:
+                    //     selected == 'videos'
+                    //       ? galleryData?.data?.video
+                    //       : galleryData?.data?.saved_post,
+                    //   index: index,
+                    // });
+                  }}>
+                  <Video
+                    repeat={true}
+                    resizeMode={'stretch'}
+                    mute={true}
+                    source={{uri: `${imageUrl}${item?.file}`}}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                    }}
+                    onBuffer={e => {
+                      console.log('=---------------> ', e);
+                    }}
+                  />
+                </TouchableOpacity>
               );
             }}
           />
@@ -316,5 +399,16 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     marginVertical: moderateScale(2, 0.3),
     marginHorizontal: moderateScale(2, 0.3),
+  },
+  imageView: {
+    widtth: windowWidth,
+    height: windowHeight,
+    justifyContent: 'center',
+    // backgroundColor: 'rgba(0,0,0,0.16)',
+    backgroundColor: 'red',
+  },
+  save_image: {
+    height: '100%',
+    width: '100%',
   },
 });

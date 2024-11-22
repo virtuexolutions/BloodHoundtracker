@@ -70,11 +70,11 @@ const Profile = () => {
   const [isloading, setIsLoading] = useState(false);
   const [myPostData, setMyPostdata] = useState([]);
   const tabs = ['profile', 'posts', 'photo', 'videos', 'saved'];
-  useEffect(() => {
-    if (selectedTab != isFocused) {
-      setSelectedTab('ProfileComponent');
-    }
-  }, [isFocused]);
+  // useEffect(() => {
+  //   if (selectedTab != isFocused) {
+  //     setSelectedTab('profile');
+  //   }
+  // }, [isFocused]);
 
   useEffect(() => {
     setNumColumns(
@@ -149,6 +149,7 @@ const Profile = () => {
       <View style={styles.sec_row}>
         <FlatList
           horizontal
+          scrollEnabled={false}
           showsHorizontalScrollIndicator={false}
           style={{
             paddingHorizontal: moderateScale(3, 0.6),

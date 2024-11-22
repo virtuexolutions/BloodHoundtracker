@@ -27,6 +27,7 @@ import {comentlist} from '../Config/dummyData';
 
 const MediaPlayerScreen = props => {
   const video = props?.route?.params?.item;
+  console.log("🚀 ~ MediaPlayerScreen ~ video:", video)
   const selectedIndex = props?.route?.params?.index;
 
   const videoRef = useRef(null);
@@ -35,9 +36,7 @@ const MediaPlayerScreen = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [paused, setPaused] = useState(false);
   const [currentVisibleIndex, setCurrentVisibleIndex] = useState(0);
-  console.log("🚀 ~ MediaPlayerScreen ~ currentVisibleIndex:", currentVisibleIndex)
   const [currIndex, setCurrentIndex] = useState(0);
-  console.log("🚀 ~ MediaPlayerScreen ~  ==================   = = = = = =:", currIndex)
   const [clicked, setClicked] = useState(false);
   const [commentsCount, setCommentsCount] = useState(0);
 
@@ -50,6 +49,8 @@ const MediaPlayerScreen = props => {
       setCurrentVisibleIndex(viewableItems[0].index);
     }
   }).current;
+  // const typecheck = video?.image.map((item,i) => {console.log( 'dsfasdfasdfasdfdfdfadfadsf' ,item?.type)})
+  // console.log("🚀 ~ MediaPlayerScreen ~ typecheck:", typecheck)
   return (
     <View
       style={{
@@ -75,14 +76,15 @@ const MediaPlayerScreen = props => {
         })}
         numColumns={1}
         pagingEnabled
-        style={{
-          marginBottom: moderateScale(-100, 0.6),
-        }}
         onScroll={e => {
-          const contentOffsetX = e.nativeEvent.contentOffset.x;
-          const itemWidth = windowWidth * 0.95;
-          const index = Math.round(contentOffsetX / itemWidth);
+          const contentOffsetY = e.nativeEvent.contentOffset.y;
+          const itemHeight = windowHeight * 0.95;
+          const index = Math.round(contentOffsetY / itemHeight);
+          console.log('🚀 ~ MediaPlayerScreen ~ index:', index);
           setCurrentIndex(index);
+        }}
+        style={{
+          height: windowHeight,
         }}
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
@@ -99,7 +101,8 @@ const MediaPlayerScreen = props => {
                 styles.card,
                 {
                   height: windowHeight,
-                  justifyContent: 'center',
+                  paddingTop: windowHeight * 0.12,
+                  // justifyContent: 'center',
                 },
               ]}>
               <Video
@@ -203,7 +206,6 @@ const MediaPlayerScreen = props => {
                       />
                     </TouchableOpacity>
                     <CustomText numberOfLines={1} style={styles.customT}>
-                      
                       {item?.post?.total_comment}
                     </CustomText>
                     <TouchableOpacity
@@ -220,7 +222,6 @@ const MediaPlayerScreen = props => {
                       />
                     </TouchableOpacity>
                     <CustomText numberOfLines={1} style={styles.customT}>
-                      
                       {item?.post?.total_post_like}
                     </CustomText>
                   </View>
@@ -258,7 +259,7 @@ export default MediaPlayerScreen;
 const styles = StyleSheet.create({
   linearstyle: {
     position: 'absolute',
-    bottom: 0,
+    bottom: 55,
     justifyContent: 'flex-end',
     shadowOffset: {height: 1, width: 0},
     shadowOpacity: 1,
@@ -330,7 +331,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     elevation: 2,
     overflow: 'hidden',
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
   },
   cT: {
     fontSize: moderateScale(12, 0.6),
