@@ -20,16 +20,18 @@ import LinearGradient from 'react-native-linear-gradient';
 import ShowMoreAndShowLessText from '../Components/ShowMoreAndShowLessText';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import CustomHeader from '../Components/CustomHeader';
-import {imageUrl} from '../Config';
+import {baseUrl, imageUrl} from '../Config';
 import {mode} from 'native-base/lib/typescript/theme/tools';
 import ComentsSection from '../Components/ComentsSection';
 import {comentlist} from '../Config/dummyData';
+import { useSelector } from 'react-redux';
 
 const MediaPlayerScreen = props => {
   const video = props?.route?.params?.item;
-  console.log("🚀 ~ MediaPlayerScreen ~ video:", video)
+  console.log('🚀 ~ MediaPlayerScreen ~ video:', video);
   const selectedIndex = props?.route?.params?.index;
-
+  const userData = useSelector(state => state.commonReducer.userData)
+  console.log("🚀 ~ MediaPlayerScreen ~ userData>>>>>>>>>>>>>>>>>>>>>:", userData)
   const videoRef = useRef(null);
   const navigation = useNavigation();
   const refRBSheet = useRef();
@@ -89,6 +91,10 @@ const MediaPlayerScreen = props => {
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
         renderItem={({item, index}) => {
+          console.log(
+            '🚀 ~ MediaPlayerScreen ~ item ========================:',
+            item?.post?.description,
+          );
           return (
             <TouchableOpacity
               onPress={() => {
@@ -142,7 +148,7 @@ const MediaPlayerScreen = props => {
                   <View style={styles.contView}>
                     <View style={styles.photoView}>
                       <CustomImage
-                        source={require('../Assets/Images/dummyman5.png')}
+                        source={{uri: `${baseUrl}${userData?.photo}`}}
                         style={{
                           height: '100%',
                           width: '100%',
@@ -155,8 +161,8 @@ const MediaPlayerScreen = props => {
                         justifyContent: 'space-between',
                       }}>
                       <CustomText numberOfLines={1} style={styles.cT} isBold>
-                        user name
-                        {/* {item?.profile_info?.name} */}
+                        
+                        {userData?.name}
                       </CustomText>
 
                       <CustomText numberOfLines={1} style={styles.customT2}>
@@ -167,26 +173,25 @@ const MediaPlayerScreen = props => {
                   <View style={styles.Views}>
                     <CustomText style={styles.text3}>
                       {/* {likeCount}  */}
-                      likes
+                      {`${item?.post?.total_post_like} likes`}
                     </CustomText>
                     <View style={styles.cmtView}></View>
                     <CustomText style={styles.text3}>
                       {/* {commentsCount} */}
-                      comments
+                      {`${item?.post?.total_comment} comments`}
                     </CustomText>
                   </View>
                   <View style={styles.caption}>
                     <ScrollView
                       showsVerticalScrollIndicator={false}
                       contentContainerStyle={{
-                        //   backgroundColor: 'green',
                         paddingBottom: moderateScale(20, 0.3),
                       }}>
                       <ShowMoreAndShowLessText
                         minTextLength={10}
                         style={styles.moreLess}>
-                        caption here
-                        {/* {item?.caption} */}
+                        {/* caption here */}
+                        {item?.post?.description}
                       </ShowMoreAndShowLessText>
                     </ScrollView>
                   </View>

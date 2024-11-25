@@ -271,7 +271,7 @@ const styles = StyleSheet.create({
   like_row: {
     flexDirection: 'row',
     position: 'absolute',
-    bottom: 15,
+    bottom: 20,
     borderColor: Color.lightGrey,
     borderBottomWidth: 0.7,
     paddingVertical: moderateScale(8, 0.6),

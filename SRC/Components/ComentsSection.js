@@ -1,6 +1,6 @@
 import moment from 'moment';
 import {Icon} from 'native-base';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Alert,
   FlatList,
@@ -30,14 +30,16 @@ const ComentsSection = ({
   fromimage,
   post_id,
 }) => {
-  console.log('🚀 ~ data:', data);
   const themeColor = useSelector(state => state.authReducer.ThemeColor);
   const token = useSelector(state => state.authReducer.token);
   const profileData = useSelector(state => state.commonReducer.userData);
   const [yourComment, setYourComment] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [commentsData, setCommentsData] = useState(data);
+  const [commentsData, setCommentsData] = useState([]);
   const [commentLike, setCommentLike] = useState(false);
+
+
+
 
   const addComment = async () => {
     const url = 'auth/comment';
@@ -82,6 +84,11 @@ const ComentsSection = ({
       setCommentLike(!commentLike);
     }
   };
+
+
+  useEffect(() =>{
+    setCommentsData(data)
+  },[data])
   return (
     <KeyboardAwareScrollView
       style={styles.container}

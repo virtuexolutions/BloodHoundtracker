@@ -26,7 +26,6 @@ import {Modal} from 'react-native-modal';
 import SaveDataModal from './SaveDataModal';
 
 const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
-  console.log('🚀 ~ Myposts ~ selected:', selected);
   const token = useSelector(state => state.authReducer.token);
   const isFocused = useIsFocused();
   const navigation = useNavigation();
@@ -34,7 +33,13 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
   const [imageView, setImageView] = useState(false);
   const [myPostData, setMyPostdata] = useState([]);
   const [imageModal, setImageModal] = useState(false);
-  console.log('🚀 ~ Myposts ~ imageModal:', imageModal);
+  const [data, setdata] = useState({});
+  const [selectedimage, setSelectedImage] = useState('');
+  console.log(
+    '🚀 ~ Myposts ~ selectedimage ==========================:',
+    selectedimage,
+  );
+  const [selectedItem, setSelectedItem] = useState({});
   const [galleryData, setGalleryData] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
   const [isloading, setIsLoading] = useState(false);
@@ -305,17 +310,23 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
             data={flattenedData}
             ListEmptyComponent={<CustomText>no post yet</CustomText>}
             renderItem={({item, index}) => {
+              const postData = galleryData?.data?.saved_post.find(post =>
+                post?.images?.some(image => image?.file === item?.file),
+              );
               return item.fileType === 'image' ? (
                 <>
                   <TouchableOpacity
                     onPress={() => {
-                      console.log('hello im image ');
+                      setImageModal(true);
+                      setSelectedImage(item);
+                      setSelectedItem(postData);
                     }}
                     style={styles.activityImage}>
                     <CustomImage
                       onPress={() => {
-                        console.log('hello im image ');
                         setImageModal(true);
+                        setSelectedImage(item);
+                        setSelectedItem(postData);
                       }}
                       style={styles.save_image}
                       source={{uri: `${imageUrl}${item?.file}`}}
@@ -324,7 +335,8 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
                   <SaveDataModal
                     setImageModal={setImageModal}
                     imageModal={imageModal}
-                    data={item}
+                    data={selectedItem}
+                    image={selectedimage}
                   />
                 </>
               ) : (
@@ -333,14 +345,9 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
                     style={styles.activityImage}
                     onPress={() => {
                       setImageModal(true);
-                      console.log('hello this console  from video component ');
-                      // navigation.navigate('MediaPlayerScreen', {
-                      //   item:
-                      //     selected == 'videos'
-                      //       ? galleryData?.data?.video
-                      //       : galleryData?.data?.saved_post,
-                      //   index: index,
-                      // });
+                      setImageModal(true);
+                      setSelectedImage(item);
+                      setSelectedItem(postData);
                     }}>
                     <Video
                       repeat={true}
@@ -359,7 +366,8 @@ const Myposts = ({setSelected, selected, seSelectedAssets, selectedAssets}) => {
                   <SaveDataModal
                     setImageModal={setImageModal}
                     imageModal={imageModal}
-                    data={item}
+                    data={selectedItem}
+                    image={selectedimage}
                   />
                 </>
               );
