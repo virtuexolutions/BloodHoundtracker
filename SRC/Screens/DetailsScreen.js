@@ -1,32 +1,30 @@
+import { Icon } from 'native-base';
+import React, { useRef, useState } from 'react';
 import {
-  FlatList,
-  StyleSheet,
-  ScrollView,
-  View,
-  TouchableOpacity,
-  ToastAndroid,
   Alert,
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  ToastAndroid,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
-import CustomStatusBar from '../Components/CustomStatusBar';
+import { moderateScale } from 'react-native-size-matters';
+import SwiperFlatList from 'react-native-swiper-flatlist';
+import Feather from 'react-native-vector-icons/Feather';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Video from 'react-native-video';
+import { useSelector } from 'react-redux';
 import Color from '../Assets/Utilities/Color';
-import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
-import {moderateScale} from 'react-native-size-matters';
+import { Post } from '../Axios/AxiosInterceptorFunction';
 import CustomHeader from '../Components/CustomHeader';
 import CustomImage from '../Components/CustomImage';
+import CustomStatusBar from '../Components/CustomStatusBar';
 import CustomText from '../Components/CustomText';
-import {FONTS, SIZES} from '../Config/theme';
-import {Icon} from 'native-base';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {comentlist} from '../Config/dummyData';
-import ImageSlider from 'react-native-image-slider';
-import Video from 'react-native-video';
-import Feather from 'react-native-vector-icons/Feather';
 import TextInputWithTitle from '../Components/TextInputWithTitle';
-import {baseUrl, imageUrl} from '../Config';
-import SwiperFlatList from 'react-native-swiper-flatlist';
-import {Post} from '../Axios/AxiosInterceptorFunction';
-import {useSelector} from 'react-redux';
+import { baseUrl, imageUrl } from '../Config';
+import { FONTS, SIZES } from '../Config/theme';
+import { apiHeader, windowHeight, windowWidth } from '../Utillity/utils';
 
 const DetailScreen = props => {
   const item = props?.route?.params?.item;

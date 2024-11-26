@@ -101,7 +101,6 @@ const Signup = () => {
     }
 
     const url = 'register';
-    // return console.log("🚀 ~ SignUp ~ body:", JSON.stringify(formData, null, 2))
 
     setIsLoading(true);
     const response = await Post(url, formData, apiHeader());

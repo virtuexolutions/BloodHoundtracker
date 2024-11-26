@@ -40,11 +40,9 @@ const GroupCard = ({ item }) => {
           textColor={Color.white}
           width={windowWidth * 0.16}
           height={windowHeight * 0.035}
-          //   marginTop={moderateScale(20, 0.3)}
           onPress={() => { }}
           bgColor={Color.themeColor}
           borderRadius={moderateScale(5, 0.3)}
-          elevation
         />
       </View>
     </TouchableOpacity>

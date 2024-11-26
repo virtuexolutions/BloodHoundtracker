@@ -10,7 +10,7 @@ import {
 import React from 'react';
 import CustomHeader from '../Components/CustomHeader';
 import {windowHeight, windowWidth} from '../Utillity/utils';
-import NotificationCard from '../Components/NotificationCard';
+
 import {moderateScale} from 'react-native-size-matters';
 import Color from '../Assets/Utilities/Color';
 import {notificationArray} from '../Config/dummyData';

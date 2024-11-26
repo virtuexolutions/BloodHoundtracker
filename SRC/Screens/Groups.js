@@ -1,17 +1,24 @@
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
-import { windowHeight, windowWidth } from '../Utillity/utils';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {windowHeight, windowWidth} from '../Utillity/utils';
 import Header from '../Components/Header';
 import CustomText from '../Components/CustomText';
-import { moderateScale } from 'react-native-size-matters';
+import {moderateScale} from 'react-native-size-matters';
 import Color from '../Assets/Utilities/Color';
 import GroupCard from '../Components/GroupCard';
 import CustomImage from '../Components/CustomImage';
-import { FONTS } from '../Config/theme';
+import {FONTS} from '../Config/theme';
 import CustomHeader from '../Components/CustomHeader';
 import navigationService from '../navigationService';
+import {useSelector} from 'react-redux';
+import {Get} from '../Axios/AxiosInterceptorFunction';
+import {useIsFocused} from '@react-navigation/native';
 
 const Groups = () => {
+  const isFocused = useIsFocused();
+  const token = useSelector(state => state.authReducer.token);
+  const [isLoading, setIsLoading] = useState(false);
+  const [groupData, setGroupData] = useState([]);
   const dummyGroupArray = [
     {
       id: 1,
@@ -129,6 +136,18 @@ const Groups = () => {
     require('../Assets/Images/car.png'),
   ];
 
+  const groupsList = async () => {
+    const url = 'communities';
+    setIsLoading(true);
+    const response = await Get(url, token);
+    if (response != undefined) {
+    }
+  };
+
+  // useEffect(() => {
+  //   groupsList();
+  // }, [isFocused]);
+
   return (
     <View style={styles.mainContainer}>
       <CustomHeader leftIcon={true} text={'Groups'} />
@@ -157,7 +176,8 @@ const Groups = () => {
         <CustomText isBold style={styles.headingtxt}>
           Suggested Groups
         </CustomText>
-        <TouchableOpacity onPress={() => navigationService.navigate('CreateGroup')}>
+        <TouchableOpacity
+          onPress={() => navigationService.navigate('CreateGroup')}>
           <CustomText isBold style={styles.subtxt}>
             Create Group
           </CustomText>

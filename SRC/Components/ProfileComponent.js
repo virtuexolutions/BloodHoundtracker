@@ -122,6 +122,7 @@ const ProfileComponent = ({
         stolen assets list
       </CustomText>
       <FlatList
+      scrollEnabled={false}
         showsVerticalScrollIndicator={false}
         numColumns={1}
         data={stolenAssetsArray}

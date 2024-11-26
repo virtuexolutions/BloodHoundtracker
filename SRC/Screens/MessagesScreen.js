@@ -112,7 +112,6 @@ const MessagesScreen = (props) => {
             wrapperStyle={{
               right: {
                 backgroundColor: '#E6E6FA',
-       
                 borderRadius: moderateScale(8, 0.6),
                 marginBottom: moderateScale(10, 0.3),
                 shadowColor: '#000000',

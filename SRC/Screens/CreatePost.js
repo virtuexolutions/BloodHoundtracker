@@ -1,26 +1,28 @@
-import {Icon} from 'native-base';
-import React, {useState} from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { Icon } from 'native-base';
+import React, { useState } from 'react';
 import {
-  Alert,
+  ActivityIndicator,
   FlatList,
   KeyboardAvoidingView,
   PermissionsAndroid,
   Platform,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
-  ToastAndroid,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import {moderateScale} from 'react-native-size-matters';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { moderateScale } from 'react-native-size-matters';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import Entypo from 'react-native-vector-icons/Entypo';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { useSelector } from 'react-redux';
 import Color from '../Assets/Utilities/Color';
+import { Post } from '../Axios/AxiosInterceptorFunction';
 import CreatePostimges from '../Components/CreatePostimges';
 import CustomButton from '../Components/CustomButton';
 import CustomHeader from '../Components/CustomHeader';
@@ -29,19 +31,14 @@ import CustomText from '../Components/CustomText';
 import SearchLocationModal from '../Components/SearchLocationModal';
 import TagPeopleModal from '../Components/TagPeopleModal';
 import TextInputWithTitle from '../Components/TextInputWithTitle';
-import {FONTS} from '../Config/theme';
-import Entypo from 'react-native-vector-icons/Entypo';
+import { baseUrl } from '../Config';
+import { FONTS } from '../Config/theme';
 import {
   apiHeader,
   requestCameraPermission,
   windowHeight,
   windowWidth,
 } from '../Utillity/utils';
-import {useNavigation} from '@react-navigation/native';
-import {useSelector} from 'react-redux';
-import {Post} from '../Axios/AxiosInterceptorFunction';
-import {baseUrl} from '../Config';
-import {ActivityIndicator} from 'react-native';
 
 const CreatePost = () => {
   const navigation = useNavigation();

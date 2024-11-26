@@ -1,36 +1,20 @@
-import React, {useState} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {AirbnbRating} from 'react-native-ratings';
+import React from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import {moderateScale} from 'react-native-size-matters';
-import {useSelector} from 'react-redux';
+import { moderateScale } from 'react-native-size-matters';
 import Color from '../Assets/Utilities/Color';
+import { FONTS } from '../Config/theme';
+import { windowHeight, windowWidth } from '../Utillity/utils';
 import CustomText from './CustomText';
-import {windowHeight, windowWidth} from '../Utillity/utils';
-import CustomButton from './CustomButton';
-import TextInputWithTitle from './TextInputWithTitle';
-import {FONTS} from '../Config/theme';
-import {Circle} from 'react-native-svg';
-import {color} from 'native-base/lib/typescript/theme/styled-system';
 
 const PrivacyModal = ({
   setRef,
-  rbRef,
-  item,
   selectedType,
-  selectedCategoryType,
-  setSelectedCategoryType,
   visibility,
   setvisiblity,
   setPrivacy,
   privacy,
 }) => {
-  console.log('🚀 ~ selectedCategoryType:', selectedCategoryType);
-  const token = useSelector(state => state.authReducer.token);
-  const [loading, setLoading] = useState(false);
-  const [review, setReview] = useState('');
-  const [rating, setRating] = useState(0);
-
   return (
     <RBSheet
       closeOnDragDown={true}
@@ -112,10 +96,8 @@ const PrivacyModal = ({
             </CustomText>
             <TouchableOpacity
               onPress={() => {
-                (selectedType == 'privacy' &&
-                  setPrivacy('private')) ||
-                  (selectedType == 'visibility' &&
-                    setvisiblity('hidden'));
+                (selectedType == 'privacy' && setPrivacy('private')) ||
+                  (selectedType == 'visibility' && setvisiblity('hidden'));
               }}
               style={[
                 styles.Circle,

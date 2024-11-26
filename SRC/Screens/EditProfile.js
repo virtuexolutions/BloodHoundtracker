@@ -1,40 +1,28 @@
 import React, {useState} from 'react';
-import * as Animatable from 'react-native-animatable';
 import Color from '../Assets/Utilities/Color';
 import CustomImage from '../Components/CustomImage';
 import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
-import ScreenBoiler from '../Components/ScreenBoiler';
 
 import {
   ActivityIndicator,
-  ScrollView,
-  View,
-  TouchableOpacity,
-  ImageBackground,
-  StyleSheet,
   Platform,
+  ScrollView,
   ToastAndroid,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import CustomText from '../Components/CustomText';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import CustomButton from '../Components/CustomButton';
 import TextInputWithTitle from '../Components/TextInputWithTitle';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-// import CountryPicker, {DARK_THEME} from 'react-native-country-picker-modal';
-import Fontisto from 'react-native-vector-icons/Fontisto';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-
-import navigationService from '../navigationService';
-import {useDispatch, useSelector} from 'react-redux';
-import Feather from 'react-native-vector-icons/Feather';
-import {Icon} from 'native-base';
-import ImagePickerModal from '../Components/ImagePickerModal';
-import {ScaledSheet, moderateScale} from 'react-native-size-matters';
 import {useNavigation} from '@react-navigation/native';
-import {Post} from '../Axios/AxiosInterceptorFunction';
-import {setUserData} from '../Store/slices/common';
-import LinearGradient from 'react-native-linear-gradient';
+import {Icon} from 'native-base';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {ScaledSheet, moderateScale} from 'react-native-size-matters';
+import {useDispatch, useSelector} from 'react-redux';
+import {Post} from '../Axios/AxiosInterceptorFunction';
 import CustomHeader from '../Components/CustomHeader';
+import ImagePickerModal from '../Components/ImagePickerModal';
+import {setUserData} from '../Store/slices/common';
 
 const EditProfile = () => {
   const dispatch = useDispatch();
@@ -62,25 +50,6 @@ const EditProfile = () => {
   const [countryCode, setCountryCode] = useState('US');
   const [imagePicker, setImagePicker] = useState(false);
   const [image, setImage] = useState({});
-  console.log('🚀 ~ Profile ~ image:', image);
-
-  //   const [country, setCountry] = useState({
-  //     callingCode: ['1'],
-  //     cca2: 'US',
-  //     currency: ['USD'],
-  //     flag: 'flag-us',
-  //     name: 'United States',
-  //     region: 'Americas',
-  //     subregion: 'North America',
-  //   });
-  //   const [withCallingCode, setWithCallingCode] = useState(true);
-  //   const [withFilter, setFilter] = useState(true);
-  //   const [phone, setPhone] = useState('');
-
-  //   const onSelect = country => {
-  //     setCountryCode(country.cca2);
-  //     setCountry(country);
-  //   };
 
   const profileUpdate = async () => {
     const formData = new FormData();
@@ -115,7 +84,6 @@ const EditProfile = () => {
       <ScrollView
         contentContainerStyle={{
           paddingBottom: moderateScale(20, 0.6),
-          //   justifyContent: 'center',
           alignItems: 'center',
           width: windowWidth,
 
@@ -154,46 +122,6 @@ const EditProfile = () => {
             />
           </TouchableOpacity>
         </View>
-        {/* <View
-          style={{
-            height: windowHeight * 0.13,
-            width: windowHeight * 0.13,
-            borderRadius: moderateScale((windowHeight * 0.13) / 2),
-            marginTop: windowHeight * 0.05,
-          }}>
-          <CustomImage
-            source={
-              Object.keys(image).length > 0
-                ? {uri: image?.uri}
-                : userData?.photo
-                ? {uri: userData?.photo}
-                : require('../Assets/Images/user.png')
-            }
-            style={{
-              width: '100%',
-              height: '100%',
-              borderRadius: moderateScale((windowHeight * 0.13) / 2),
-            }}
-          />
-
-          <TouchableOpacity
-            activeOpacity={0.6}
-            style={styles.edit}
-            onPress={() => {
-              setImagePicker(true);
-            }}>
-            <Icon
-              name="pencil"
-              as={FontAwesome}
-              style={styles.icon2}
-              color={Color.white}
-              size={moderateScale(12, 0.3)}
-              onPress={() => {
-                setImagePicker(true);
-              }}
-            />
-          </TouchableOpacity>
-        </View> */}
         <View style={styles.container}>
           <TextInputWithTitle
             titleText={'full Name'}

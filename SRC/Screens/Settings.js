@@ -141,9 +141,9 @@ const Settings = ({navigation, route}) => {
                   <CustomText style={styles.nestedItemTitle}>
                     {item?.title}
                   </CustomText>
-                  {item.icon ? (
+                  {/* {item.icon ? ( */}
                     <Icon as={MaterialIcons} name="arrow-forward-ios" />
-                  ) : (
+                  {/* ) : (
                     <SwitchToggle
                       switchOn={item.toggleState}
                       onPress={item.ontoggle}
@@ -156,7 +156,7 @@ const Settings = ({navigation, route}) => {
                       backgroundColorOn="#c7c4c4"
                       // backgroundColorOff='#C4C4C4'
                     />
-                  )}
+                  )} */}
                 </TouchableOpacity>
               )}
             </>
