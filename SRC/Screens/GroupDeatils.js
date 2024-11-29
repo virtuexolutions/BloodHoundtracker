@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
@@ -19,10 +19,15 @@ import {Icon} from 'native-base';
 import {homeListData} from '../Config/dummyData';
 import Card from '../Components/Card';
 import Color from '../Assets/Utilities/Color';
+import {Get} from '../Axios/AxiosInterceptorFunction';
+import {useSelector} from 'react-redux';
+import {useIsFocused} from '@react-navigation/native';
 
 const GroupDeatils = props => {
   const groupName = props?.route?.params?.item;
-  console.log('🚀 ~ GroupDeatils ~ groupName:', groupName);
+  const token = useSelector(state => state.authReducer.token);
+  const isFocused = useIsFocused();
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <>
@@ -97,6 +102,7 @@ const GroupDeatils = props => {
           new posts
         </CustomText>
         <FlatList
+          scrollEnabled={false}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
             alignItems: 'center',

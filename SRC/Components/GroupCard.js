@@ -1,16 +1,24 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
-import { windowHeight, windowWidth } from '../Utillity/utils';
-import { moderateScale } from 'react-native-size-matters';
+import {windowHeight, windowWidth} from '../Utillity/utils';
+import {moderateScale} from 'react-native-size-matters';
 import CustomText from './CustomText';
 import CustomImage from './CustomImage';
 import CustomButton from './CustomButton';
-import { FONTS } from '../Config/theme';
+import {FONTS} from '../Config/theme';
 import navigationService from '../navigationService';
+import {imageUrl} from '../Config';
+import { color } from 'native-base/lib/typescript/theme/styled-system';
+import Color from '../Assets/Utilities/Color';
 
-const GroupCard = ({ item }) => {
+const GroupCard = ({item}) => {
+  console.log('🚀 ~ GroupCard =====================~ item:', item?.image);
   return (
-    <TouchableOpacity style={styles.card} onPress={() => navigationService.navigate('GroupDeatils' ,{item:item?.assetsName})}>
+    <TouchableOpacity
+      style={styles.card}
+      onPress={() =>
+        navigationService.navigate('GroupDeatils', {item: item?.assetsName})
+      }>
       <View style={styles.rowContainer}>
         <View style={styles.imageContainer}>
           <CustomImage
@@ -18,18 +26,29 @@ const GroupCard = ({ item }) => {
               height: '100%',
               width: '100%',
             }}
-            source={item?.assetsimage}
+            source={{uri: `${imageUrl}${item?.image}`}}
           />
         </View>
-        <View style={{ width: windowWidth * 0.55 }}>
+        <View style={{width: windowWidth * 0.55 ,paddingTop : moderateScale(8,.6)}}>
           <CustomText isBold style={styles.text}>
-            {item?.assetsName}
+            {item?.name}
+            
+          </CustomText>
+          <CustomText 
+          numberOfLines={1}
+          isBold style={[styles.text,{
+            fontSize : moderateScale(10,.6),
+            color: Color.lightGrey
+          }]}>
+            {item?.description}
           </CustomText>
           <View style={styles.row2}>
             <CustomText isBold style={styles.membertext}>
+              DFJSHDGF
               {item?.members}
             </CustomText>
             <CustomText isBold style={styles.membertext}>
+              KDFHSJ
               {item?.post}
             </CustomText>
           </View>
@@ -40,7 +59,7 @@ const GroupCard = ({ item }) => {
           textColor={Color.white}
           width={windowWidth * 0.16}
           height={windowHeight * 0.035}
-          onPress={() => { }}
+          onPress={() => {}}
           bgColor={Color.themeColor}
           borderRadius={moderateScale(5, 0.3)}
         />
@@ -59,7 +78,6 @@ const styles = StyleSheet.create({
   },
   rowContainer: {
     flexDirection: 'row',
-
   },
   imageContainer: {
     height: windowHeight * 0.08,
@@ -84,5 +102,6 @@ const styles = StyleSheet.create({
   },
   row2: {
     flexDirection: 'row',
+  paddingTop : moderateScale(5,.6)
   },
 });

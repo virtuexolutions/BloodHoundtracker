@@ -20,6 +20,7 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const Card = ({item, fromProfile, setSelected, selected, index, loading}) => {
+  console.log("🚀 ~from ============================  Card ~ item:", item)
   const userData = useSelector(state => state.commonReducer.userData);
   const token = useSelector(state => state.authReducer.token);
 
@@ -49,36 +50,36 @@ const Card = ({item, fromProfile, setSelected, selected, index, loading}) => {
     }
   };
 
-  // const linking = {
-  //   prefixes: ['https://blood-hound.cstmpanel.com', 'yourapp://'],
-  //   config: {
-  //     screens: {
-  //       Post: `HomeScreen/${item?.id}`,
-  //     },
-  //   },
-  // };
+  const linking = {
+    prefixes: ['https://blood-hound.cstmpanel.com', 'yourapp://'],
+    config: {
+      screens: {
+        Post: `HomeScreen/${item?.id}`,
+      },
+    },
+  };
 
-  // const onShare = async () => {
-  //   try {
-  //     const result = await Share.share({
-  //       // message: 'Hello from React Native!',
-  //       message: `${baseUrl}${item?.id}`,
-  //     });
-  //     if (result.action === Share.sharedAction) {
-  //       linking;
-  //       console.log(
-  //         'here is url which is im sharing to the other',
-  //         `${baseUrl}/post/${item?.id} `,
-  //       );
+  const onShare = async () => {
+    const shareUrl = `${baseUrl}/HomeScreen/${item?.id}`;
+    try {
+      console.log('🚀 ~ onShare ~ shareUrl:', shareUrl);
+      const result = await Share.share({
+        // message: 'Hello from React Native!',
+        // message: `${baseUrl}/${item?.id}`,
+        message: shareUrl,
+      });
+      if (result.action === Share.sharedAction) {
+        linking;
+        console.log('here is url which is im sharing to the other', shareUrl);
 
-  //       console.log('Shared successfully');
-  //     } else if (result.action === Share.dismissedAction) {
-  //       console.log('Share dismissed');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error sharing:', error);
-  //   }
-  // };
+        console.log('Shared successfully');
+      } else if (result.action === Share.dismissedAction) {
+        console.log('Share dismissed');
+      }
+    } catch (error) {
+      console.error('Error sharing:', error);
+    }
+  };
 
   const onsave = async () => {
     const url = 'auth/posts_save ';
@@ -215,7 +216,7 @@ const Card = ({item, fromProfile, setSelected, selected, index, loading}) => {
           borderRadius: moderateScale(20, 0.6),
         }}
         index={0}
-        showPagination={item?.images.length > 1 ? true : false}
+        showPagination={item?.images?.length > 1 ? true : false}
         paginationDefaultColor={Color.themeLightGray}
         paginationActiveColor={Color.blue}
         data={item?.images}
@@ -345,7 +346,7 @@ const Card = ({item, fromProfile, setSelected, selected, index, loading}) => {
         </View>
         <TouchableOpacity
           onPress={() => {
-            // onShare();
+            onShare();
           }}
           style={{flexDirection: 'row'}}>
           <Icon

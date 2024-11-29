@@ -232,7 +232,7 @@ const SaveDataModal = ({
                       {/* {item?.profile_info?.name} */}
                     </CustomText>
 
-                    <CustomText numberOfLines={1} style={styles.customT2}>
+                    <CustomText numberOfLines={1} style={styles.customT2}>                  
                       new york
                     </CustomText>
                   </View>

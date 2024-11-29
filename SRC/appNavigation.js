@@ -1,15 +1,15 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Icon } from 'native-base';
-import React from 'react';
-import { View } from 'react-native';
-import { moderateScale } from 'react-native-size-matters';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+import {NavigationContainer, useNavigation} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {Icon} from 'native-base';
+import React, {useEffect} from 'react';
+import {Linking, View} from 'react-native';
+import {moderateScale} from 'react-native-size-matters';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 import Color from './Assets/Utilities/Color';
 import Drawer from './Drawer/Drawer';
 import navigationService from './navigationService';
@@ -34,7 +34,7 @@ import ResetPassword from './Screens/ResetPassword';
 import Settings from './Screens/Settings';
 import Signup from './Screens/Signup';
 import TermsAndConditions from './Screens/TermsAndConditions';
-import { windowHeight, windowWidth } from './Utillity/utils';
+import {windowHeight, windowWidth} from './Utillity/utils';
 import ViewAllScreen from './Screens/ViewAllScreen';
 
 const AppNavigator = () => {
@@ -47,12 +47,60 @@ const AppNavigator = () => {
   const RootNav = createNativeStackNavigator();
   const RootNavLogged = createNativeStackNavigator();
 
+  const linking = {
+    prefixes: ['https://blood-hound.cstmpanel.com'], // Make sure this matches the URL you're sharing
+    config: {
+      screens: {
+        HomeScreen: 'HomeScreen/:id', // Path to the screen where you want to navigate, with dynamic params (e.g. `id`)
+      },
+    },
+  };
+
   const AppNavigatorContainer = () => {
+    // const navigation = useNavigation();
     const firstScreen = token == null ? 'LoginScreen' : 'TabNavigation';
-  
+
+    // Linking.getInitialURL().then(url => {
+    //   if (url) {
+    //     // Parse the URL to get the params and navigate
+    //     const route = url.replace(/.*?:\/\//g, ''); // Remove the scheme
+    //     const routeParts = route.split('/'); // Split the URL into parts
+    //     const id = routeParts[1]; // Get the id part from the URL
+
+    //     // Perform navigation (assuming you're using React Navigation)
+    //     if (id) {
+    //       // Navigate to the specific screen using the extracted `id`
+    //       navigation.navigate('TabNavigation', { id });
+    //     }
+    //   }
+    // });
+    // const navigation = useNavigation();
+
+    // useEffect(() => {
+    //   const handleDeepLink = async () => {
+    //     const url = await Linking.getInitialURL(); // Get the URL that opened the app
+    //     if (url) {
+    //       // Parse the deep link URL and navigate to the correct screen
+    //       const route = url.replace(/.*?:\/\//g, ''); // Remove scheme
+    //       const routeParts = route.split('/');
+    //       const id = routeParts[1]; // Get the ID part
+
+    //       // Navigate to the Post screen with the ID
+    //       if (id) {
+    //         navigation.navigate('TabNavigation', {id}); // PostStack should navigate to the Post screen
+    //       }
+    //     }
+    //   };
+
+    //   handleDeepLink();
+    // }, [navigation]);
+
+    console.log('=========================================== >>>>', linking);
 
     return (
-      <NavigationContainer ref={navigationService.navigationRef}>
+      <NavigationContainer
+        ref={navigationService.navigationRef}
+        linking={linking}>
         <RootNav.Navigator
           initialRouteName={firstScreen}
           screenOptions={{headerShown: false}}>
@@ -68,13 +116,21 @@ const AppNavigator = () => {
           <RootNav.Screen name="ResetPassword" component={ResetPassword} />
           <RootNav.Screen name="EditProfile" component={EditProfile} />
           <RootNav.Screen name="MessageList" component={MessageList} />
-          <RootNav.Screen name="ChangePasswordScreen"  component={ChangePassword}/>
+          <RootNav.Screen
+            name="ChangePasswordScreen"
+            component={ChangePassword}
+          />
           <RootNav.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
-          <RootNav.Screen name="TermsAndConditions" component={TermsAndConditions}/>
+          <RootNav.Screen
+            name="TermsAndConditions"
+            component={TermsAndConditions}
+          />
           <RootNav.Screen name="CreatePost" component={CreatePost} />
-          <RootNav.Screen name="MediaPlayerScreen"component={MediaPlayerScreen} />
-          <RootNav.Screen name="ViewAllScreen"component={ViewAllScreen} />
-
+          <RootNav.Screen
+            name="MediaPlayerScreen"
+            component={MediaPlayerScreen}
+          />
+          <RootNav.Screen name="ViewAllScreen" component={ViewAllScreen} />
         </RootNav.Navigator>
       </NavigationContainer>
     );

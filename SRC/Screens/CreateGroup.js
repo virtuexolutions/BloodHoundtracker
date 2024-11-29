@@ -1,6 +1,6 @@
-import { useNavigation } from '@react-navigation/native';
-import { Icon } from 'native-base';
-import React, { useState } from 'react';
+import {useNavigation} from '@react-navigation/native';
+import {Icon} from 'native-base';
+import React, {useState} from 'react';
 import {
   Alert,
   Platform,
@@ -9,14 +9,14 @@ import {
   StyleSheet,
   ToastAndroid,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
-import { moderateScale } from 'react-native-size-matters';
+import {moderateScale} from 'react-native-size-matters';
 import Entypo from 'react-native-vector-icons/Entypo';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 import Color from '../Assets/Utilities/Color';
-import { Post } from '../Axios/AxiosInterceptorFunction';
+import {Post} from '../Axios/AxiosInterceptorFunction';
 import CustomButton from '../Components/CustomButton';
 import CustomHeader from '../Components/CustomHeader';
 import CustomImage from '../Components/CustomImage';
@@ -24,8 +24,8 @@ import CustomText from '../Components/CustomText';
 import ImagePickerModal from '../Components/ImagePickerModal';
 import PrivacyModal from '../Components/PrivacyModal';
 import TextInputWithTitle from '../Components/TextInputWithTitle';
-import { FONTS } from '../Config/theme';
-import { apiHeader, windowHeight, windowWidth } from '../Utillity/utils';
+import {FONTS} from '../Config/theme';
+import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
 
 const CreateGroup = () => {
   const navigation = useNavigation();
@@ -45,7 +45,7 @@ const CreateGroup = () => {
       name: groupName,
       privacy: privacy,
       visibility: visibility,
-      // description :
+      description : 'dyfysdifyaisdfyiuyasdfiydiasfyiasdyfiydsfiyaisudf'
     };
 
     for (let key in body) {
@@ -63,17 +63,22 @@ const CreateGroup = () => {
       Object.keys(image).length > 0;
       formData.append('image', image);
     }
+    for (let key in body) {
+      formData.append(key, body[key]);
+    }
     // formData.append('body', body);
-    return console.log(
-      '================================= form data ',
-      JSON.stringify(body, null, 2),
-    );
-    const url = '';
+    // return console.log(
+    //   '================================= form data ',
+    //   JSON.stringify( formData ,null, 2),
+    // );
+    const url = 'auth/communities';
     setIsLoading(true);
-    const response = await Post(url, body, apiHeader(token));
+    const response = await Post(url, formData, apiHeader(token));
     setIsLoading(false);
+     console.log("🚀 ~ groupCreate ~ response:", response?.data)
 
     if (response != undefined) {
+      Platform.OS== 'android' ?ToastAndroid.show('group created successfully') : Alert.alert('group created successfully')
     }
   };
 

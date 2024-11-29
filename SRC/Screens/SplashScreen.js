@@ -1,5 +1,5 @@
-import React from 'react';
-import {ImageBackground, View} from 'react-native';
+import React, { useEffect } from 'react';
+import {ImageBackground, Linking, View} from 'react-native';
 import Color from '../Assets/Utilities/Color';
 import CustomText from '../Components/CustomText';
 import CustomImage from '../Components/CustomImage';
@@ -9,6 +9,12 @@ import ScreenBoiler from '../Components/ScreenBoiler';
 
 const SplashScreen = () => {
   const backgroundImage = require('../Assets/Images/logo.png');
+//   useEffect(() =>{
+// Linking.getInitialURL().then(url =>{
+//   handleDeepLinking({url} ,'CLOSE')
+// })
+// Linking.addEventListener(url,event => handleDeepLinking(event ,'RESUME'))
+//   },[])
   return (
     <ScreenBoiler
       statusBarBackgroundColor={Color.themeColor}
