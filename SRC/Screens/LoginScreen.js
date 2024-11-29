@@ -1,7 +1,14 @@
 import {useNavigation} from '@react-navigation/native';
 import {ScrollView} from 'native-base';
 import React, {useState} from 'react';
-import {ActivityIndicator, TouchableOpacity, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  Platform,
+  ToastAndroid,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {moderateScale, ScaledSheet} from 'react-native-size-matters';
 import {useDispatch, useSelector} from 'react-redux';
 import Color from '../Assets/Utilities/Color';
@@ -11,9 +18,12 @@ import CustomStatusBar from '../Components/CustomStatusBar';
 import CustomText from '../Components/CustomText';
 import TextInputWithTitle from '../Components/TextInputWithTitle';
 import navigationService from '../navigationService';
-import {windowHeight, windowWidth} from '../Utillity/utils';
+import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import {Post} from '../Axios/AxiosInterceptorFunction';
+import {setUserToken} from '../Store/slices/auth';
+import {setUserData} from '../Store/slices/common';
 
 const LoginScreen = () => {
   const dispatch = useDispatch();
@@ -27,13 +37,29 @@ const LoginScreen = () => {
     userRole ? userRole : 'Customer',
   );
 
+  const Login = async () => {
+    const url = 'login';
+    const body = {email: email, password: password};
+    setIsLoading(true);
+    const response = await Post(url, body, apiHeader());
+    setIsLoading(false);
+
+    if (response != undefined) {
+      Platform.OS == 'android'
+        ? ToastAndroid.show('User LoggedIn successfully', ToastAndroid.SHORT)
+        : Alert.alert('User LoggedIn successfully');
+
+      dispatch(setUserToken({token: response?.data?.token}));
+      dispatch(setUserData(response?.data?.user_info));
+    }
+  };
+
   return (
     <>
       <CustomStatusBar
         backgroundColor={Color.white}
         barStyle={'dark-content'}
       />
-
       <ScrollView
         showsVerticalScrollIndicator={false}
         removeClippedSubviews={true}
@@ -101,13 +127,13 @@ const LoginScreen = () => {
             marginBottom={moderateScale(10, 0.3)}
           />
         </View>
-        {/* <CustomText
+        <CustomText
           onPress={() => {
-            navigationService.navigate('EnterPhone', {fromForgot: true});
+            navigationService.navigate('EnterEmail');
           }}
           style={styles.txt3}>
           {'Forgot Password?'}
-        </CustomText> */}
+        </CustomText>
 
         <CustomButton
           text={
@@ -121,7 +147,7 @@ const LoginScreen = () => {
           width={windowWidth * 0.85}
           height={windowHeight * 0.07}
           marginTop={moderateScale(20, 0.3)}
-          onPress={() => navigation.navigate('TabNavigation')}
+          onPress={Login}
           bgColor={Color.themeColor}
           borderRadius={moderateScale(30, 0.3)}
           elevation
@@ -191,14 +217,14 @@ const styles = ScaledSheet.create({
     paddingTop: windowHeight * 0.02,
   },
   title: {
-    color: Color.dar,
+    color: Color.darkGray,
     fontSize: moderateScale(12, 0.6),
     paddingHorizontal: moderateScale(10, 0.6),
   },
 
   txt3: {
-    fontSize: moderateScale(10, 0.6),
-    alignSelf: 'center',
+    fontSize: moderateScale(13, 0.6),
+    alignSelf: 'flex-end',
     fontWeight: '600',
   },
 

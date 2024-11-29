@@ -7,7 +7,13 @@ export const homeListData = [
     coments: '12 Coments',
     likes: '85 Likes',
     shares: '36 Shared',
-    images: require('../Assets/Images/scoter_image.png'),
+    mediatype: 'image',
+    images: [
+      require('../Assets/Images/scoter_image.png'),
+      require('../Assets/Images/scoter_image.png'),
+      require('../Assets/Images/scoter_image.png'),
+      require('../Assets/Images/scoter_image.png'),
+    ],
     profile_image: require('../Assets/Images/dummyman1.png'),
   },
   {
@@ -18,6 +24,7 @@ export const homeListData = [
     coments: '12 Coments',
     likes: '85 Likes',
     shares: '36 Shared',
+    mediatype: 'image',
     images: require('../Assets/Images/scoter_image.png'),
     profile_image: require('../Assets/Images/dummyman1.png'),
   },
@@ -30,6 +37,24 @@ export const homeListData = [
     likes: '85 Likes',
     shares: '36 Shared',
     images: require('../Assets/Images/scoter_image.png'),
+    mediatype: 'video',
+    video: require('../Assets/Images/video2.mp4'),
+    profile_image: require('../Assets/Images/dummyman1.png'),
+  },
+  {
+    id: 4,
+    name: 'Prisha Mclaughlin',
+    time: '52 minutes ago',
+    description: 'I Lost My Electric Motor Bike before Todays ago',
+    coments: '12 Coments',
+    likes: '85 Likes',
+    shares: '36 Shared',
+    images: [
+      require('../Assets/Images/scoter_image.png'),
+      require('../Assets/Images/scoter_image.png'),
+      require('../Assets/Images/scoter_image.png'),
+      require('../Assets/Images/scoter_image.png'),
+    ],
     profile_image: require('../Assets/Images/dummyman1.png'),
   },
 ];
@@ -43,7 +68,25 @@ export const comentlist = [
     coment:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
     likes: 25,
-    replay: '12  replay',
+    replaycount: '12  reply',
+    replay: [
+      {
+        id: 1,
+        profile_image: require('../Assets/Images/dummyman1.png'),
+        name: 'Prisha Mclaughlin',
+        time: '52 minutes ago',
+        coment:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+      },
+      {
+        id: 1,
+        profile_image: require('../Assets/Images/dummyman1.png'),
+        name: 'Prisha Mclaughlin',
+        time: '52 minutes ago',
+        coment:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+      },
+    ],
   },
   {
     id: 2,
@@ -53,7 +96,7 @@ export const comentlist = [
     coment:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
     likes: 25,
-    replay: '12  replay',
+    replaycount: '12  reply',
   },
   {
     id: 3,
@@ -63,7 +106,7 @@ export const comentlist = [
     coment:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
     likes: 25,
-    replay: '12  replay',
+    replaycount: '12  reply',
   },
 ];
 export const chatlist = [

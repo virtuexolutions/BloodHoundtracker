@@ -1,7 +1,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+      <uses-permission android:name="android.permission.CAMERA" />
+      <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+      <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+  <queries>
+        <package android:name="com.example.store" />
+        <package android:name="com.example.services" />
 
+        <!--for example, to share via instagram -->
+        <package android:name="com.instagram.android" />
+    </queries>
     <application
       android:name=".MainApplication"
       android:label="@string/app_name"
@@ -16,10 +25,25 @@
         android:launchMode="singleTask"
         android:windowSoftInputMode="adjustResize"
         android:exported="true">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
+        
+         <intent-filter >
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
+
+        <intent-filter  android:label="DeepLink">
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="http" />
+        <data android:scheme="https" />
+        <data android:scheme="blood-hound.cstmpanel.com"
+          android:host="blood-hound.cstmpanel.com"
+          android:pathPrefix="/post" />
+          
+        </intent-filter>
+
+
       </activity>
     </application>
 </manifest>

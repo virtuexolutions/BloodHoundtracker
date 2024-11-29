@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
@@ -18,8 +18,16 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Icon} from 'native-base';
 import {homeListData} from '../Config/dummyData';
 import Card from '../Components/Card';
+import Color from '../Assets/Utilities/Color';
+import {Get} from '../Axios/AxiosInterceptorFunction';
+import {useSelector} from 'react-redux';
+import {useIsFocused} from '@react-navigation/native';
 
-const GroupDeatils = () => {
+const GroupDeatils = props => {
+  const groupName = props?.route?.params?.item;
+  const token = useSelector(state => state.authReducer.token);
+  const isFocused = useIsFocused();
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <>
@@ -27,7 +35,7 @@ const GroupDeatils = () => {
         backgroundColor={Color.background_color}
         barStyle={'dark-content'}
       />
-      <ScrollView style={styles.container}>
+      <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
         <CustomHeader text={'TimeLine'} leftIcon RightIcon={true} />
 
         <View style={styles.banner}>
@@ -40,10 +48,11 @@ const GroupDeatils = () => {
             }}
           />
         </View>
-        <View style={{
-          paddingHorizontal:moderateScale(20,.6),
-          paddingTop:moderateScale(10,.6)
-        }}>
+        <View
+          style={{
+            paddingHorizontal: moderateScale(20, 0.6),
+            paddingTop: moderateScale(10, 0.6),
+          }}>
           <CustomText isBold style={styles.btn_text}>
             Newyork Electronic E-Bikes
           </CustomText>
@@ -75,6 +84,10 @@ const GroupDeatils = () => {
             <SearchContainer
               placeholder={'name your group '}
               width={windowWidth * 0.6}
+              style={{
+                // marginTop:moderateScale(5,.3),
+                height: windowHeight * 0.04,
+              }}
             />
             <Icon
               style={{marginTop: moderateScale(13, 0.6)}}
@@ -89,6 +102,7 @@ const GroupDeatils = () => {
           new posts
         </CustomText>
         <FlatList
+          scrollEnabled={false}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
             alignItems: 'center',
@@ -136,15 +150,15 @@ const styles = StyleSheet.create({
   },
   btn_text: {
     ...FONTS.Medium17,
-    color: Color.mediumGrey,
+    color: Color.darkGray,
   },
   btn_text3: {
     ...FONTS.Medium13,
-    color: Color.mediumGrey,
+    color: Color.darkGray,
   },
   btn_text2: {
     ...FONTS.Medium13,
-    color: Color.mediumGrey,
+    color: Color.darkGray,
     paddingVertical: moderateScale(8, 0.6),
   },
   banner: {

@@ -1,24 +1,17 @@
-import React, {useState} from 'react';
-import {Icon} from 'native-base';
-import {View, Platform, Dimensions, TouchableOpacity} from 'react-native';
-import {DrawerActions, useNavigation} from '@react-navigation/native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import {moderateScale, ScaledSheet} from 'react-native-size-matters';
+import { useNavigation } from '@react-navigation/native';
+import { Icon } from 'native-base';
+import React, { useState } from 'react';
+import { Dimensions, TouchableOpacity, View } from 'react-native';
+import { moderateScale, ScaledSheet } from 'react-native-size-matters';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import Entypo from 'react-native-vector-icons/Entypo';
 import Color from '../Assets/Utilities/Color';
-import {windowHeight, windowWidth} from '../Utillity/utils';
-import CustomText from './CustomText';
+import { windowHeight, windowWidth } from '../Utillity/utils';
 import CustomImage from './CustomImage';
 const {height, width} = Dimensions.get('window');
-import Foundation from 'react-native-vector-icons/Foundation';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Entypo from 'react-native-vector-icons/Entypo';
-import Modal from 'react-native-modal';
 
-import {useDispatch, useSelector} from 'react-redux';
-import {imageUrl} from '../Config';
-import {setUserLogout} from '../Store/slices/auth';
 import LinearGradient from 'react-native-linear-gradient';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Header = props => {
   const dispatch = useDispatch();

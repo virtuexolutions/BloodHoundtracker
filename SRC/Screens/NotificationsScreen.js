@@ -5,29 +5,27 @@ import {
   Text,
   View,
   TouchableOpacity,
+  SafeAreaView,
 } from 'react-native';
 import React from 'react';
 import CustomHeader from '../Components/CustomHeader';
-import { windowHeight, windowWidth } from '../Utillity/utils';
-import NotificationCard from '../Components/NotificationCard';
-import { moderateScale } from 'react-native-size-matters';
+import {windowHeight, windowWidth} from '../Utillity/utils';
+
+import {moderateScale} from 'react-native-size-matters';
 import Color from '../Assets/Utilities/Color';
-import { notificationArray } from '../Config/dummyData';
+import {notificationArray} from '../Config/dummyData';
 import CustomText from '../Components/CustomText';
-import { FONTS } from '../Config/theme';
-import { SwipeListView } from 'react-native-swipe-list-view';
-import { Icon } from 'native-base';
+import {FONTS} from '../Config/theme';
+import {SwipeListView} from 'react-native-swipe-list-view';
+import {Icon} from 'native-base';
 import Entypo from 'react-native-vector-icons/Entypo';
 import CustomImage from '../Components/CustomImage';
 
 const NotificationsScreen = () => {
   return (
-    <ScrollView
-      style={styles.mainContainer}
-      contentContainerStyle={{
-        paddingBottom: moderateScale(20, 0.6),
-        alignItems: 'center',
-      }}>
+  
+    <SafeAreaView
+      style={{paddingBottom: moderateScale(20, 0.6), alignItems: 'center'}}>
       <CustomHeader text={'Notification'} leftIcon RightIcon={true} />
       <View
         style={{
@@ -53,18 +51,9 @@ const NotificationsScreen = () => {
           mark as us read
         </CustomText>
       </View>
-      {/* <FlatList
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          paddingTop: windowHeight * 0.02,
-        }}
-        numColumns={1}
-        data={notificationArray}
-        renderItem={(item, index) => {
-          return <NotificationCard item={item?.item} />;
-        }}
-      /> */}
+ 
       <SwipeListView
+      showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           paddingTop: moderateScale(10, 6),
         }}
@@ -75,25 +64,15 @@ const NotificationsScreen = () => {
         data={notificationArray}
         renderItem={(item, rowMap) => {
           return (
-            <TouchableOpacity activeOpacity={0.8} onPress={() => { }}>
-              <View
-                style={[
-                  styles.NotificationCard,
-
-                  // {backgroundColor: 'rgba(223, 254, 250,0.7)'},
-                ]}>
+            <TouchableOpacity activeOpacity={0.8} onPress={() => {}}>
+              <View style={styles.NotificationCard}>
                 <View style={styles.image}>
                   <CustomImage
                     source={require('../Assets/Images/dummyman1.png')}
                     style={styles.imageBg}
                   />
                 </View>
-                <View
-                  style={
-                    {
-                      // marginLeft: moderateScale(10, 0.3)
-                    }
-                  }>
+                <View>
                   <View style={styles.row}>
                     <CustomText numberOfLines={1} style={styles.subHeading}>
                       john
@@ -101,10 +80,8 @@ const NotificationsScreen = () => {
                     <CustomText
                       numberOfLines={1}
                       style={{
-                        // marginLeft: moderateScale(15, 0.3),
                         width: windowWidth * 0.4,
                         color: Color.themeLightGray,
-                        // backgroundColor: 'red',
                         ...FONTS.Regular12,
                       }}>
                       added a comment
@@ -122,9 +99,8 @@ const NotificationsScreen = () => {
               style={{
                 alignItems: 'center',
                 backgroundColor: Color.themeColor,
-                height: windowHeight * 0.065,
+                height: windowHeight * 0.062,
                 width: windowWidth * 0.15,
-                // padding:moderateScale(10,.6),
                 justifyContent: 'center',
                 borderRadius: moderateScale(8, 0.6),
                 position: 'absolute',
@@ -146,9 +122,8 @@ const NotificationsScreen = () => {
             </TouchableOpacity>
           );
         }}
-      // leftOpenValue={75}
       />
-    </ScrollView>
+    </SafeAreaView>
   );
 };
 

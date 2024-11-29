@@ -1,17 +1,24 @@
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
-import { windowHeight, windowWidth } from '../Utillity/utils';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {windowHeight, windowWidth} from '../Utillity/utils';
 import Header from '../Components/Header';
 import CustomText from '../Components/CustomText';
-import { moderateScale } from 'react-native-size-matters';
+import {moderateScale} from 'react-native-size-matters';
 import Color from '../Assets/Utilities/Color';
 import GroupCard from '../Components/GroupCard';
 import CustomImage from '../Components/CustomImage';
-import { FONTS } from '../Config/theme';
+import {FONTS} from '../Config/theme';
 import CustomHeader from '../Components/CustomHeader';
 import navigationService from '../navigationService';
+import {useSelector} from 'react-redux';
+import {Get} from '../Axios/AxiosInterceptorFunction';
+import {useIsFocused} from '@react-navigation/native';
 
 const Groups = () => {
+  const isFocused = useIsFocused();
+  const token = useSelector(state => state.authReducer.token);
+  console.log('🚀 ~ Groups ~ token:', token);
+  const [isLoading, setIsLoading] = useState(false);
   const dummyGroupArray = [
     {
       id: 1,
@@ -129,35 +136,61 @@ const Groups = () => {
     require('../Assets/Images/car.png'),
   ];
 
+  const [groupData, setGroupData] = useState([]);
+
+  const groupsList = async () => {
+    const url = 'auth/communities';
+    setIsLoading(true);
+    const response = await Get(url, token);
+    console.log('🚀 ~ groupsList ~ response:', response?.data);
+    setIsLoading(false);
+
+    if (response != undefined) {
+      setGroupData(response?.data?.data);
+    }
+  };
+
+  useEffect(() => {
+    console.log('================== ffrom details');
+    groupsList();
+  }, [isFocused]);
+
   return (
     <View style={styles.mainContainer}>
       <CustomHeader leftIcon={true} text={'Groups'} />
-      <FlatList
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{
-          paddingBottom: moderateScale(25, 0.6),
-        }}
-        horizontal
-        data={dummyImages}
-        renderItem={(item, index) => {
-          return (
-            <View style={styles.imageContainer}>
-              <CustomImage
-                style={{
-                  height: '100%',
-                  width: '100%',
-                }}
-                source={item?.item}
-              />
-            </View>
-          );
-        }}
-      />
+      <View
+        style={{
+          height: windowHeight * 0.12,
+          paddingVertical: moderateScale(5, 0.6),
+        }}>
+        <FlatList
+          showsHorizontalScrollIndicator={false}
+          // contentContainerStyle={{
+          //   // paddingBottom: moderateScale(25, 0.6),
+          // }}
+          horizontal
+          data={dummyImages}
+          renderItem={(item, index) => {
+            return (
+              <View style={styles.imageContainer}>
+                <CustomImage
+                  style={{
+                    height: '100%',
+                    width: '100%',
+                  }}
+                  source={item?.item}
+                />
+              </View>
+            );
+          }}
+        />
+      </View>
       <View style={styles.rowContainer}>
         <CustomText isBold style={styles.headingtxt}>
           Suggested Groups
         </CustomText>
-        <TouchableOpacity onPress={() => navigationService.navigate('CreateGroup')}>
+        <TouchableOpacity
+          onPress={() => navigationService.navigate('CreateGroup')}>
           <CustomText isBold style={styles.subtxt}>
             Create Group
           </CustomText>
@@ -166,11 +199,14 @@ const Groups = () => {
       <FlatList
         showsVerticalScrollIndicator={false}
         numColumns={1}
+        style={{
+          flex: 1,
+        }}
         contentContainerStyle={{
           alignItems: 'center',
-          paddingBottom: moderateScale(30, 0.6),
+          paddingBottom: moderateScale(60, 0.6),
         }}
-        data={dummyGroupArray}
+        data={groupData}
         renderItem={(item, index) => {
           return <GroupCard item={item?.item} />;
         }}
@@ -184,10 +220,6 @@ export default Groups;
 const styles = StyleSheet.create({
   mainContainer: {
     height: windowHeight,
-    width: windowWidth,
-  },
-  header: {
-    height: windowHeight * 0.1,
     width: windowWidth,
   },
   rowContainer: {

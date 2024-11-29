@@ -1,63 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { Platform } from 'react-native';
-import { PersistGate } from 'redux-persist/integration/react';
-import { Provider, useDispatch, useSelector } from 'react-redux';
-import { PermissionsAndroid } from 'react-native';
-import { NativeBaseProvider } from 'native-base';
-import { store, persistor } from './SRC/Store/index';
-// import {stripeKey} from './SRC/Config';
-// import {
-//   requestCameraPermission,
-//   requestLocationPermission,
-//   requestManagePermission,
-//   requestNotificationPermission,
-//   requestReadPermission,
-//   requestWritePermission,
-// } from './SRC/Utillity/utils';
-import SplashScreen from './SRC/Screens/SplashScreen';
+import {NativeBaseProvider} from 'native-base';
+import React, {useEffect, useState} from 'react';
+import {Provider, useDispatch} from 'react-redux';
+import {PersistGate} from 'redux-persist/integration/react';
+import {persistor, store} from './SRC/Store/index';
 import AppNavigator from './SRC/appNavigation';
-import Numberverfication from './SRC/Screens/Numberverfication';
-import Groups from './SRC/Screens/Groups';
-import CreateGroup from './SRC/Screens/CreateGroup';
-import Profile from './SRC/Screens/Profile';
-import HomeScreen from './SRC/Screens/HomeScreen';
-import DetailScreen from './SRC/Screens/DetailsScreen';
-import CreatePost from './SRC/Screens/CreatePost';
-import MessageList from './SRC/Screens/MessageList';
-import MessagesScreen from './SRC/Screens/MessagesScreen';
-import NotificationsScreen from './SRC/Screens/NotificationsScreen';
-import GroupDeatils from './SRC/Screens/GroupDeatils';
-// import AddCard from './SRC/Screens/AddCard';
+import SplashScreen from './SRC/Screens/SplashScreen';
+import {
+  requestCameraPermission,
+  requestLocationPermission,
+  requestReadPermission,
+  requestWritePermission,
+} from './SRC/Utillity/utils';
+import {Linking, LogBox} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const App = () => {
-  // const [publishableKey, setPublishableKey] = useState('');
-
-  // const fetchPublishableKey = async () => {
-  //   const key = await fetchKey(); // fetch key from your server here
-  //   setPublishableKey(key);
-  // };
-
-  // useEffect(() => {
-  //   fetchPublishableKey();
-  // }, []);
-
-  // console.reportErrorsAsExceptions = false;
-
-  //  const requestUserPermission = async () =>{
-  //     const authStatus = await messaging().requestPermission();
-  //     const enabled =
-  //       authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-  //       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-  //     if (enabled) {
-  //       console.log('Authorization status:', authStatus);
-  //     }
-  //   }
-
-  // useEffect(()=>{
-
-  //   requestUserPermission()
-  // },[])
+  // const navigation = useNavigation()
+  useEffect(() => {
+    LogBox.ignoreLogs([
+      'In React 18, SSRProvider is not necessary and is a noop. You can remove it from your app.',
+    ]);
+  }, []);
 
   return (
     <Provider store={store}>
@@ -67,19 +30,6 @@ const App = () => {
         </NativeBaseProvider>
       </PersistGate>
     </Provider>
-    // <StripeProvider
-    //   publishableKey={'pk_test_qblFNYngBkEdjEZ16jxxoWSM'}
-    //   // merchantIdentifier="merchant.identifier" // required for Apple Pay
-    //   // urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
-    // >
-    //   <Provider store={store}>
-    //     <PersistGate loading={null} persistor={persistor}>
-    //       <NativeBaseProvider>
-    //         <MainContainer />
-    //       </NativeBaseProvider>
-    //     </PersistGate>
-    //   </Provider>
-    // </StripeProvider>
   );
 };
 
@@ -161,19 +111,22 @@ const MainContainer = () => {
   //     GetPermission();
   //   }, []);
 
+  useEffect(() => {
+    async function GetPermission() {
+      await requestCameraPermission();
+      await requestWritePermission();
+      await requestLocationPermission();
+      await requestReadPermission();
+    }
+    GetPermission();
+    requestCameraPermission();
+  }, []);
+
   const [isloading] = useloader(true);
   if (isloading == true) {
     return <SplashScreen />;
   }
-  return <AppNavigator />
-  // <GroupDeatils />;
-  // <NotificationsScreen />;
-
-  // return <DetailScreen />
-  // <HomeScreen/>
-  //  <AppNavigator />;
-  // <HomeScreen />
-  //  <CreateNew />
+  return <AppNavigator />;
 };
 
 const useloader = value => {

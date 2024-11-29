@@ -11,12 +11,13 @@ import { setUserLogOut } from '../Store/slices/common';
 import { windowWidth } from '../Utillity/utils';
 import CustomText from './CustomText';
 import Feather from 'react-native-vector-icons/Feather';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { FONTS } from '../Config/theme';
 import { useNavigation } from '@react-navigation/native';
 
-const CustomHeader = ({ leftIcon, RightIcon, isCamer, text, style }) => {
-  const dispatch = useDispatch()
+const CustomHeader = ({ leftIcon, RightIcon, isCamer, text, style, logout }) => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
 
   return (
@@ -54,6 +55,23 @@ const CustomHeader = ({ leftIcon, RightIcon, isCamer, text, style }) => {
           }}
         />
       }
+      {logout &&
+        <Icon
+          name='exit-outline'
+          as={Ionicons}
+          size={moderateScale(22, 0.3)}
+          color={Color.lightGrey}
+          style={{
+            position: 'absolute',
+            right: moderateScale(1, 0.3),
+          }}
+          onPress={() => {
+            // navigation.navigate('MessageList')
+            // dispatch(setUserLogOut())
+            dispatch(setUserLogoutAuth())
+          }}
+        />
+      }
     </View>
   );
 };
@@ -62,16 +80,15 @@ export default CustomHeader;
 
 const styles = StyleSheet.create({
   header: {
-    width: windowWidth * 0.9,
+    width: windowWidth * 0.95,
     height: moderateScale(50, 0.6),
     backgroundColor: 'tranparent',
     justifyContent: 'center',
-    marginHorizontal: moderateScale(10, 0.6),
+    paddingHorizontal: moderateScale(10, 0.6),
     alignSelf: 'center'
   },
   text: {
     color: Color.lightGrey,
-    // fontSize: moderateScale(18, 0.6),
     ...FONTS.Medium19,
     alignSelf: 'center',
     fontWeight: 'bold',

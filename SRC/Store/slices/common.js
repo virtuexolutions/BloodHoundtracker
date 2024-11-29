@@ -62,8 +62,9 @@ const CommonSlice = createSlice({
       // state.userData = action?.payload?.userData;
     },
     setUserLogOut(state, action) {
-      state.userData = {};
-      state.selectedRole = '';
+      state.token = null;
+      // state.userData = {};
+      // state.selectedRole = '';
     },
     setServiceCategories(state, action) {
       state.categories = action?.payload;

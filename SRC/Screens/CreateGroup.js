@@ -1,34 +1,86 @@
+import {useNavigation} from '@react-navigation/native';
+import {Icon} from 'native-base';
+import React, {useState} from 'react';
 import {
+  Alert,
+  Platform,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
-  Text,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
-import {SafeAreaView} from 'react-native';
-import {windowHeight, windowWidth} from '../Utillity/utils';
 import {moderateScale} from 'react-native-size-matters';
-import TextInputWithTitle from '../Components/TextInputWithTitle';
-import CustomText from '../Components/CustomText';
-import DropDownSingleSelect from '../Components/DropDownSingleSelect';
-import Color from '../Assets/Utilities/Color';
-import CustomHeader from '../Components/CustomHeader';
-import {FONTS} from '../Config/theme';
-import CustomButton from '../Components/CustomButton';
-import {color} from 'native-base/lib/typescript/theme/styled-system';
-import {Icon} from 'native-base';
+import Entypo from 'react-native-vector-icons/Entypo';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {useSelector} from 'react-redux';
+import Color from '../Assets/Utilities/Color';
+import {Post} from '../Axios/AxiosInterceptorFunction';
+import CustomButton from '../Components/CustomButton';
+import CustomHeader from '../Components/CustomHeader';
+import CustomImage from '../Components/CustomImage';
+import CustomText from '../Components/CustomText';
+import ImagePickerModal from '../Components/ImagePickerModal';
 import PrivacyModal from '../Components/PrivacyModal';
+import TextInputWithTitle from '../Components/TextInputWithTitle';
+import {FONTS} from '../Config/theme';
+import {apiHeader, windowHeight, windowWidth} from '../Utillity/utils';
 
 const CreateGroup = () => {
+  const navigation = useNavigation();
+  const token = useSelector(state => state.authReducer.token);
   const [groupName, setGroupName] = useState('');
   const [privacy, setPrivacy] = useState('');
   const [visibility, setvisiblity] = useState('');
   const [selectedType, setSelectedType] = useState('');
-  const [selectedCategoryType, setSelectedCategoryType] = useState('')
-  const privacyArray = ['ffaadf', 'fafaf ', 'fdadsfadsf'];
   const [rbRef, setRef] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [image, setImage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const groupCreate = async () => {
+    const formData = new FormData();
+    const body = {
+      name: groupName,
+      privacy: privacy,
+      visibility: visibility,
+      description : 'dyfysdifyaisdfyiuyasdfiydiasfyiasdyfiydsfiyaisudf'
+    };
+
+    for (let key in body) {
+      if (body[key] == '') {
+        return Platform.OS == 'android'
+          ? ToastAndroid.show(`${key} is required`, ToastAndroid.SHORT)
+          : Alert.alert(`${key} is required`);
+      }
+    }
+    if (image == null) {
+      return Platform.OS == 'android'
+        ? ToastAndroid.show(`image is required`, ToastAndroid.SHORT)
+        : Alert.alert(`image  is required`);
+    } else {
+      Object.keys(image).length > 0;
+      formData.append('image', image);
+    }
+    for (let key in body) {
+      formData.append(key, body[key]);
+    }
+    // formData.append('body', body);
+    // return console.log(
+    //   '================================= form data ',
+    //   JSON.stringify( formData ,null, 2),
+    // );
+    const url = 'auth/communities';
+    setIsLoading(true);
+    const response = await Post(url, formData, apiHeader(token));
+    setIsLoading(false);
+     console.log("🚀 ~ groupCreate ~ response:", response?.data)
+
+    if (response != undefined) {
+      Platform.OS== 'android' ?ToastAndroid.show('group created successfully') : Alert.alert('group created successfully')
+    }
+  };
 
   return (
     <SafeAreaView>
@@ -38,9 +90,47 @@ const CreateGroup = () => {
           alignItems: 'center',
         }}
         style={styles.mainContainer}>
-        <CustomHeader text={'Crate Group'} leftIcon />
+        <CustomHeader text={'Create Group'} leftIcon />
+        {image != null && (
+          <Icon
+            onPress={() => {
+              setImage(null);
+            }}
+            style={styles.Icon}
+            name="circle-with-cross"
+            as={Entypo}
+            size={moderateScale(15, 0.6)}
+            color={Color.black}
+          />
+        )}
+        <View style={styles.imageContainer}>
+          <CustomImage
+            onPress={() => {
+              setShowModal(true);
+            }}
+            style={[
+              styles.image,
+              image == null && {
+                height: windowHeight * 0.05,
+                width: windowWidth * 0.1,
+                marginTop: windowHeight * 0.12,
+                alignSelf: 'center',
+              },
+            ]}
+            source={
+              image ? {uri: image?.uri} : require('../Assets/Images/plus.png')
+            }
+          />
+        </View>
         <View style={styles.titleContainer}>
-          <CustomText isBold style={styles.title}>
+          <CustomText
+            isBold
+            style={[
+              styles.title,
+              {
+                marginTop: windowHeight * 0.02,
+              },
+            ]}>
             Name
           </CustomText>
           <TextInputWithTitle
@@ -66,7 +156,7 @@ const CreateGroup = () => {
           <TouchableOpacity
             onPress={() => {
               rbRef.open();
-              setSelectedType('privacy')
+              setSelectedType('privacy');
             }}
             style={styles.dropdown}>
             <View style={{paddingHorizontal: moderateScale(15, 0.6)}}>
@@ -75,18 +165,9 @@ const CreateGroup = () => {
                   color: Color.lightGrey,
                   ...FONTS.Regular14,
 
-                  paddingTop: moderateScale(5, 0.6),
+                  paddingTop: moderateScale(10, 0.6),
                 }}>
-                privacy
-              </CustomText>
-              <CustomText
-                style={{
-                  color: Color.lightGrey,
-                  ...FONTS.Regular10,
-
-                  // paddingTop: moderateScale(5, 0.6),
-                }}>
-                privacy
+                {privacy ? privacy : 'select privacy'}
               </CustomText>
             </View>
             <Icon
@@ -112,8 +193,6 @@ const CreateGroup = () => {
                 borderBottomWidth: 1,
                 borderColor: Color.themeColor,
                 alignSelf: 'left',
-
-                // textAlign:'left'
               },
             ]}>
             Learn More
@@ -124,29 +203,20 @@ const CreateGroup = () => {
             Visibility
           </CustomText>
           <TouchableOpacity
-          onPress={() => {
-            rbRef.open();
-            setSelectedType('visibility')
-          }}
-          style={styles.dropdown}>
+            onPress={() => {
+              rbRef.open();
+              setSelectedType('visibility');
+            }}
+            style={styles.dropdown}>
             <View style={{paddingHorizontal: moderateScale(15, 0.6)}}>
               <CustomText
                 style={{
                   color: Color.lightGrey,
                   ...FONTS.Regular14,
 
-                  paddingTop: moderateScale(5, 0.6),
+                  paddingTop: moderateScale(10, 0.6),
                 }}>
-                visibility
-              </CustomText>
-              <CustomText
-                style={{
-                  color: Color.lightGrey,
-                  ...FONTS.Regular10,
-
-                  // paddingTop: moderateScale(5, 0.6),
-                }}>
-                visibility
+                {visibility ? visibility : 'select visibility'}
               </CustomText>
             </View>
             <Icon
@@ -163,14 +233,28 @@ const CreateGroup = () => {
           textColor={Color.white}
           width={windowWidth * 0.85}
           height={windowHeight * 0.05}
-          marginTop={windowHeight * 0.15}
-          onPress={() => {}}
+          marginTop={windowHeight * 0.12}
+          onPress={() => {
+            groupCreate();
+          }}
           bgColor={Color.themeColor}
           borderRadius={moderateScale(5, 0.3)}
           elevation
         />
-        {/* <PrivacyModal  rbRef={rbRef} setRef={setRef}/> */}
-        <PrivacyModal rbRef={rbRef} setRef={setRef}  selectedType={selectedType} setSelectedCategoryType={setSelectedCategoryType}  selectedCategoryType={selectedCategoryType}/>
+        <PrivacyModal
+          rbRef={rbRef}
+          setRef={setRef}
+          selectedType={selectedType}
+          privacy={privacy}
+          setPrivacy={setPrivacy}
+          setvisiblity={setvisiblity}
+          visibility={visibility}
+        />
+        <ImagePickerModal
+          show={showModal}
+          setShow={setShowModal}
+          setFileObject={setImage}
+        />
       </ScrollView>
     </SafeAreaView>
   );
@@ -193,7 +277,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: moderateScale(5, 0.6),
   },
   card: {
-    marginTop: windowHeight * 0.04,
+    marginTop: windowHeight * 0.025,
     width: windowWidth * 0.85,
     paddingVertical: moderateScale(10, 0.6),
     paddingHorizontal: moderateScale(15, 0.6),
@@ -217,5 +301,20 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 10,
     top: 10,
+  },
+  imageContainer: {
+    width: windowWidth * 0.85,
+    height: windowHeight * 0.25,
+  },
+  image: {
+    height: '100%',
+    width: '100%',
+  },
+  Icon: {
+    position: 'absolute',
+    top: 55,
+    zIndex: 1,
+    // left : 320,
+    right: 30,
   },
 });

@@ -20,11 +20,9 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import CustomText from '../Components/CustomText';
-import { windowHeight, windowWidth} from '../Utillity/utils';
+import {windowHeight, windowWidth} from '../Utillity/utils';
 import Color from '../Assets/Utilities/Color';
 import {useSelector} from 'react-redux';
-
-
 
 const ImagePickerModal = props => {
   let {show, setShow, setFileObject, setMultiImages, crop} = props;
@@ -42,13 +40,13 @@ const ImagePickerModal = props => {
         },
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        return true
         console.log('You can use the camera');
+        return true;
         // openCamera()
       } else {
         // ToastAndroid.show('Camera permission denied' , ToastAndroid.SHORT)
         // setShow(false)
-        return false
+        return false;
       }
     } catch (err) {
       console.warn(err);
@@ -112,41 +110,38 @@ const ImagePickerModal = props => {
       saveToPhotos: true,
     };
     if (Platform.OS === 'android') {
-    //   if (PermissionsAndroid.PERMISSIONS.CAMERA == null) {
-    //     console.log('herer camera permissio null===============');
-    //   }
-    //  else
+      //   if (PermissionsAndroid.PERMISSIONS.CAMERA == null) {
+      //     console.log('herer camera permissio null===============');
+      //   }
+      //  else
       if (PermissionsAndroid.PERMISSIONS.CAMERA == true) {
         console.log('herer');
       } else {
-      const permissionResponse = await requestCameraPermission();
-      if (permissionResponse == true) {
-        console.log('camera permission granted')
-      }
-      else {
-      ToastAndroid.show('Camera permission rejected' ,ToastAndroid.SHORT)
-     return setShow(false)
-      }
-    } 
-  }
-    
-    
-    launchCamera(options, response => {
-      console.log("Response from Camera Launch", response)
-     
-      try {
-      if (Platform.OS == 'ios') {
-        setShow(false);
-      }
-      if (response.didCancel) {
-        } else if (response.error) {
-          } else if (response.customButton) {
+        const permissionResponse = await requestCameraPermission();
+        if (permissionResponse == true) {
+          console.log('camera permission granted');
+        } else {
+          ToastAndroid.show('Camera permission rejected', ToastAndroid.SHORT);
+          return setShow(false);
         }
-        else {
+      }
+    }
+
+    launchCamera(options, response => {
+      console.log('Response from Camera Launch', response);
+
+      try {
+        if (Platform.OS == 'ios') {
+          setShow(false);
+        }
+        if (response.didCancel) {
+        } else if (response.error) {
+        } else if (response.customButton) {
+        } else {
           // if (response == undefined) {
           //   console.log('response is undefiend');
           // } else {
-            setFileObject &&
+          setFileObject &&
             setFileObject({
               uri: response?.assets[0]?.uri,
               type: response?.assets[0]?.type,
@@ -156,18 +151,17 @@ const ImagePickerModal = props => {
           // if (response == undefined) {
           //   console.log('response is undefiend');
           // } else {
-            setMultiImages &&
+          setMultiImages &&
             setMultiImages(x => [
-                ...x,
-                {
-                  uri: response?.assets[0]?.uri,
-                  type: response?.assets[0]?.type,
-                  name: response?.assets[0]?.fileName,
-                },
-              ]);
-            // }
-          }
-      
+              ...x,
+              {
+                uri: response?.assets[0]?.uri,
+                type: response?.assets[0]?.type,
+                name: response?.assets[0]?.fileName,
+              },
+            ]);
+          // }
+        }
       } catch (error) {
         console.log('response is undefined=================>', error);
       }
@@ -200,18 +194,8 @@ const ImagePickerModal = props => {
           style={[
             styles.modalContentContianer,
             {
-              borderBottomColor:
-                userRole == 'Qbid Member'
-                  ? Color.blue
-                  : userRole == 'Qbid Negotiator'
-                  ? Color.themeColor
-                  : Color.black,
-              borderTopColor:
-                userRole == 'Qbid Member'
-                  ? Color.blue
-                  : userRole == 'Qbid Negotiator'
-                  ? Color.themeColor
-                  : Color.black,
+              borderBottomColor: Color.black,
+              borderTopColor: Color.black,
             },
           ]}>
           <TouchableOpacity

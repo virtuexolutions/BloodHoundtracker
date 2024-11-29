@@ -75,7 +75,7 @@ const SearchContainer = ({
                   marginLeft: moderateScale(10, 0.3),
                   width: windowWidth * 0.6,
                   color: Color.black,
-                  paddingBottom:moderateScale(3,.6)
+                  marginTop:moderateScale(2,.6)
                   // marginTop:moderateScale(5,.6)
                   // height:windowHeight*0.06
                   // backgroundColor : 'red'
@@ -113,7 +113,7 @@ const styles = ScaledSheet.create({
     borderColor: Color.mediumGray,
     backgroundColor: Color.white,
     borderRadius: moderateScale(5, 0.3),
-    paddingVertical: moderateScale(8, 0.3),
+    // paddingVertical: moderateScale(8, 0.3),
     paddingHorizontal: moderateScale(10, 0.3),
     shadowColor: '#000',
     shadowOffset: {
