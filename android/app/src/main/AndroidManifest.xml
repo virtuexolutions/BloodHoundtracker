@@ -37,9 +37,7 @@
         <category android:name="android.intent.category.BROWSABLE" />
         <data android:scheme="http" />
         <data android:scheme="https" />
-        <data android:scheme="blood-hound.cstmpanel.com"
-          android:host="blood-hound.cstmpanel.com"
-          android:pathPrefix="/post" />
+        <data android:host="blood-hound.cstmpanel.com"  />
           
         </intent-filter>
 

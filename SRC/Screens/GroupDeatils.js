@@ -24,6 +24,7 @@ import {useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 
 const GroupDeatils = props => {
+             
   const groupName = props?.route?.params?.item;
   const token = useSelector(state => state.authReducer.token);
   const isFocused = useIsFocused();

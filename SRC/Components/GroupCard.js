@@ -17,7 +17,7 @@ const GroupCard = ({item}) => {
     <TouchableOpacity
       style={styles.card}
       onPress={() =>
-        navigationService.navigate('GroupDeatils', {item: item?.assetsName})
+        navigationService.navigate('GroupDeatils', {item: item?.assetsName ,id:item?.id})
       }>
       <View style={styles.rowContainer}>
         <View style={styles.imageContainer}>

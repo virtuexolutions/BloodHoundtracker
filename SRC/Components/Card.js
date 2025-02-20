@@ -54,13 +54,13 @@ const Card = ({item, fromProfile, setSelected, selected, index, loading}) => {
     prefixes: ['https://blood-hound.cstmpanel.com', 'yourapp://'],
     config: {
       screens: {
-        Post: `HomeScreen/${item?.id}`,
+        Post: `HomeScreen/post/${item?.id}`,
       },
     },
   };
 
   const onShare = async () => {
-    const shareUrl = `${baseUrl}/HomeScreen/${item?.id}`;
+    const shareUrl = `${baseUrl}/HomeScreen/post/${item?.id}`;
     try {
       console.log('🚀 ~ onShare ~ shareUrl:', shareUrl);
       const result = await Share.share({
